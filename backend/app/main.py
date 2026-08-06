@@ -6,6 +6,8 @@ from app.api.v1.router import api_v1_router
 from app.core.config import settings
 from app.core.logging import logger
 from app.models.health import HealthCheckResponse
+from app.models.quota import QuotaStatusResponse
+
 
 
 @asynccontextmanager
@@ -48,6 +50,14 @@ async def top_level_health() -> HealthCheckResponse:
         environment=settings.ENV,
         api_mode=settings.API_MODE,
     )
+
+
+# Top-level quota endpoint alias (documented in API.md)
+@app.get("/api/quota", response_model=QuotaStatusResponse, tags=["Quota"], summary="Public API Quota Status")
+async def top_level_quota() -> QuotaStatusResponse:
+    from app.services.quota_manager import quota_manager
+    return quota_manager.get_quota_status()
+
 
 
 @app.get("/", tags=["Root"])

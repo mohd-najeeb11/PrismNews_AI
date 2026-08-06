@@ -1,0 +1,212 @@
+[
+  {
+    "id": "a1b2c3d4-0000-0000-0000-000000000001",
+    "headline": "Global Tech Summit Reaches Landmark AI Safety Agreement",
+    "topic": "Artificial Intelligence",
+    "created_at": "2026-08-06T18:00:00Z",
+    "article_count": 3,
+    "sources": ["BBC News", "Reuters", "Fox News"],
+    "articles": [
+      {
+        "id": "e1111111-0000-0000-0000-000000000001",
+        "source": "BBC News",
+        "title": "Nations Sign Historic AI Framework at Geneva Summit",
+        "url": "https://bbc.com/news/tech-ai-framework-2026",
+        "published_at": "2026-08-06T18:00:00Z",
+        "snippet": "Representatives from 40 nations agreed on binding safety guardrails for frontier artificial intelligence models..."
+      },
+      {
+        "id": "e2222222-0000-0000-0000-000000000002",
+        "source": "Reuters",
+        "title": "Global Accord Sets Limits on Autonomous AI Systems",
+        "url": "https://reuters.com/technology/global-accord-ai-2026",
+        "published_at": "2026-08-06T19:00:00Z",
+        "snippet": "An international treaty signed in Geneva mandates independent audits for advanced machine learning models prior to deployment..."
+      },
+      {
+        "id": "e3333333-0000-0000-0000-000000000003",
+        "source": "Fox News",
+        "title": "New Geneva AI Deal Raises Concerns Over Tech Overregulation",
+        "url": "https://foxnews.com/tech/geneva-ai-deal-overregulation-fear",
+        "published_at": "2026-08-06T20:00:00Z",
+        "snippet": "Tech industry leaders warned that new international mandates signed in Switzerland could stifle American innovation..."
+      }
+    ],
+    "analysis": {
+      "balanced_summary": {
+        "consensus_facts": [
+          "Delegates from over 40 countries signed a safety framework in Geneva.",
+          "The agreement introduces auditing guidelines for frontier AI models.",
+          "The treaty was backed by major international tech delegations."
+        ],
+        "disputed_points": [
+          "Whether the auditing process burdens tech startups excessively.",
+          "Enforcement mechanisms and compliance rules for non-signatory nations."
+        ],
+        "neutral_summary": "Forty nations assembled in Geneva to ratify a safety agreement establishing independent audit requirements for frontier AI models. While proponents emphasize risk reduction, industry critics highlight potential headwinds for competitive innovation."
+      },
+      "comparison": [
+        {
+          "source": "BBC News",
+          "headline": "Nations Sign Historic AI Framework at Geneva Summit",
+          "tone": "neutral",
+          "emphasis": "international cooperation"
+        },
+        {
+          "source": "Reuters",
+          "headline": "Global Accord Sets Limits on Autonomous AI Systems",
+          "tone": "factual",
+          "emphasis": "regulatory mechanics"
+        },
+        {
+          "source": "Fox News",
+          "headline": "New Geneva AI Deal Raises Concerns Over Tech Overregulation",
+          "tone": "critical",
+          "emphasis": "economic impact on domestic tech"
+        }
+      ],
+      "bias_analysis": [
+        {
+          "source": "BBC News",
+          "framing": ["global cooperation", "risk reduction"],
+          "tone": "optimistic",
+          "loaded_phrases": [
+            {
+              "text": "historic milestone",
+              "reason": "Laudatory phrasing emphasizing international achievement"
+            }
+          ]
+        },
+        {
+          "source": "Fox News",
+          "framing": ["overregulation", "innovation penalty"],
+          "tone": "skeptical",
+          "loaded_phrases": [
+            {
+              "text": "stifle American innovation",
+              "reason": "Emotionally charged protectionist narrative"
+            }
+          ]
+        }
+      ],
+      "missing_perspectives": {
+        "covered": ["Government representatives", "Tech industry executives"],
+        "missing": ["Open-source developer community perspectives", "Consumer privacy advocacy groups"]
+      },
+      "timeline": [
+        {
+          "published_at": "2026-08-06T18:00:00Z",
+          "source": "BBC News",
+          "framing_shift": "Focus on summit opening and international consensus building."
+        },
+        {
+          "published_at": "2026-08-06T19:00:00Z",
+          "source": "Reuters",
+          "framing_shift": "Focus on legal language and mandatory compliance rules."
+        },
+        {
+          "published_at": "2026-08-06T20:00:00Z",
+          "source": "Fox News",
+          "framing_shift": "Pivot toward industry pushback and global market competitiveness concerns."
+        }
+      ]
+    }
+  },
+  {
+    "id": "b2c3d4e5-0000-0000-0000-000000000002",
+    "headline": "Central Banks Signal Shift in Global Interest Rate Policy",
+    "topic": "Economy",
+    "created_at": "2026-08-06T14:00:00Z",
+    "article_count": 3,
+    "sources": ["Reuters", "CNN", "Associated Press"],
+    "articles": [
+      {
+        "id": "e4444444-0000-0000-0000-000000000004",
+        "source": "Reuters",
+        "title": "Fed Holds Benchmark Rate Steady Amid Mixed Inflation Indicators",
+        "url": "https://reuters.com/markets/fed-rate-decision-2026",
+        "published_at": "2026-08-06T14:00:00Z",
+        "snippet": "The Federal Reserve kept interest rates unchanged while signaling a potential rate easing cycle later this year..."
+      },
+      {
+        "id": "e5555555-0000-0000-0000-000000000005",
+        "source": "CNN",
+        "title": "Borrowers Facing High Rate Strain as Fed Pauses Cuts Again",
+        "url": "https://cnn.com/business/fed-rate-pause-impact-2026",
+        "published_at": "2026-08-06T15:00:00Z",
+        "snippet": "Consumer advocate groups warned that sustained high interest rates continue to pressure household debt..."
+      },
+      {
+        "id": "e6666666-0000-0000-0000-000000000006",
+        "source": "Associated Press",
+        "title": "Central Bank Balancing Act: Inflation Cooling vs Job Growth",
+        "url": "https://apnews.com/finance/central-bank-policy-2026",
+        "published_at": "2026-08-06T16:00:00Z",
+        "snippet": "Economists noted that central bankers are carefully navigating labor market stability against inflation targets..."
+      }
+    ],
+    "analysis": {
+      "balanced_summary": {
+        "consensus_facts": [
+          "The Federal Reserve maintained benchmark interest rates at current levels.",
+          "Policymakers cited stabilizing inflation alongside steady labor market metrics.",
+          "Further economic data will dictate future monetary policy adjustments."
+        ],
+        "disputed_points": [
+          "The ideal timeline for initiating interest rate reductions.",
+          "Whether current borrowing costs unfairly penalize low-income consumers."
+        ],
+        "neutral_summary": "Central bankers opted to hold benchmark borrowing rates steady, weighing inflation trends against labor market durability. Proponents point to economic stability, while critics emphasize persistent pressure on consumer debt."
+      },
+      "comparison": [
+        {
+          "source": "Reuters",
+          "headline": "Fed Holds Benchmark Rate Steady Amid Mixed Inflation Indicators",
+          "tone": "objective",
+          "emphasis": "market data and policy signals"
+        },
+        {
+          "source": "CNN",
+          "headline": "Borrowers Facing High Rate Strain as Fed Pauses Cuts Again",
+          "tone": "critical",
+          "emphasis": "consumer and household financial stress"
+        },
+        {
+          "source": "Associated Press",
+          "headline": "Central Bank Balancing Act: Inflation Cooling vs Job Growth",
+          "tone": "balanced",
+          "emphasis": "dual-mandate economic trade-offs"
+        }
+      ],
+      "bias_analysis": [
+        {
+          "source": "CNN",
+          "framing": ["consumer hardship", "delayed relief"],
+          "tone": "concerned",
+          "loaded_phrases": [
+            {
+              "text": "high rate strain",
+              "reason": "Emphasizes negative impact on ordinary borrowers"
+            }
+          ]
+        }
+      ],
+      "missing_perspectives": {
+        "covered": ["Central bank officials", "Financial market analysts"],
+        "missing": ["Small business loan applicants", "Mortgage broker industry reps"]
+      },
+      "timeline": [
+        {
+          "published_at": "2026-08-06T14:00:00Z",
+          "source": "Reuters",
+          "framing_shift": "Immediate reporting on policy statement release."
+        },
+        {
+          "published_at": "2026-08-06T15:00:00Z",
+          "source": "CNN",
+          "framing_shift": "Shift focus to mortgage rates and personal financial impact."
+        }
+      ]
+    }
+  }
+]

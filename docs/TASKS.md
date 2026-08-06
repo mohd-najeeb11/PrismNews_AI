@@ -33,6 +33,8 @@
 ## P1 — Foundation (Hours 0–6)
 
 - [x] Backend Foundation Setup (FastAPI, venv, requirements, config, logging, CORS, API v1 routing, health check) — **Completed**
+- [x] Module M1: Database Schema & Migrations (`supabase/migrations/001_initial.sql`, `supabase/seed.sql`) — **Completed**
+- [x] Module M7: Quota Manager & Seed Loader (`app/services/quota_manager.py`, `data/seed/demo_stories.json`, `GET /api/quota`) — **Completed**
 
 | Hour | Member A | Member B | Member C | Modules |
 |---|---|---|---|---|
@@ -44,6 +46,7 @@
 tabs render mock data.
 
 **Commit:** `feat(M1,M7,M3): database, quota manager, seed API`
+
 
 
 ---
