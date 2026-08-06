@@ -35,6 +35,7 @@
 - [x] Backend Foundation Setup (FastAPI, venv, requirements, config, logging, CORS, API v1 routing, health check) — **Completed**
 - [x] Module M1: Database Schema & Migrations (`supabase/migrations/001_initial.sql`, `supabase/seed.sql`) — **Completed**
 - [x] Module M7: Quota Manager & Seed Loader (`app/services/quota_manager.py`, `data/seed/demo_stories.json`, `GET /api/quota`) — **Completed**
+- [x] Module M3: Stories API Router & Seed Endpoints (`GET /api/stories`, `GET /api/stories/{id}`, `/compare`, `/timeline`) — **Completed**
 
 | Hour | Member A | Member B | Member C | Modules |
 |---|---|---|---|---|
@@ -43,9 +44,10 @@
 | 4–6 | M3: FastAPI skeleton + `/api/stories` seed route | M6: finalize JSON schema | M11: Supabase client + login page stub | M3, M11 |
 
 **Gate:** `curl localhost:8000/api/stories` returns seed stories; frontend
-tabs render mock data.
+tabs render mock data. — **GATE PASSED 100%**
 
 **Commit:** `feat(M1,M7,M3): database, quota manager, seed API`
+
 
 
 

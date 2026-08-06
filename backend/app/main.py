@@ -59,6 +59,32 @@ async def top_level_quota() -> QuotaStatusResponse:
     return quota_manager.get_quota_status()
 
 
+# Top-level stories route aliases (documented in API.md)
+@app.get("/api/stories", tags=["Stories"], summary="Top-level Stories Search/Browse")
+async def top_level_stories(q: str = None):
+    from app.api.v1.endpoints.stories import get_stories
+    return await get_stories(q=q)
+
+
+@app.get("/api/stories/{id}", tags=["Stories"], summary="Top-level Story Detail")
+async def top_level_story_by_id(id: str):
+    from app.api.v1.endpoints.stories import get_story_by_id
+    return await get_story_by_id(id=id)
+
+
+@app.get("/api/stories/{id}/compare", tags=["Stories"], summary="Top-level Story Comparison")
+async def top_level_story_compare(id: str):
+    from app.api.v1.endpoints.stories import get_story_comparison
+    return await get_story_comparison(id=id)
+
+
+@app.get("/api/stories/{id}/timeline", tags=["Stories"], summary="Top-level Story Timeline")
+async def top_level_story_timeline(id: str):
+    from app.api.v1.endpoints.stories import get_story_timeline
+    return await get_story_timeline(id=id)
+
+
+
 
 @app.get("/", tags=["Root"])
 async def root():
