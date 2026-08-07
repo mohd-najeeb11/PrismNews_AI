@@ -112,7 +112,8 @@ export default function StoryDashboardPage() {
             <span>{analyzing ? analysisStep || 'Re-analyzing...' : 'Re-analyze Story'}</span>
           </button>
 
-          <SaveButton storyId={story.id} />
+          <SaveButton storyId={story.id} story={story} />
+
         </div>
       </div>
 

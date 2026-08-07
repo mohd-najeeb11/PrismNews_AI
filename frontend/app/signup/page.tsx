@@ -4,7 +4,7 @@ import React, { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { createClient } from '@/lib/supabase/client';
-import { UserPlus, Sparkles, CheckCircle2 } from 'lucide-react';
+import { UserPlus, Sparkles } from 'lucide-react';
 
 export default function SignupPage() {
   const [fullName, setFullName] = useState('');
@@ -19,40 +19,27 @@ export default function SignupPage() {
     setLoading(true);
     setErrorMsg('');
 
+    const userObj = { email, name: fullName || email.split('@')[0], is_authenticated: true };
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('prism_user', JSON.stringify(userObj));
+    }
+
     try {
       const supabase = createClient();
-      const { data, error } = await supabase.auth.signUp({
+      await supabase.auth.signUp({
         email,
         password,
         options: {
           data: { full_name: fullName },
         },
       });
-
-      if (error) {
-        // Fall back gracefully to demo session if API network call fails
-        if (typeof window !== 'undefined') {
-          localStorage.setItem('prism_demo_user', JSON.stringify({ email, name: fullName || email }));
-        }
-        router.push('/saved');
-        router.refresh();
-      } else {
-        if (typeof window !== 'undefined') {
-          localStorage.setItem('prism_demo_user', JSON.stringify({ email, name: fullName || email }));
-        }
-        router.push('/saved');
-        router.refresh();
-      }
     } catch (err: any) {
-      if (typeof window !== 'undefined') {
-        localStorage.setItem('prism_demo_user', JSON.stringify({ email, name: fullName || email }));
-      }
-      router.push('/saved');
-      router.refresh();
+      console.warn('Supabase registration fallback activated:', err);
     } finally {
       setLoading(false);
+      router.push('/saved');
+      router.refresh();
     }
-
   };
 
   return (

@@ -1,22 +1,33 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { saveStoryToSavedList } from '@/lib/api';
+import { Story } from '@/lib/types';
 import { Bookmark, Check, LogIn } from 'lucide-react';
 import Link from 'next/link';
 
 interface Props {
   storyId: string;
+  story?: Story;
 }
 
-export default function SaveButton({ storyId }: Props) {
+export default function SaveButton({ storyId, story }: Props) {
   const [saved, setSaved] = useState(false);
   const [loading, setLoading] = useState(false);
   const [showAuthModal, setShowAuthModal] = useState(false);
 
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const savedIds: string[] = JSON.parse(localStorage.getItem('prism_saved_stories') || '[]');
+      if (savedIds.includes(storyId)) {
+        setSaved(true);
+      }
+    }
+  }, [storyId]);
+
   const handleSave = async () => {
     setLoading(true);
-    const success = await saveStoryToSavedList(storyId);
+    const success = await saveStoryToSavedList(storyId, undefined, story);
     if (success) {
       setSaved(true);
     } else {

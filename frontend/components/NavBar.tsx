@@ -1,15 +1,59 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { PrismIcon } from './PrismIcon';
 import QuotaBadge from './QuotaBadge';
-import { Search, Bookmark, LogIn, User, Sparkles, SlidersHorizontal } from 'lucide-react';
+import { Search, Bookmark, LogIn, User, Sparkles, LogOut } from 'lucide-react';
+import { createClient } from '@/lib/supabase/client';
 
 export default function NavBar() {
   const [searchQuery, setSearchQuery] = useState('');
+  const [user, setUser] = useState<{ email: string; name?: string } | null>(null);
   const router = useRouter();
+
+  useEffect(() => {
+    const checkUser = () => {
+      if (typeof window !== 'undefined') {
+        const stored = localStorage.getItem('prism_user') || localStorage.getItem('prism_demo_user');
+        if (stored) {
+          try {
+            setUser(JSON.parse(stored));
+            return;
+          } catch (e) {}
+        }
+      }
+
+      try {
+        const supabase = createClient();
+        supabase.auth.getSession().then(({ data }) => {
+          if (data.session?.user) {
+            setUser({
+              email: data.session.user.email || '',
+              name: data.session.user.user_metadata?.full_name || data.session.user.email?.split('@')[0],
+            });
+          }
+        });
+      } catch (e) {}
+    };
+
+    checkUser();
+  }, []);
+
+  const handleLogout = async () => {
+    if (typeof window !== 'undefined') {
+      localStorage.removeItem('prism_user');
+      localStorage.removeItem('prism_demo_user');
+    }
+    try {
+      const supabase = createClient();
+      await supabase.auth.signOut();
+    } catch (e) {}
+    setUser(null);
+    router.push('/login');
+    router.refresh();
+  };
 
   const handleSearchSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -65,13 +109,29 @@ export default function NavBar() {
             <span>Saved Stories</span>
           </Link>
 
-          <Link
-            href="/login"
-            className="flex items-center gap-1.5 px-3.5 py-2 text-xs font-semibold text-white bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 rounded-lg shadow-md shadow-blue-500/20 hover:shadow-blue-500/30 transition-all"
-          >
-            <LogIn className="w-3.5 h-3.5" />
-            <span>Sign In</span>
-          </Link>
+          {user ? (
+            <div className="flex items-center gap-2">
+              <span className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-slate-200 bg-slate-900 border border-slate-800 rounded-lg shadow-sm">
+                <User className="w-3.5 h-3.5 text-blue-400" />
+                <span className="max-w-[110px] truncate">{user.name || user.email.split('@')[0]}</span>
+              </span>
+              <button
+                onClick={handleLogout}
+                className="p-2 text-slate-400 hover:text-rose-400 bg-slate-900 hover:bg-slate-800 border border-slate-800 rounded-lg transition-colors"
+                title="Sign Out"
+              >
+                <LogOut className="w-3.5 h-3.5" />
+              </button>
+            </div>
+          ) : (
+            <Link
+              href="/login"
+              className="flex items-center gap-1.5 px-3.5 py-2 text-xs font-semibold text-white bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 rounded-lg shadow-md shadow-blue-500/20 hover:shadow-blue-500/30 transition-all"
+            >
+              <LogIn className="w-3.5 h-3.5" />
+              <span>Sign In</span>
+            </Link>
+          )}
         </div>
       </div>
     </header>
