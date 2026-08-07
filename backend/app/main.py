@@ -81,6 +81,12 @@ async def top_level_stories(q: str = None):
     return await get_stories(q=q)
 
 
+@app.post("/api/stories/live", tags=["Stories"], summary="Top-level Live On-Demand Query Analysis")
+async def top_level_analyze_live_query(req: LiveQueryRequest = Body(...)):
+    from app.api.v1.endpoints.stories import LiveQueryRequest, analyze_live_query
+    return await analyze_live_query(req=req)
+
+
 @app.get("/api/stories/{id}", tags=["Stories"], summary="Top-level Story Detail")
 async def top_level_story_by_id(id: str):
     from app.api.v1.endpoints.stories import get_story_by_id

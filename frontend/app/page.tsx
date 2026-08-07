@@ -2,26 +2,44 @@
 
 import React, { useEffect, useState, Suspense } from 'react';
 import Link from 'next/link';
-import { useSearchParams } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { Story } from '@/lib/types';
-import { fetchStories } from '@/lib/api';
-import { Sparkles, Layers, ArrowRight, Compass, Scale, Newspaper, EyeOff, Clock, Search } from 'lucide-react';
+import { fetchStories, fetchLiveStoryByQuery } from '@/lib/api';
+import { Sparkles, Layers, ArrowRight, Compass, Scale, Newspaper, EyeOff, Clock, Search, Loader2 } from 'lucide-react';
 
 
 const CATEGORIES = ['All', 'Technology & Policy', 'Economy & Markets', 'Energy & Environment', 'World News'];
 
 function HomeContent() {
+  const router = useRouter();
   const searchParams = useSearchParams();
   const queryParam = searchParams.get('query') || '';
 
   const [stories, setStories] = useState<Story[]>([]);
   const [loading, setLoading] = useState(true);
+  const [liveSearching, setLiveSearching] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState('All');
   const [searchTerm, setSearchTerm] = useState(queryParam);
 
   useEffect(() => {
     setSearchTerm(queryParam);
   }, [queryParam]);
+
+  const handleSearchSubmit = async (query: string) => {
+    if (!query || !query.trim()) return;
+    setLiveSearching(true);
+    try {
+      const liveStory = await fetchLiveStoryByQuery(query.trim());
+      if (liveStory && liveStory.id) {
+        router.push(`/story/${liveStory.id}`);
+        return;
+      }
+    } catch (e) {
+      console.warn('Live search redirect failed:', e);
+    } finally {
+      setLiveSearching(false);
+    }
+  };
 
   useEffect(() => {
     const loadData = () => {
@@ -62,6 +80,7 @@ function HomeContent() {
           <form
             onSubmit={(e) => {
               e.preventDefault();
+              handleSearchSubmit(searchTerm);
             }}
             className="relative flex items-center shadow-xl shadow-blue-500/5 rounded-2xl"
           >
@@ -69,20 +88,26 @@ function HomeContent() {
               type="text"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              placeholder="Search any news topic, event, or outlet (e.g. AI Regulation, Election)..."
-              className="w-full bg-slate-900/90 text-sm text-slate-100 placeholder-slate-500 rounded-2xl pl-11 pr-24 py-3.5 border border-slate-800 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 focus:outline-none transition-all"
+              placeholder="Search any live news topic, event, or URL (e.g. Nvidia AI, https://reuters.com/...)..."
+              className="w-full bg-slate-900/90 text-sm text-slate-100 placeholder-slate-500 rounded-2xl pl-11 pr-28 py-3.5 border border-slate-800 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 focus:outline-none transition-all"
             />
             <Search className="w-5 h-5 text-slate-400 absolute left-3.5 top-4" />
-            {searchTerm ? (
-              <button
-                type="button"
-                onClick={() => setSearchTerm('')}
-                className="absolute right-3 px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-xs font-semibold text-slate-300 transition-colors flex items-center gap-1"
-              >
-                Clear
-              </button>
-            ) : null}
+            <button
+              type="submit"
+              disabled={liveSearching}
+              className="absolute right-2 px-3.5 py-1.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-xs font-semibold text-white transition-colors flex items-center gap-1.5 shadow-md"
+            >
+              {liveSearching ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Sparkles className="w-3.5 h-3.5" />}
+              <span>{liveSearching ? 'Fetching...' : 'Analyze'}</span>
+            </button>
           </form>
+
+          {liveSearching && (
+            <div className="p-3 bg-blue-950/40 border border-blue-800/40 rounded-xl text-xs text-blue-300 flex items-center justify-center space-x-2 animate-pulse">
+              <Loader2 className="w-4 h-4 animate-spin text-blue-400" />
+              <span>Fetching live news coverage & running Gemini AI analysis for "{searchTerm}"...</span>
+            </div>
+          )}
 
           {/* Quick Topic Chips */}
           <div className="flex flex-wrap justify-center items-center gap-2 text-xs font-medium text-slate-400">
@@ -91,7 +116,10 @@ function HomeContent() {
               <button
                 key={topic}
                 type="button"
-                onClick={() => setSearchTerm(topic)}
+                onClick={() => {
+                  setSearchTerm(topic);
+                  handleSearchSubmit(topic);
+                }}
                 className="px-2.5 py-1 rounded-lg bg-slate-900/80 hover:bg-slate-800 text-slate-300 hover:text-white border border-slate-800 transition-colors"
               >
                 #{topic}

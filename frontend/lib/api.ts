@@ -458,6 +458,29 @@ export async function fetchStories(category?: string, query?: string): Promise<S
   return stories;
 }
 
+export async function fetchLiveStoryByQuery(queryOrUrl: string): Promise<Story> {
+  try {
+    const res = await fetch(`${API_BASE_URL}/stories/live`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ query: queryOrUrl }),
+    });
+    if (res.ok) {
+      const data = await res.json();
+      return normalizeStory(data);
+    }
+  } catch (e) {
+    console.warn('POST /stories/live failed, falling back to GET /stories search:', e);
+  }
+
+  // Fallback to GET /stories?q=...
+  const stories = await fetchStories(undefined, queryOrUrl);
+  if (stories && stories.length > 0) {
+    return fetchStoryById(stories[0].id);
+  }
+  return SEED_STORIES[0];
+}
+
 export async function fetchStoryById(id: string): Promise<Story | null> {
   try {
     const res = await fetch(`${API_BASE_URL}/stories/${id}`, { cache: 'no-store' });

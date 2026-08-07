@@ -1,33 +1,72 @@
 from typing import List, Optional
 from fastapi import APIRouter, HTTPException, Query
 
+from pydantic import BaseModel, Field
+
 from app.core.config import settings
 from app.models.story import ComparisonItem, StoryDetailResponse, StorySummaryResponse, TimelineItem
 from app.services.ai_analysis import ai_analysis_service
 from app.services.db_service import db_service
+from app.services.live_fetcher import live_fetcher
 from app.services.quota_manager import quota_manager
 
 router = APIRouter()
+
+
+class LiveQueryRequest(BaseModel):
+    query: str = Field(..., example="Nvidia AI")
+
+
+@router.post("/stories/live", response_model=StoryDetailResponse, summary="On-Demand Live Topic/URL Analysis")
+async def analyze_live_query(req: LiveQueryRequest) -> StoryDetailResponse:
+    """
+    On-demand live data ingestion and AI analysis for any topic or URL.
+    Fetches real-time coverage from Google News RSS & NewsAPI, clusters publishers, and returns full analysis.
+    """
+    q = req.query.strip()
+    if not q:
+        raise HTTPException(status_code=400, detail="Query string cannot be empty.")
+
+    if q.startswith("http://") or q.startswith("https://"):
+        story = await live_fetcher.fetch_by_url(q)
+    else:
+        story = await live_fetcher.fetch_by_topic(q)
+
+    return StoryDetailResponse(**story)
 
 
 @router.get("/stories", response_model=List[StorySummaryResponse], summary="Search/Browse Story Clusters")
 async def get_stories(q: Optional[str] = Query(None, description="Topic or headline keyword filter")) -> List[StorySummaryResponse]:
     """
     Returns a list of story cluster summaries.
-    Reads from live Supabase DB first, falling back to seed dataset in API_MODE=seed or when empty.
+    Reads from live Supabase DB first, falling back to seed dataset or live on-demand fetch.
     """
     stories = []
     if settings.API_MODE != "seed":
         stories = db_service.get_stories(q)
 
+    # If query is provided and no local stories match, trigger live fetching on-demand
+    if q and not stories and settings.API_MODE != "seed":
+        try:
+            if q.startswith("http://") or q.startswith("https://"):
+                live_story = await live_fetcher.fetch_by_url(q)
+            else:
+                live_story = await live_fetcher.fetch_by_topic(q)
+            if live_story:
+                stories = [live_story]
+        except Exception as e:
+            logger.warning(f"On-demand live fetch for query '{q}' failed: {e}")
+
     if not stories:
         stories = quota_manager.load_seed_stories()
         if q:
             query_lower = q.lower()
-            stories = [
+            filtered = [
                 s for s in stories
                 if query_lower in s.get("headline", "").lower() or query_lower in s.get("topic", "").lower()
             ]
+            if filtered:
+                stories = filtered
 
     summary_list = []
     for story in stories:
