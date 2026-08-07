@@ -1,6 +1,4 @@
 import React from 'react';
-import QuotaBadge from './QuotaBadge';
-import { ShieldCheck, Cpu, Code2, Globe } from 'lucide-react';
 
 export default function Footer() {
   return (
@@ -14,16 +12,11 @@ export default function Footer() {
           <p className="text-xs text-slate-400 max-w-md text-center md:text-left">
             Comparing framing across media outlets using explainable AI, missing perspective detection, and chronological bias tracking.
           </p>
-
         </div>
 
-        <div className="flex flex-col items-center md:items-end gap-2">
-          <QuotaBadge />
-          <p className="text-[11px] text-slate-400 flex items-center gap-1 font-mono">
-            <span>Powered by Gemini 2.0 Flash</span>
-            <span>•</span>
-            <span>Supabase Auth & DB</span>
-          </p>
+        <div className="flex flex-col items-center md:items-end gap-1 text-xs text-slate-400">
+          <span className="font-semibold text-slate-300">PrismNews AI Engine</span>
+          <span className="text-[11px] text-slate-400">© 2026 PrismNews AI. All rights reserved.</span>
         </div>
       </div>
     </footer>
