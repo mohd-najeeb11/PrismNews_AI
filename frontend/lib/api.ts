@@ -526,6 +526,8 @@ export function createClientSideUrlStory(targetUrl: string): Story {
       },
     ],
     analysis: {
+      story_id: storyId,
+      analyzed_at: new Date().toISOString(),
       balanced_summary: {
         overview: `Breaking coverage report from ${publisher} regarding '${headline}'.`,
         consensus_points: [
