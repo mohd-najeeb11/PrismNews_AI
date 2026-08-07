@@ -12,6 +12,7 @@ import ComparisonGrid from '@/components/story/ComparisonGrid';
 import BiasChart from '@/components/story/BiasChart';
 import PerspectivesList from '@/components/story/PerspectivesList';
 import TimelineView from '@/components/story/TimelineView';
+import PdfReportGenerator from '@/components/story/PdfReportGenerator';
 import { TransparencyReportCard } from '@/components/story/TransparencyReportCard';
 import {
   Scale,
@@ -19,6 +20,7 @@ import {
   ShieldAlert,
   EyeOff,
   Clock,
+  FileText,
   ArrowLeft,
   RefreshCw,
   Layers,
@@ -30,7 +32,8 @@ import {
   Loader2,
 } from 'lucide-react';
 
-type TabType = 'summary' | 'compare' | 'bias' | 'perspectives' | 'timeline';
+type TabType = 'summary' | 'compare' | 'bias' | 'perspectives' | 'timeline' | 'pdf';
+
 
 export default function StoryDashboardPage() {
   const params = useParams();
@@ -306,6 +309,18 @@ export default function StoryDashboardPage() {
             <Clock className="w-4 h-4" />
             <span>5. {t('tab_timeline')}</span>
           </button>
+
+          <button
+            onClick={() => setActiveTab('pdf')}
+            className={`flex items-center gap-2 px-4 py-3 text-xs font-bold border-b-2 whitespace-nowrap transition-all ${
+              activeTab === 'pdf'
+                ? 'border-purple-500 text-purple-400 bg-purple-500/10 rounded-t-xl'
+                : 'border-transparent text-slate-400 hover:text-slate-200 hover:border-slate-700'
+            }`}
+          >
+            <FileText className="w-4 h-4" />
+            <span>6. PDF Report</span>
+          </button>
         </nav>
       </div>
 
@@ -316,7 +331,16 @@ export default function StoryDashboardPage() {
         {activeTab === 'bias' && <BiasChart biasAnalysis={activeAnalysis?.bias_analysis} />}
         {activeTab === 'perspectives' && <PerspectivesList perspectives={activeAnalysis?.missing_perspectives} />}
         {activeTab === 'timeline' && <TimelineView timeline={activeAnalysis?.timeline} narrativeShifts={activeAnalysis?.narrative_shifts} />}
+        {activeTab === 'pdf' && <PdfReportGenerator story={story} analysis={activeAnalysis || undefined} />}
       </div>
+
+      {/* Always render PDF Report Section after Narrative Timeline for quick access */}
+      {activeTab !== 'pdf' && (
+        <div className="pt-8 border-t border-slate-800/80">
+          <PdfReportGenerator story={story} analysis={activeAnalysis || undefined} />
+        </div>
+      )}
     </div>
   );
 }
+
