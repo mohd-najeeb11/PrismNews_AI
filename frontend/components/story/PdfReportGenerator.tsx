@@ -2,6 +2,7 @@
 
 import React, { useRef, useState } from 'react';
 import { Story, StoryAnalysis } from '@/lib/types';
+import { useLanguage } from '@/lib/LanguageContext';
 import { FileText, Download, Loader2, CheckCircle2, Scale, Newspaper, ShieldAlert, Clock, Sparkles } from 'lucide-react';
 
 interface Props {
@@ -10,9 +11,11 @@ interface Props {
 }
 
 export default function PdfReportGenerator({ story, analysis }: Props) {
+  const { t } = useLanguage();
   const [generating, setGenerating] = useState(false);
   const [downloadSuccess, setDownloadSuccess] = useState(false);
   const reportRef = useRef<HTMLDivElement>(null);
+
 
   const balanced = analysis?.balanced_summary;
   const comparison = analysis?.comparison || [];
@@ -138,20 +141,21 @@ export default function PdfReportGenerator({ story, analysis }: Props) {
         <div className="mt-6 pt-6 border-t border-slate-800/80 grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs text-slate-400 font-medium">
           <div className="flex items-center gap-2 bg-slate-900/60 p-2.5 rounded-xl border border-slate-800/60">
             <Scale className="w-4 h-4 text-blue-400 shrink-0" />
-            <span>1. Balanced Summary</span>
+            <span>1. {t('tab_summary')}</span>
           </div>
           <div className="flex items-center gap-2 bg-slate-900/60 p-2.5 rounded-xl border border-slate-800/60">
             <Newspaper className="w-4 h-4 text-purple-400 shrink-0" />
-            <span>2. Side-by-Side Matrix</span>
+            <span>2. {t('tab_comparison')}</span>
           </div>
           <div className="flex items-center gap-2 bg-slate-900/60 p-2.5 rounded-xl border border-slate-800/60">
             <ShieldAlert className="w-4 h-4 text-pink-400 shrink-0" />
-            <span>3. Bias Spectrum & Charts</span>
+            <span>3. {t('tab_bias')}</span>
           </div>
           <div className="flex items-center gap-2 bg-slate-900/60 p-2.5 rounded-xl border border-slate-800/60">
             <Clock className="w-4 h-4 text-emerald-400 shrink-0" />
-            <span>4. Narrative Timeline</span>
+            <span>4. {t('tab_timeline')}</span>
           </div>
+
         </div>
       </div>
 
