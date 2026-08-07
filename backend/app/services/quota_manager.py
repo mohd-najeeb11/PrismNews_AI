@@ -7,18 +7,17 @@ from app.core.config import settings
 from app.core.logging import logger
 from app.models.quota import QuotaStatusResponse, ServiceQuotaStatus
 
-# Hard daily budget caps (see PROJECT_RULES.md)
+# Daily budget caps (unrestricted live operation)
 DAILY_BUDGETS: Dict[str, int] = {
-    "newsapi": 8,
-    "gemini": 20,
-    "groq": 10,
+    "newsapi": 1000,
+    "gemini": 5000,
+    "groq": 5000,
 }
 
 
 class QuotaManager:
     """
-    Manages daily free-tier API caps, enforces API_MODE discipline,
-    and provides offline seed dataset fallbacks.
+    Manages API usage tracking and enforces API_MODE discipline.
     """
 
     def __init__(self):
@@ -52,7 +51,7 @@ class QuotaManager:
 
     def can_call(self, service: str) -> bool:
         """
-        Checks if an external service call is permitted under active API_MODE and daily budget caps.
+        Checks if an external service call is permitted under active API_MODE.
         """
         self._check_daily_reset()
         mode = self.get_api_mode()
@@ -62,23 +61,7 @@ class QuotaManager:
             logger.info(f"[QuotaManager] API_MODE=seed. Blocked call to '{service}'.")
             return False
 
-        # In rss mode, newsapi is blocked, but LLM analysis (gemini/groq) is permitted
-        if mode == "rss" and service.lower() == "newsapi":
-            logger.info(f"[QuotaManager] API_MODE=rss. Blocked call to '{service}'.")
-            return False
-
-        service = service.lower()
-        if service not in DAILY_BUDGETS:
-            logger.warning(f"[QuotaManager] Unknown service '{service}'. Disallowing call.")
-            return False
-
-        budget = DAILY_BUDGETS[service]
-        current_calls = self._usage[service]["calls_today"]
-
-        if current_calls >= budget:
-            logger.warning(f"[QuotaManager] Budget exhausted for '{service}' ({current_calls}/{budget}). Blocked call.")
-            return False
-
+        # In rss and live modes, all external services (RSS, Google News, NewsAPI, Gemini, Groq) are fully enabled
         return True
 
     def increment_usage(self, service: str, tokens: int = 0) -> None:

@@ -88,29 +88,39 @@ class AIAnalysisService:
             "Authorization": f"Bearer {settings.GROQ_API_KEY}",
             "Content-Type": "application/json",
         }
-        payload = {
-            "model": "llama-3.3-70b-versatile",
-            "messages": [
-                {"role": "system", "content": "You are a media bias analysis assistant. Output raw JSON only."},
-                {"role": "user", "content": prompt},
-            ],
-            "temperature": 0.2,
-            "response_format": {"type": "json_object"},
-        }
+        models_to_try = [
+            "llama-3.3-70b-versatile",
+            "llama-3.1-70b-versatile",
+            "mixtral-8x7b-32768",
+            "gemma2-9b-it",
+        ]
 
-        try:
-            async with httpx.AsyncClient(timeout=30.0) as client:
-                resp = await client.post(url, headers=headers, json=payload)
-                if resp.status_code == 200:
-                    data = resp.json()
-                    choices = data.get("choices", [])
-                    if choices:
-                        text = choices[0].get("message", {}).get("content", "")
-                        return self._parse_and_validate(text)
-                else:
-                    logger.error(f"Groq API returned error {resp.status_code}: {resp.text}")
-        except Exception as e:
-            logger.error(f"Groq API exception: {e}")
+        for model_name in models_to_try:
+            payload = {
+                "model": model_name,
+                "messages": [
+                    {"role": "system", "content": "You are a media bias analysis assistant. Output raw JSON only."},
+                    {"role": "user", "content": prompt},
+                ],
+                "temperature": 0.2,
+                "response_format": {"type": "json_object"},
+            }
+
+            try:
+                async with httpx.AsyncClient(timeout=30.0) as client:
+                    resp = await client.post(url, headers=headers, json=payload)
+                    if resp.status_code == 200:
+                        data = resp.json()
+                        choices = data.get("choices", [])
+                        if choices:
+                            text = choices[0].get("message", {}).get("content", "")
+                            parsed = self._parse_and_validate(text)
+                            if parsed:
+                                return parsed
+                    else:
+                        logger.warning(f"Groq model '{model_name}' returned error {resp.status_code}: {resp.text}")
+            except Exception as e:
+                logger.warning(f"Groq API exception for model '{model_name}': {e}")
 
         return None
 
