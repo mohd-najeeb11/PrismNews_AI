@@ -319,8 +319,9 @@ export default function StoryDashboardPage() {
             }`}
           >
             <FileText className="w-4 h-4" />
-            <span>6. PDF Report</span>
+            <span>6. AI Transparency Report Export</span>
           </button>
+
         </nav>
       </div>
 

@@ -77,7 +77,7 @@ export default function PdfReportGenerator({ story, analysis }: Props) {
         heightLeft -= pageHeight;
       }
 
-      const filename = `PrismNews_AI_Report_${(story.title || 'Analysis').slice(0, 30).replace(/[^a-zA-Z0-9]/g, '_')}.pdf`;
+      const filename = `AI_Transparency_Report_Export_${(story.title || 'Analysis').slice(0, 30).replace(/[^a-zA-Z0-9]/g, '_')}.pdf`;
       pdf.save(filename);
       setDownloadSuccess(true);
       setTimeout(() => setDownloadSuccess(false), 5000);
@@ -97,10 +97,10 @@ export default function PdfReportGenerator({ story, analysis }: Props) {
           <div className="space-y-2 max-w-xl">
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-purple-500/20 border border-purple-500/30 text-xs font-semibold text-purple-300">
               <Sparkles className="w-3.5 h-3.5 text-purple-400" />
-              <span>Full Intelligence Briefing PDF</span>
+              <span>AI Transparency Report Export</span>
             </div>
             <h3 className="text-xl sm:text-2xl font-bold text-white tracking-tight">
-              Export Complete Multi-Outlet AI PDF Report
+              AI Transparency Report Export
             </h3>
             <p className="text-xs sm:text-sm text-slate-300 leading-relaxed">
               Generate a printable document including Synthesized Summary, Side-by-Side Outlet Comparison, Explainable Bias Spectrum, and Narrative Timeline.
@@ -126,12 +126,13 @@ export default function PdfReportGenerator({ story, analysis }: Props) {
               ) : (
                 <>
                   <Download className="w-4 h-4 text-purple-200" />
-                  <span>Download Full PDF Report</span>
+                  <span>Export AI Transparency Report</span>
                 </>
               )}
             </button>
           </div>
         </div>
+
 
         {/* Included Sections Preview */}
         <div className="mt-6 pt-6 border-t border-slate-800/80 grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs text-slate-400 font-medium">
