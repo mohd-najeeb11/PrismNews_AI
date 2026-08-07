@@ -23,6 +23,9 @@ function HomeContent() {
 
   useEffect(() => {
     setSearchTerm(queryParam);
+    if (queryParam && queryParam.trim()) {
+      handleSearchSubmit(queryParam.trim());
+    }
   }, [queryParam]);
 
   const handleSearchSubmit = async (query: string) => {

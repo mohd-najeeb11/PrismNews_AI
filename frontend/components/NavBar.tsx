@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { PrismIcon } from './PrismIcon';
 import QuotaBadge from './QuotaBadge';
-import { Search, Bookmark, LogIn, User, Sparkles, LogOut } from 'lucide-react';
+import { Search, Bookmark, LogIn, User, Sparkles, LogOut, Loader2 } from 'lucide-react';
 import { createClient } from '@/lib/supabase/client';
 
 export default function NavBar() {
@@ -55,11 +55,27 @@ export default function NavBar() {
     router.refresh();
   };
 
-  const handleSearchSubmit = (e: React.FormEvent) => {
+  const [isAnalyzing, setIsAnalyzing] = useState(false);
+
+  const handleSearchSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (searchQuery.trim()) {
-      router.push(`/?query=${encodeURIComponent(searchQuery.trim())}`);
+    const q = searchQuery.trim();
+    if (!q) return;
+
+    setIsAnalyzing(true);
+    try {
+      const { fetchLiveStoryByQuery } = await import('@/lib/api');
+      const liveStory = await fetchLiveStoryByQuery(q);
+      if (liveStory && liveStory.id) {
+        router.push(`/story/${liveStory.id}`);
+        return;
+      }
+    } catch (err) {
+      console.warn('Live search from NavBar failed:', err);
+    } finally {
+      setIsAnalyzing(false);
     }
+    router.push(`/?query=${encodeURIComponent(q)}`);
   };
 
   return (
@@ -92,7 +108,11 @@ export default function NavBar() {
             placeholder="Search news topics, outlets, or framing..."
             className="w-full bg-slate-900/90 text-sm text-slate-200 placeholder-slate-500 rounded-full pl-10 pr-4 py-2 border border-slate-800 focus:border-blue-500/60 focus:outline-none focus:ring-2 focus:ring-blue-500/20 transition-all"
           />
-          <Search className="w-4 h-4 text-slate-400 absolute left-3.5 top-2.5" />
+          {isAnalyzing ? (
+            <Loader2 className="w-4 h-4 text-blue-400 animate-spin absolute left-3.5 top-2.5" />
+          ) : (
+            <Search className="w-4 h-4 text-slate-400 absolute left-3.5 top-2.5" />
+          )}
         </form>
 
         {/* Navigation & Quota */}
