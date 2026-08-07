@@ -13,11 +13,12 @@ const nextConfig = {
     return [
       {
         source: '/api/:path*',
-        destination: 'https://backend-beta-lovat-zapar2k22e.vercel.app/api/:path*',
+        destination: 'https://prismnews-ai.onrender.com/api/:path*',
       },
     ];
   },
 };
+
 
 export default nextConfig;
 
