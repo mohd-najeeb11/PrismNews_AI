@@ -42,16 +42,13 @@ export const LanguageProvider = ({ children }: { children: React.ReactNode }) =>
   const [language, setLanguageState] = useState<LanguageCode>('en');
 
   useEffect(() => {
+    // Website always starts in English ('en') by default on load
+    setLanguageState('en');
     if (typeof window !== 'undefined') {
-      const savedLang = localStorage.getItem('prism_language') as LanguageCode;
-      if (savedLang && (savedLang === 'en' || savedLang === 'hi' || savedLang === 'te')) {
-        setLanguageState(savedLang);
-      } else {
-        setLanguageState('en');
-        localStorage.setItem('prism_language', 'en');
-      }
+      localStorage.setItem('prism_language', 'en');
     }
   }, []);
+
 
 
   const setLanguage = (lang: LanguageCode) => {
