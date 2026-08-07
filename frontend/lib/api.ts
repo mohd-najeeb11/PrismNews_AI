@@ -527,6 +527,7 @@ export function createClientSideUrlStory(targetUrl: string): Story {
     ],
     analysis: {
       balanced_summary: {
+        overview: `Breaking coverage report from ${publisher} regarding '${headline}'.`,
         consensus_points: [
           `Primary reporting verified by ${publisher}.`,
           `Multi-outlet wire services covering the event.`,
