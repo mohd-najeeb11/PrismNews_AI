@@ -1,7 +1,46 @@
+import he from 'he';
 import { Story, QuotaStatus, SavedStory, BalancedSummary, ComparisonItem, LoadedPhrase, BiasAnalysis, MissingPerspective, TimelineEvent, BiasRating, TransparencyReport, NarrativeShiftStage } from './types';
 import { SEED_STORIES, INITIAL_QUOTA } from './seedData';
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || '/api/v1';
+
+export function decodeHtml(text: any): string {
+  if (text === null || text === undefined) return '';
+  if (typeof text !== 'string') return String(text);
+  let res = text;
+  try {
+    for (let i = 0; i < 3; i++) {
+      if (res.includes('&')) {
+        const next = he.decode(res);
+        if (next === res) break;
+        res = next;
+      } else {
+        break;
+      }
+    }
+  } catch (e) {
+    return text;
+  }
+  return res;
+}
+
+export function recursiveDecodeHtml<T>(val: T): T {
+  if (val === null || val === undefined) return val;
+  if (typeof val === 'string') {
+    return decodeHtml(val) as any;
+  }
+  if (Array.isArray(val)) {
+    return val.map((item) => recursiveDecodeHtml(item)) as any;
+  }
+  if (typeof val === 'object' && val.constructor === Object) {
+    const copy: any = {};
+    for (const key of Object.keys(val)) {
+      copy[key] = recursiveDecodeHtml((val as any)[key]);
+    }
+    return copy as any;
+  }
+  return val;
+}
 
 function formatTimelineTimestamp(ts: string | undefined, idx: number): string {
   if (!ts || ts === 'Recently') {
@@ -29,13 +68,15 @@ function formatTimelineTimestamp(ts: string | undefined, idx: number): string {
   return ts;
 }
 
-export function normalizeStory(raw: any): Story {
-  if (!raw) return SEED_STORIES[0];
+export function normalizeStory(rawInput: any): Story {
+  if (!rawInput) return SEED_STORIES[0];
+  const raw = recursiveDecodeHtml(rawInput);
 
   const analysis = raw.analysis || {};
   const rawSummary = analysis.balanced_summary || {};
   const rawBias = analysis.bias_analysis || {};
   const rawMissing = analysis.missing_perspectives || {};
+
 
   // 1. Balanced Summary
   const storyHeadline = raw.title || raw.headline || 'this story';

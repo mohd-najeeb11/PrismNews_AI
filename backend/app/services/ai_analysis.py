@@ -1,3 +1,4 @@
+import html
 import json
 import re
 from typing import Any, Dict, Optional
@@ -10,15 +11,38 @@ from app.prompts.combined_analysis import build_combined_analysis_prompt
 from app.services.quota_manager import quota_manager
 
 
+def recursive_unescape(val: Any) -> Any:
+    if isinstance(val, str):
+        if not val:
+            return ""
+        res = val
+        for _ in range(3):
+            if "&" in res:
+                next_val = html.unescape(res)
+                if next_val == res:
+                    break
+                res = next_val
+            else:
+                break
+        return res
+    elif isinstance(val, list):
+        return [recursive_unescape(item) for item in val]
+    elif isinstance(val, dict):
+        return {k: recursive_unescape(v) for k, v in val.items()}
+    return val
+
+
 def normalize_story_analysis(analysis: Dict[str, Any]) -> Dict[str, Any]:
     """
     Normalizes a story analysis dictionary to ensure compatibility with both
     backend Pydantic schemas and frontend React components.
+    Automatically decodes all HTML entities across LLM text outputs.
     """
     if not isinstance(analysis, dict):
         return {}
 
-    res = dict(analysis)
+    res = recursive_unescape(dict(analysis))
+
 
     # 1. Balanced Summary normalization
     bs = res.get("balanced_summary") or {}

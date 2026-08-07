@@ -1,3 +1,4 @@
+import html
 import json
 from datetime import datetime, timezone
 from pathlib import Path
@@ -9,6 +10,22 @@ from app.core.logging import logger
 from app.models.article import NormalizedArticle
 from app.services.embeddings import embed_text
 from app.services.quota_manager import quota_manager
+
+
+def clean_text_html(text: str) -> str:
+    if not text:
+        return ""
+    res = text
+    for _ in range(3):
+        if "&" in res:
+            next_res = html.unescape(res)
+            if next_res == res:
+                break
+            res = next_res
+        else:
+            break
+    return res.strip()
+
 
 
 class IngestionService:
@@ -57,11 +74,12 @@ class IngestionService:
                         continue
 
                     self._seen_urls.add(url)
-                    title = entry.get("title", "").strip()
-                    if not title:
+                    raw_title = entry.get("title", "").strip()
+                    if not raw_title:
                         continue
 
-                    summary = entry.get("summary") or entry.get("description") or ""
+                    title = clean_text_html(raw_title)
+                    summary = clean_text_html(entry.get("summary") or entry.get("description") or "")
                     # Truncate content to ~2,000 chars per DATABASE.md rules
                     content = summary[:2000]
 
@@ -82,7 +100,7 @@ class IngestionService:
 
                     article = NormalizedArticle(
                         source_id=source_id,
-                        source_name=source_name,
+                        source_name=clean_text_html(source_name),
                         title=title,
                         url=url,
                         content=content,
@@ -130,11 +148,23 @@ class IngestionService:
                         continue
                     
                     self._seen_urls.add(item_url)
-                    title = item.get("title", "")
-                    content = (item.get("description") or item.get("content") or "")[:2000]
+                    title = clean_text_html(item.get("title", ""))
+                    content = clean_text_html(item.get("description") or item.get("content") or "")[:2000]
                     
                     text_for_embedding = f"{title}. {content[:600]}"
                     embedding_vector = embed_text(text_for_embedding)
+
+                    article = NormalizedArticle(
+                        source_id="newsapi-source",
+                        source_name=clean_text_html(item.get("source", {}).get("name", "NewsAPI Source")),
+                        title=title,
+                        url=item_url,
+                        content=content,
+                        published_at=item.get("publishedAt") or datetime.now(timezone.utc).isoformat(),
+                        embedding=embedding_vector,
+                    )
+                    normalized_articles.append(article)
+
 
                     article = NormalizedArticle(
                         source_id="newsapi-source",

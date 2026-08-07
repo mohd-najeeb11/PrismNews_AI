@@ -1,3 +1,4 @@
+import html
 import re
 import uuid
 import json
@@ -14,6 +15,22 @@ from app.services.ai_analysis import ai_analysis_service
 from app.services.db_service import db_service
 from app.services.embeddings import embed_text
 from app.services.quota_manager import quota_manager
+
+
+def clean_html_str(text: Optional[str]) -> str:
+    if not text:
+        return ""
+    res = text
+    for _ in range(3):
+        if "&" in res:
+            next_res = html.unescape(res)
+            if next_res == res:
+                break
+            res = next_res
+        else:
+            break
+    return res.strip()
+
 
 
 class LiveFetcherService:
@@ -83,14 +100,14 @@ class LiveFetcherService:
                 pub_name = "News Outlet"
                 if " - " in title:
                     parts = title.rsplit(" - ", 1)
-                    title_clean = parts[0].strip()
-                    pub_name = parts[1].strip()
+                    title_clean = clean_html_str(parts[0].strip())
+                    pub_name = clean_html_str(parts[1].strip())
                 else:
-                    title_clean = title
-                    pub_name = self.extract_domain_publisher(link)
+                    title_clean = clean_html_str(title)
+                    pub_name = clean_html_str(self.extract_domain_publisher(link))
 
                 summary = entry.get("summary") or entry.get("description") or title_clean
-                clean_content = re.sub(r"<[^>]+>", "", summary)[:1500]
+                clean_content = clean_html_str(re.sub(r"<[^>]+>", "", summary)[:1500])
 
                 pub_raw = entry.get("published") or entry.get("updated")
                 published_at = datetime.now(timezone.utc).isoformat()
@@ -123,8 +140,6 @@ class LiveFetcherService:
                     if img_match:
                         image_url = img_match.group(1)
 
-
-
                 text_for_embed = f"{title_clean}. {clean_content[:500]}"
                 vector = embed_text(text_for_embed)
 
@@ -139,6 +154,7 @@ class LiveFetcherService:
                     embedding=vector,
                 )
                 articles.append(art)
+
         except Exception as e:
             logger.error(f"Failed to fetch Google News RSS for query '{query}': {e}")
 
