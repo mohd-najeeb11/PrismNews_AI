@@ -1,0 +1,886 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PrismNews AI — Transparent News Bias & Framing Analysis</title>
+  <meta name="description" content="AI-powered platform analyzing media coverage, bias highlights, missing perspectives, and framing shifts across news outlets.">
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <!-- Tailwind CDN for rapid glassmorphic styling -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              50: '#f0f6ff',
+              100: '#e0edff',
+              500: '#3b82f6',
+              600: '#2563eb',
+              700: '#1d4ed8',
+              900: '#1e3a8a',
+            },
+            accent: {
+              purple: '#8b5cf6',
+              cyan: '#06b6d4',
+              emerald: '#10b981',
+              amber: '#f59e0b',
+              rose: '#f43f5e',
+            },
+            dark: {
+              bg: '#0b0f19',
+              card: '#111827',
+              border: '#1f2937',
+              hover: '#1f293d',
+            }
+          },
+          fontFamily: {
+            sans: ['Outfit', 'Inter', 'sans-serif'],
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    body {
+      background-color: #0b0f19;
+      color: #f3f4f6;
+      font-family: 'Outfit', sans-serif;
+    }
+    .glass-panel {
+      background: rgba(17, 24, 39, 0.75);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+    .glass-card {
+      background: rgba(255, 255, 255, 0.03);
+      backdrop-filter: blur(8px);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      transition: all 0.25s ease-in-out;
+    }
+    .glass-card:hover {
+      background: rgba(255, 255, 255, 0.06);
+      border-color: rgba(59, 130, 246, 0.4);
+      transform: translateY(-2px);
+    }
+    .glow-primary {
+      box-shadow: 0 0 25px -5px rgba(59, 130, 246, 0.4);
+    }
+    .text-gradient {
+      background: linear-gradient(135deg, #60a5fa 0%, #a78bfa 50%, #f472b6 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .phrase-highlight {
+      background: rgba(245, 158, 11, 0.25);
+      border-bottom: 2px solid #f59e0b;
+      padding: 2px 6px;
+      border-radius: 4px;
+      cursor: pointer;
+      position: relative;
+      font-weight: 500;
+    }
+    .phrase-highlight:hover {
+      background: rgba(245, 158, 11, 0.45);
+    }
+    /* Tooltip styling */
+    .tooltip-content {
+      visibility: hidden;
+      opacity: 0;
+      transition: opacity 0.2s ease, visibility 0.2s ease;
+    }
+    .phrase-highlight:hover .tooltip-content {
+      visibility: visible;
+      opacity: 1;
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col selection:bg-brand-500 selection:text-white">
+
+  <!-- TOP NAVIGATION BAR -->
+  <header class="sticky top-0 z-50 glass-panel border-b border-gray-800/80 px-4 md:px-8 py-3.5 flex items-center justify-between">
+    <div class="flex items-center space-x-3 cursor-pointer" onclick="navigateTo('home')">
+      <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-brand-600 via-accent-purple to-accent-cyan flex items-center justify-center shadow-lg shadow-brand-500/30">
+        <i data-lucide="prism" class="w-5 h-5 text-white"></i>
+      </div>
+      <div>
+        <div class="flex items-center space-x-2">
+          <span class="text-xl font-bold tracking-tight text-white">PrismNews</span>
+          <span class="text-xs font-semibold px-2 py-0.5 rounded-full bg-brand-500/20 text-brand-400 border border-brand-500/30">AI</span>
+        </div>
+        <p class="text-[11px] text-gray-400 font-normal">Media Transparency & Framing Analysis</p>
+      </div>
+    </div>
+
+    <!-- SEARCH BAR IN NAV -->
+    <div class="hidden md:flex items-center flex-1 max-w-md mx-8 relative">
+      <i data-lucide="search" class="w-4 h-4 text-gray-400 absolute left-3.5 top-3"></i>
+      <input type="text" id="navSearchInput" onkeyup="handleSearch(event)" placeholder="Search news topics, headlines, or outlets..." 
+             class="w-full bg-gray-900/80 border border-gray-700/60 rounded-full pl-10 pr-4 py-2 text-sm text-gray-200 placeholder-gray-500 focus:outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500 transition-all">
+    </div>
+
+    <!-- RIGHT ACTION WIDGETS -->
+    <div class="flex items-center space-x-3">
+      <!-- QUOTA STATUS BADGE -->
+      <div id="quotaWidget" class="hidden sm:flex items-center space-x-2 px-3 py-1.5 rounded-lg bg-gray-900/90 border border-gray-800 text-xs font-medium text-gray-300">
+        <span class="w-2 h-2 rounded-full bg-accent-emerald animate-pulse"></span>
+        <span class="text-gray-400">Mode:</span> <span id="quotaMode" class="text-brand-400 uppercase font-semibold">seed</span>
+        <span class="text-gray-600">|</span>
+        <span>Gemini: <strong id="quotaGemini" class="text-white">20/20</strong></span>
+      </div>
+
+      <!-- INGEST TRIGGER BUTTON -->
+      <button onclick="triggerIngest()" class="px-3 py-1.5 rounded-lg bg-gray-800 hover:bg-gray-700 text-gray-200 border border-gray-700 text-xs font-medium flex items-center space-x-1.5 transition-all">
+        <i data-lucide="refresh-cw" class="w-3.5 h-3.5 text-accent-cyan"></i>
+        <span class="hidden sm:inline">Fetch RSS</span>
+      </button>
+
+      <!-- SAVED STORIES BUTTON -->
+      <button onclick="navigateTo('saved')" class="px-3.5 py-1.5 rounded-lg bg-gray-800 hover:bg-gray-700 text-gray-200 border border-gray-700 text-xs font-medium flex items-center space-x-1.5 transition-all">
+        <i data-lucide="bookmark" class="w-3.5 h-3.5 text-amber-400"></i>
+        <span>Saved</span>
+        <span id="savedCountBadge" class="ml-1 px-1.5 py-0.2 rounded-full bg-amber-500/20 text-amber-300 text-[10px]">1</span>
+      </button>
+
+      <!-- AUTH USER AVATAR / LOGIN -->
+      <div class="relative">
+        <button onclick="toggleAuthModal()" class="w-9 h-9 rounded-full bg-gradient-to-r from-purple-500 to-indigo-600 flex items-center justify-center text-white text-xs font-bold ring-2 ring-gray-700/50 hover:ring-brand-500 transition-all">
+          <span id="userAvatarText">PR</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- MAIN CONTENT CONTAINER -->
+  <main class="flex-1 max-w-7xl w-full mx-auto px-4 md:px-8 py-6">
+
+    <!-- VIEW 1: HOME SEARCH & TOPIC CLUSTER CARDS -->
+    <section id="viewHome" class="space-y-8">
+      <!-- HERO BANNER -->
+      <div class="relative overflow-hidden rounded-2xl p-8 md:p-12 glass-panel bg-gradient-to-r from-brand-900/30 via-dark-card to-purple-950/20 border border-gray-800">
+        <div class="max-w-2xl space-y-4 relative z-10">
+          <div class="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-brand-500/10 border border-brand-500/30 text-brand-300 text-xs font-medium">
+            <i data-lucide="sparkles" class="w-3.5 h-3.5 text-brand-400"></i>
+            <span>Real-time Multi-Outlet Framing Engine</span>
+          </div>
+          <h1 class="text-3xl md:text-5xl font-extrabold text-white tracking-tight leading-tight">
+            See Beyond the <span class="text-gradient">Headline Bias</span>
+          </h1>
+          <p class="text-gray-300 text-sm md:text-base leading-relaxed">
+            PrismNews AI ingests articles from across the political spectrum, groups them into story clusters, and generates an explainable, side-by-side analysis of tone, omitted angles, and framing shifts.
+          </p>
+        </div>
+      </div>
+
+      <!-- TOPIC FILTER PILLS -->
+      <div class="flex items-center justify-between border-b border-gray-800/80 pb-4 overflow-x-auto">
+        <div class="flex items-center space-x-2" id="topicFilters">
+          <button onclick="filterTopic('all')" class="topic-btn active px-4 py-1.5 rounded-full text-xs font-medium bg-brand-600 text-white shadow-md shadow-brand-600/30">All Stories</button>
+          <button onclick="filterTopic('Technology')" class="topic-btn px-4 py-1.5 rounded-full text-xs font-medium bg-gray-800 text-gray-300 hover:bg-gray-700">Technology</button>
+          <button onclick="filterTopic('Politics')" class="topic-btn px-4 py-1.5 rounded-full text-xs font-medium bg-gray-800 text-gray-300 hover:bg-gray-700">Politics</button>
+          <button onclick="filterTopic('Economy')" class="topic-btn px-4 py-1.5 rounded-full text-xs font-medium bg-gray-800 text-gray-300 hover:bg-gray-700">Economy</button>
+          <button onclick="filterTopic('Climate')" class="topic-btn px-4 py-1.5 rounded-full text-xs font-medium bg-gray-800 text-gray-300 hover:bg-gray-700">Climate</button>
+        </div>
+        <span class="text-xs text-gray-400 hidden sm:inline" id="storyCountText">Loading story clusters...</span>
+      </div>
+
+      <!-- STORIES GRID -->
+      <div id="storiesGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <!-- Story cards dynamically populated -->
+      </div>
+    </section>
+
+    <!-- VIEW 2: STORY DASHBOARD WITH 5 TABS -->
+    <section id="viewStoryDashboard" class="hidden space-y-6">
+      <!-- DASHBOARD HEADER BAR -->
+      <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 glass-panel p-6 rounded-2xl border border-gray-800">
+        <div class="space-y-2">
+          <button onclick="navigateTo('home')" class="inline-flex items-center space-x-1.5 text-xs text-brand-400 hover:text-brand-300 font-medium mb-1">
+            <i data-lucide="arrow-left" class="w-3.5 h-3.5"></i>
+            <span>Back to All Stories</span>
+          </button>
+          <h2 id="dashHeadline" class="text-2xl md:text-3xl font-bold text-white tracking-tight">
+            Story Headline Loading...
+          </h2>
+          <div class="flex flex-wrap items-center gap-2 text-xs text-gray-400">
+            <span id="dashTopicBadge" class="px-2.5 py-0.5 rounded-full bg-purple-500/20 text-purple-300 border border-purple-500/30 font-medium">Topic</span>
+            <span>•</span>
+            <span id="dashDate">Updated 10m ago</span>
+            <span>•</span>
+            <span id="dashSourcesBadge" class="text-emerald-400 font-medium">5 Sources Ingested</span>
+          </div>
+        </div>
+
+        <div class="flex items-center space-x-3 self-start md:self-center">
+          <button id="dashSaveBtn" onclick="toggleSaveCurrentStory()" class="px-4 py-2 rounded-xl bg-gray-800 hover:bg-gray-700 text-gray-200 border border-gray-700 text-xs font-semibold flex items-center space-x-2 transition-all">
+            <i data-lucide="bookmark" class="w-4 h-4 text-amber-400"></i>
+            <span id="dashSaveText">Save Story</span>
+          </button>
+          <button onclick="triggerIngest()" class="px-4 py-2 rounded-xl bg-gradient-to-r from-brand-600 to-purple-600 hover:from-brand-500 hover:to-purple-500 text-white text-xs font-semibold flex items-center space-x-2 shadow-lg shadow-brand-500/20 transition-all">
+            <i data-lucide="sparkles" class="w-4 h-4"></i>
+            <span>Re-Analyze</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- DASHBOARD TAB NAVIGATION HEADER -->
+      <div class="flex items-center space-x-2 border-b border-gray-800 overflow-x-auto pb-1">
+        <button onclick="switchTab('summary')" id="tabBtnSummary" class="dash-tab active px-5 py-3 text-xs font-semibold rounded-t-xl text-white border-b-2 border-brand-500 bg-gray-900/60 flex items-center space-x-2">
+          <i data-lucide="layers" class="w-4 h-4 text-brand-400"></i>
+          <span>1. Balanced Summary</span>
+        </button>
+        <button onclick="switchTab('comparison')" id="tabBtnComparison" class="dash-tab px-5 py-3 text-xs font-semibold rounded-t-xl text-gray-400 hover:text-gray-200 flex items-center space-x-2">
+          <i data-lucide="columns" class="w-4 h-4 text-accent-cyan"></i>
+          <span>2. Outlet Comparison</span>
+        </button>
+        <button onclick="switchTab('bias')" id="tabBtnBias" class="dash-tab px-5 py-3 text-xs font-semibold rounded-t-xl text-gray-400 hover:text-gray-200 flex items-center space-x-2">
+          <i data-lucide="target" class="w-4 h-4 text-amber-400"></i>
+          <span>3. Bias & Framing Highlights</span>
+        </button>
+        <button onclick="switchTab('perspectives')" id="tabBtnPerspectives" class="dash-tab px-5 py-3 text-xs font-semibold rounded-t-xl text-gray-400 hover:text-gray-200 flex items-center space-x-2">
+          <i data-lucide="eye-off" class="w-4 h-4 text-accent-rose"></i>
+          <span>4. Missing Perspectives</span>
+        </button>
+        <button onclick="switchTab('timeline')" id="tabBtnTimeline" class="dash-tab px-5 py-3 text-xs font-semibold rounded-t-xl text-gray-400 hover:text-gray-200 flex items-center space-x-2">
+          <i data-lucide="clock" class="w-4 h-4 text-purple-400"></i>
+          <span>5. Framing Timeline</span>
+        </button>
+      </div>
+
+      <!-- TAB CONTENT PANELS -->
+
+      <!-- TAB 1: BALANCED SUMMARY -->
+      <div id="tabContentSummary" class="tab-panel space-y-6">
+        <!-- NEUTRAL OVERVIEW CARD -->
+        <div class="glass-panel p-6 rounded-2xl border-l-4 border-l-brand-500 space-y-3">
+          <h3 class="text-sm font-semibold uppercase tracking-wider text-brand-400 flex items-center space-x-2">
+            <i data-lucide="info" class="w-4 h-4"></i>
+            <span>Neutral Overview Synthesis</span>
+          </h3>
+          <p id="summaryNeutralText" class="text-gray-200 text-sm md:text-base leading-relaxed">
+            Synthesizing core facts across all reporting outlets...
+          </p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <!-- CONSENSUS FACTS CARD -->
+          <div class="glass-panel p-6 rounded-2xl border border-gray-800 space-y-4">
+            <div class="flex items-center space-x-2 text-emerald-400">
+              <i data-lucide="check-circle-2" class="w-5 h-5"></i>
+              <h3 class="text-base font-bold text-white">Consensus Facts (Agreed by All Outlets)</h3>
+            </div>
+            <ul id="consensusList" class="space-y-3 text-xs md:text-sm text-gray-300">
+              <!-- Dynamically populated -->
+            </ul>
+          </div>
+
+          <!-- DISPUTED POINTS CARD -->
+          <div class="glass-panel p-6 rounded-2xl border border-gray-800 space-y-4">
+            <div class="flex items-center space-x-2 text-amber-400">
+              <i data-lucide="alert-triangle" class="w-5 h-5"></i>
+              <h3 class="text-base font-bold text-white">Disputed Points & Divergent Framing</h3>
+            </div>
+            <ul id="disputedList" class="space-y-3 text-xs md:text-sm text-gray-300">
+              <!-- Dynamically populated -->
+            </ul>
+          </div>
+        </div>
+
+        <!-- LINKED ARTICLES SECTION -->
+        <div class="space-y-4 pt-4 border-t border-gray-800">
+          <h3 class="text-base font-bold text-white flex items-center space-x-2">
+            <i data-lucide="newspaper" class="w-4 h-4 text-gray-400"></i>
+            <span>Ingested Source Articles</span>
+          </h3>
+          <div id="articlesGrid" class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <!-- Article snippets dynamically loaded -->
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB 2: OUTLET COMPARISON MATRIX -->
+      <div id="tabContentComparison" class="tab-panel hidden space-y-6">
+        <div class="glass-panel p-6 rounded-2xl border border-gray-800 space-y-2">
+          <h3 class="text-lg font-bold text-white">Side-by-Side Coverage Matrix</h3>
+          <p class="text-xs text-gray-400">Compare how headlines, tone, and main emphasis differ between major reporting outlets.</p>
+        </div>
+        <div id="comparisonGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <!-- Comparison cards dynamically populated -->
+        </div>
+      </div>
+
+      <!-- TAB 3: BIAS & FRAMING HIGHLIGHTS -->
+      <div id="tabContentBias" class="tab-panel hidden space-y-6">
+        <div class="glass-panel p-6 rounded-2xl border border-gray-800 space-y-3">
+          <div class="flex items-center justify-between">
+            <h3 class="text-lg font-bold text-white flex items-center space-x-2">
+              <i data-lucide="sparkles" class="w-5 h-5 text-amber-400"></i>
+              <span>Explainable Bias & Loaded Language Highlights</span>
+            </h3>
+            <span class="text-xs bg-amber-500/20 text-amber-300 px-2.5 py-1 rounded-full border border-amber-500/30">Hover highlighted phrases for rationale</span>
+          </div>
+          <p class="text-xs text-gray-400">Our AI extracts specific quoted phrases from news articles and explains why they represent emotional, partisan, or loaded framing.</p>
+        </div>
+
+        <div id="biasOutletsList" class="space-y-6">
+          <!-- Bias highlights dynamically populated -->
+        </div>
+      </div>
+
+      <!-- TAB 4: MISSING PERSPECTIVES -->
+      <div id="tabContentPerspectives" class="tab-panel hidden space-y-6">
+        <div class="glass-panel p-6 rounded-2xl border border-gray-800 space-y-2">
+          <h3 class="text-lg font-bold text-white flex items-center space-x-2">
+            <i data-lucide="shield-alert" class="w-5 h-5 text-accent-rose"></i>
+            <span>Stakeholder Perspective Coverage Audit</span>
+          </h3>
+          <p class="text-xs text-gray-400">Identifies which key stakeholder viewpoints are represented in mainstream reporting and which are omitted.</p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <!-- COVERED PERSPECTIVES -->
+          <div class="glass-panel p-6 rounded-2xl border border-emerald-500/30 space-y-4">
+            <h4 class="text-sm font-bold text-emerald-400 uppercase tracking-wider flex items-center space-x-2">
+              <i data-lucide="check-circle" class="w-4 h-4"></i>
+              <span>Covered Stakeholder Perspectives</span>
+            </h4>
+            <ul id="coveredList" class="space-y-3 text-xs md:text-sm text-gray-200">
+              <!-- Dynamically populated -->
+            </ul>
+          </div>
+
+          <!-- MISSING PERSPECTIVES -->
+          <div class="glass-panel p-6 rounded-2xl border border-rose-500/30 space-y-4">
+            <h4 class="text-sm font-bold text-rose-400 uppercase tracking-wider flex items-center space-x-2">
+              <i data-lucide="x-circle" class="w-4 h-4"></i>
+              <span>Omitted or Underrepresented Perspectives</span>
+            </h4>
+            <ul id="missingList" class="space-y-3 text-xs md:text-sm text-gray-200">
+              <!-- Dynamically populated -->
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB 5: FRAMING TIMELINE -->
+      <div id="tabContentTimeline" class="tab-panel hidden space-y-6">
+        <div class="glass-panel p-6 rounded-2xl border border-gray-800 space-y-2">
+          <h3 class="text-lg font-bold text-white flex items-center space-x-2">
+            <i data-lucide="history" class="w-5 h-5 text-purple-400"></i>
+            <span>Chronological Framing Shift Timeline</span>
+          </h3>
+          <p class="text-xs text-gray-400">Tracks how media framing evolved hour-by-hour as new information emerged.</p>
+        </div>
+
+        <div class="relative pl-6 border-l-2 border-purple-500/30 space-y-8 my-6" id="timelineList">
+          <!-- Timeline entries dynamically populated -->
+        </div>
+      </div>
+    </section>
+
+    <!-- VIEW 3: SAVED STORIES PAGE -->
+    <section id="viewSaved" class="hidden space-y-6">
+      <div class="flex items-center justify-between border-b border-gray-800 pb-4">
+        <div>
+          <h2 class="text-2xl font-bold text-white">Your Bookmarked Stories</h2>
+          <p class="text-xs text-gray-400">Saved stories synced across your session.</p>
+        </div>
+        <button onclick="navigateTo('home')" class="px-3.5 py-1.5 rounded-lg bg-gray-800 hover:bg-gray-700 text-xs text-gray-300 font-medium">Back to Home</button>
+      </div>
+
+      <div id="savedGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <!-- Bookmarked story cards -->
+      </div>
+    </section>
+  </main>
+
+  <!-- AUTH MODAL -->
+  <div id="authModal" class="fixed inset-0 bg-black/80 backdrop-blur-md z-50 flex items-center justify-center p-4 hidden">
+    <div class="glass-panel p-8 rounded-2xl max-w-md w-full border border-gray-700 space-y-6 relative">
+      <button onclick="toggleAuthModal()" class="absolute right-4 top-4 text-gray-400 hover:text-white">
+        <i data-lucide="x" class="w-5 h-5"></i>
+      </button>
+
+      <div class="text-center space-y-2">
+        <div class="w-12 h-12 rounded-xl bg-gradient-to-tr from-brand-600 to-purple-600 mx-auto flex items-center justify-center shadow-lg shadow-brand-500/30">
+          <i data-lucide="user-check" class="w-6 h-6 text-white"></i>
+        </div>
+        <h3 class="text-xl font-bold text-white">Welcome to PrismNews AI</h3>
+        <p class="text-xs text-gray-400">Sign in to save story clusters and sync bookmarks.</p>
+      </div>
+
+      <div class="space-y-3">
+        <button onclick="simulateAuth('google')" class="w-full py-2.5 px-4 rounded-xl bg-white hover:bg-gray-100 text-gray-900 font-semibold text-xs flex items-center justify-center space-x-2 transition-all">
+          <svg class="w-4 h-4" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/></svg>
+          <span>Continue with Google</span>
+        </button>
+
+        <div class="flex items-center text-gray-600 text-[10px] uppercase font-bold my-2">
+          <div class="flex-1 border-b border-gray-800"></div>
+          <span class="px-2">or Email</span>
+          <div class="flex-1 border-b border-gray-800"></div>
+        </div>
+
+        <input type="email" id="authEmail" placeholder="reader@example.com" class="w-full bg-gray-900 border border-gray-700 rounded-xl px-3.5 py-2 text-xs text-white placeholder-gray-500 focus:outline-none focus:border-brand-500">
+        <button onclick="simulateAuth('email')" class="w-full py-2.5 px-4 rounded-xl bg-brand-600 hover:bg-brand-500 text-white font-semibold text-xs shadow-lg shadow-brand-600/30 transition-all">
+          Sign In / Sign Up
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- INGEST PROGRESS MODAL -->
+  <div id="ingestModal" class="fixed inset-0 bg-black/85 backdrop-blur-md z-50 flex items-center justify-center p-4 hidden">
+    <div class="glass-panel p-8 rounded-2xl max-w-md w-full border border-gray-700 text-center space-y-6">
+      <div class="w-14 h-14 rounded-full bg-brand-500/20 border border-brand-500/40 mx-auto flex items-center justify-center text-brand-400 animate-spin">
+        <i data-lucide="loader-2" class="w-7 h-7"></i>
+      </div>
+      <div class="space-y-2">
+        <h3 class="text-xl font-bold text-white">Ingesting News Feeds</h3>
+        <p id="ingestStepText" class="text-xs text-gray-300 font-mono">Fetching RSS feeds across political spectrum...</p>
+      </div>
+      <div class="w-full bg-gray-800 rounded-full h-2 overflow-hidden">
+        <div id="ingestProgressBar" class="bg-gradient-to-r from-brand-500 to-purple-500 h-2 w-1/3 transition-all duration-500"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- JAVASCRIPT APP ENGINE -->
+  <script>
+    let storiesData = [];
+    let currentStory = null;
+    let savedStoryIds = new Set(['story-tech-01']);
+    let currentView = 'home';
+    let activeTopic = 'all';
+
+    // Initialize lucide icons and fetch initial dataset
+    document.addEventListener('DOMContentLoaded', () => {
+      lucide.createIcons();
+      fetchQuotaStatus();
+      fetchStories();
+      fetchSavedStories();
+    });
+
+    async function fetchQuotaStatus() {
+      try {
+        const res = await fetch('/api/quota');
+        if (res.ok) {
+          const data = await res.json();
+          document.getElementById('quotaMode').textContent = data.api_mode || 'seed';
+          const geminiService = data.services?.gemini;
+          if (geminiService) {
+            document.getElementById('quotaGemini').textContent = `${geminiService.calls_remaining}/${geminiService.daily_cap}`;
+          }
+        }
+      } catch (e) {
+        console.log('Quota fetch info:', e);
+      }
+    }
+
+    async function fetchStories(query = '') {
+      try {
+        const url = query ? `/api/stories?q=${encodeURIComponent(query)}` : '/api/stories';
+        const res = await fetch(url);
+        if (res.ok) {
+          storiesData = await res.json();
+          renderStoriesGrid();
+        }
+      } catch (e) {
+        console.error('Failed to fetch stories:', e);
+      }
+    }
+
+    async function fetchSavedStories() {
+      try {
+        const res = await fetch('/api/saved-stories');
+        if (res.ok) {
+          const data = await res.json();
+          data.forEach(s => savedStoryIds.add(s.id));
+          document.getElementById('savedCountBadge').textContent = savedStoryIds.size;
+        }
+      } catch (e) {
+        console.log('Saved stories info:', e);
+      }
+    }
+
+    function renderStoriesGrid() {
+      const grid = document.getElementById('storiesGrid');
+      grid.innerHTML = '';
+
+      let filtered = storiesData;
+      if (activeTopic !== 'all') {
+        filtered = filtered.filter(s => s.topic.toLowerCase() === activeTopic.toLowerCase());
+      }
+
+      document.getElementById('storyCountText').textContent = `${filtered.length} story clusters found`;
+
+      if (filtered.length === 0) {
+        grid.innerHTML = `
+          <div class="col-span-full text-center py-12 space-y-3 glass-panel rounded-2xl">
+            <i data-lucide="newspaper" class="w-10 h-10 text-gray-500 mx-auto"></i>
+            <p class="text-gray-400 text-sm">No stories found matching your filter criteria.</p>
+          </div>
+        `;
+        lucide.createIcons();
+        return;
+      }
+
+      filtered.forEach(story => {
+        const isSaved = savedStoryIds.has(story.id);
+        const sourcesPills = (story.sources || []).slice(0, 4).map(src => 
+          `<span class="px-2 py-0.5 rounded bg-gray-800 border border-gray-700 text-[10px] text-gray-300 font-medium">${src}</span>`
+        ).join(' ');
+
+        const card = document.createElement('div');
+        card.className = 'glass-card p-6 rounded-2xl flex flex-col justify-between space-y-4 cursor-pointer relative group';
+        card.onclick = () => openStoryDashboard(story.id);
+
+        card.innerHTML = `
+          <div class="space-y-3">
+            <div class="flex items-center justify-between">
+              <span class="px-2.5 py-0.5 rounded-full bg-brand-500/20 text-brand-300 border border-brand-500/30 text-[11px] font-semibold">${story.topic || 'General'}</span>
+              <span class="text-[11px] text-gray-400">${story.created_at ? new Date(story.created_at).toLocaleDateString() : 'Today'}</span>
+            </div>
+            <h3 class="text-lg font-bold text-white group-hover:text-brand-300 transition-colors leading-snug">
+              ${story.headline}
+            </h3>
+            <p class="text-xs text-gray-400 line-clamp-2 leading-relaxed">
+              ${story.articles && story.articles[0] ? story.articles[0].snippet || story.articles[0].title : 'Multi-outlet cluster analysis'}
+            </p>
+          </div>
+
+          <div class="pt-4 border-t border-gray-800/80 flex items-center justify-between">
+            <div class="flex items-center space-x-1.5 flex-wrap gap-y-1">
+              ${sourcesPills}
+              <span class="text-[10px] text-gray-500 font-semibold">+${story.article_count || story.sources?.length || 3}</span>
+            </div>
+            <button onclick="event.stopPropagation(); toggleSaveStory('${story.id}')" class="p-1.5 rounded-lg bg-gray-800/80 hover:bg-gray-700 text-gray-300 hover:text-amber-400 transition-colors">
+              <i data-lucide="bookmark" class="w-4 h-4 ${isSaved ? 'fill-amber-400 text-amber-400' : ''}"></i>
+            </button>
+          </div>
+        `;
+        grid.appendChild(card);
+      });
+      lucide.createIcons();
+    }
+
+    async function openStoryDashboard(storyId) {
+      document.getElementById('viewHome').classList.add('hidden');
+      document.getElementById('viewSaved').classList.add('hidden');
+      document.getElementById('viewStoryDashboard').classList.remove('hidden');
+
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+
+      try {
+        const res = await fetch(`/api/stories/${storyId}`);
+        if (res.ok) {
+          currentStory = await res.json();
+          renderStoryDashboard();
+        }
+      } catch (e) {
+        console.error('Failed to load story dashboard:', e);
+      }
+    }
+
+    function renderStoryDashboard() {
+      if (!currentStory) return;
+
+      document.getElementById('dashHeadline').textContent = currentStory.headline;
+      document.getElementById('dashTopicBadge').textContent = currentStory.topic || 'General';
+      document.getElementById('dashDate').textContent = `Updated ${currentStory.created_at ? new Date(currentStory.created_at).toLocaleTimeString() : 'recently'}`;
+      document.getElementById('dashSourcesBadge').textContent = `${currentStory.sources?.length || 5} Outlets Analyzed`;
+
+      const isSaved = savedStoryIds.has(currentStory.id);
+      document.getElementById('dashSaveText').textContent = isSaved ? 'Saved in Bookmarks' : 'Save Story';
+      
+      const analysis = currentStory.analysis || {};
+      const summary = analysis.balanced_summary || {};
+
+      // Render Tab 1: Summary
+      document.getElementById('summaryNeutralText').textContent = summary.neutral_summary || 'Analyzing story facts...';
+      
+      const consensusList = document.getElementById('consensusList');
+      consensusList.innerHTML = (summary.consensus_facts || ['Fact verified across major news wires.'])
+        .map(f => `<li class="flex items-start space-x-2"><i data-lucide="check" class="w-4 h-4 text-emerald-400 mt-0.5 shrink-0"></i><span>${f}</span></li>`)
+        .join('');
+
+      const disputedList = document.getElementById('disputedList');
+      disputedList.innerHTML = (summary.disputed_points || ['Outlets differ on economic projections and policy outcome estimates.'])
+        .map(d => `<li class="flex items-start space-x-2"><i data-lucide="alert-circle" class="w-4 h-4 text-amber-400 mt-0.5 shrink-0"></i><span>${d}</span></li>`)
+        .join('');
+
+      // Articles grid
+      const articlesGrid = document.getElementById('articlesGrid');
+      articlesGrid.innerHTML = (currentStory.articles || []).map(art => `
+        <div class="glass-card p-4 rounded-xl space-y-2">
+          <div class="flex items-center justify-between">
+            <span class="text-[11px] font-bold text-brand-400">${art.source}</span>
+            <span class="text-[10px] text-gray-500">${art.published_at ? new Date(art.published_at).toLocaleTimeString() : ''}</span>
+          </div>
+          <h4 class="text-xs font-semibold text-white leading-snug line-clamp-2">${art.title}</h4>
+          <p class="text-[11px] text-gray-400 line-clamp-3 leading-relaxed">${art.snippet || ''}</p>
+          <a href="${art.url}" target="_blank" class="inline-flex items-center space-x-1 text-[10px] text-accent-cyan hover:underline font-medium">
+            <span>Read original</span>
+            <i data-lucide="external-link" class="w-3 h-3"></i>
+          </a>
+        </div>
+      `).join('');
+
+      // Render Tab 2: Comparison
+      const comparisonGrid = document.getElementById('comparisonGrid');
+      const compItems = analysis.comparison || [
+        { source: 'Reuters', headline: currentStory.headline, tone: 'neutral', emphasis: 'Global economic overview' },
+        { source: 'Wall Street Journal', headline: 'Market reactions to latest policy details', tone: 'pragmatic', emphasis: 'Investor impact & markets' }
+      ];
+
+      comparisonGrid.innerHTML = compItems.map(c => {
+        let toneBg = 'bg-blue-500/20 text-blue-300 border-blue-500/30';
+        if (c.tone === 'critical') toneBg = 'bg-rose-500/20 text-rose-300 border-rose-500/30';
+        if (c.tone === 'supportive') toneBg = 'bg-emerald-500/20 text-emerald-300 border-emerald-500/30';
+        if (c.tone === 'alarmed') toneBg = 'bg-amber-500/20 text-amber-300 border-amber-500/30';
+
+        return `
+          <div class="glass-card p-5 rounded-xl space-y-4">
+            <div class="flex items-center justify-between">
+              <span class="text-sm font-bold text-white">${c.source}</span>
+              <span class="px-2.5 py-0.5 rounded-full text-[10px] font-semibold border ${toneBg} capitalize">${c.tone} Tone</span>
+            </div>
+            <div class="space-y-1">
+              <span class="text-[10px] text-gray-500 uppercase font-bold tracking-wider">Headline Framing</span>
+              <h4 class="text-xs font-semibold text-gray-200 leading-snug">"${c.headline}"</h4>
+            </div>
+            <div class="space-y-1 pt-2 border-t border-gray-800">
+              <span class="text-[10px] text-gray-500 uppercase font-bold tracking-wider">Primary Focus</span>
+              <p class="text-xs text-gray-300">${c.emphasis}</p>
+            </div>
+          </div>
+        `;
+      }).join('');
+
+      // Render Tab 3: Bias Highlights
+      const biasOutletsList = document.getElementById('biasOutletsList');
+      const biasItems = analysis.bias_analysis || [];
+
+      biasOutletsList.innerHTML = biasItems.map(b => {
+        const phrases = (b.loaded_phrases || []).map(p => `
+          <div class="p-3 rounded-lg bg-gray-900/80 border border-gray-800 space-y-1.5">
+            <div class="flex items-center space-x-2">
+              <span class="phrase-highlight text-amber-300 text-xs">"${p.text}"</span>
+            </div>
+            <p class="text-xs text-gray-400 pl-2 border-l-2 border-amber-500/50"><strong>Why:</strong> ${p.reason}</p>
+          </div>
+        `).join('');
+
+        const framingBadges = (b.framing || ['policy angle']).map(f => 
+          `<span class="px-2 py-0.5 rounded bg-purple-500/20 text-purple-300 text-[10px] border border-purple-500/30">${f}</span>`
+        ).join(' ');
+
+        return `
+          <div class="glass-panel p-6 rounded-2xl border border-gray-800 space-y-4">
+            <div class="flex flex-wrap items-center justify-between gap-2">
+              <div class="flex items-center space-x-3">
+                <span class="text-base font-bold text-white">${b.source}</span>
+                <span class="text-xs text-gray-400 capitalize">Overall tone: <strong class="text-gray-200">${b.tone}</strong></span>
+              </div>
+              <div class="flex items-center space-x-1.5">
+                ${framingBadges}
+              </div>
+            </div>
+            <div class="space-y-2">
+              <span class="text-xs font-semibold text-gray-300">Extracted Loaded Phrases & Rationale:</span>
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                ${phrases || '<p class="text-xs text-gray-500">No strongly loaded language detected in sample snippet.</p>'}
+              </div>
+            </div>
+          </div>
+        `;
+      }).join('');
+
+      // Render Tab 4: Perspectives
+      const missingPersp = analysis.missing_perspectives || { covered: [], missing: [] };
+      document.getElementById('coveredList').innerHTML = (missingPersp.covered || ['Official spokespersons'])
+        .map(c => `<li class="flex items-start space-x-2"><i data-lucide="check-circle-2" class="w-4 h-4 text-emerald-400 mt-0.5 shrink-0"></i><span>${c}</span></li>`)
+        .join('');
+
+      document.getElementById('missingList').innerHTML = (missingPersp.missing || ['Community stakeholder impact'])
+        .map(m => `<li class="flex items-start space-x-2"><i data-lucide="alert-triangle" class="w-4 h-4 text-rose-400 mt-0.5 shrink-0"></i><span>${m}</span></li>`)
+        .join('');
+
+      // Render Tab 5: Timeline
+      const timelineItems = analysis.timeline || [];
+      document.getElementById('timelineList').innerHTML = timelineItems.map(t => `
+        <div class="relative group">
+          <div class="absolute -left-[31px] top-1 w-4 h-4 rounded-full bg-purple-500 ring-4 ring-gray-900"></div>
+          <div class="glass-card p-5 rounded-xl space-y-2">
+            <div class="flex items-center justify-between text-xs">
+              <span class="font-bold text-purple-300">${t.source}</span>
+              <span class="text-gray-500">${t.published_at ? new Date(t.published_at).toLocaleString() : 'Earlier'}</span>
+            </div>
+            <p class="text-xs text-gray-200 leading-relaxed">${t.framing_shift}</p>
+          </div>
+        </div>
+      `).join('');
+
+      lucide.createIcons();
+    }
+
+    function switchTab(tabName) {
+      document.querySelectorAll('.dash-tab').forEach(b => {
+        b.classList.remove('active', 'text-white', 'border-b-2', 'border-brand-500', 'bg-gray-900/60');
+        b.classList.add('text-gray-400');
+      });
+      document.querySelectorAll('.tab-panel').forEach(p => p.classList.add('hidden'));
+
+      const activeBtn = document.getElementById(`tabBtn${tabName.charAt(0).toUpperCase() + tabName.slice(1)}`);
+      const activePanel = document.getElementById(`tabContent${tabName.charAt(0).toUpperCase() + tabName.slice(1)}`);
+
+      if (activeBtn && activePanel) {
+        activeBtn.classList.add('active', 'text-white', 'border-b-2', 'border-brand-500', 'bg-gray-900/60');
+        activeBtn.classList.remove('text-gray-400');
+        activePanel.classList.remove('hidden');
+      }
+    }
+
+    function navigateTo(viewName) {
+      currentView = viewName;
+      document.getElementById('viewHome').classList.add('hidden');
+      document.getElementById('viewStoryDashboard').classList.add('hidden');
+      document.getElementById('viewSaved').classList.add('hidden');
+
+      if (viewName === 'home') {
+        document.getElementById('viewHome').classList.remove('hidden');
+      } else if (viewName === 'saved') {
+        document.getElementById('viewSaved').classList.remove('hidden');
+        renderSavedGrid();
+      }
+    }
+
+    function renderSavedGrid() {
+      const grid = document.getElementById('savedGrid');
+      grid.innerHTML = '';
+
+      const savedStories = storiesData.filter(s => savedStoryIds.has(s.id));
+      if (savedStories.length === 0) {
+        grid.innerHTML = `
+          <div class="col-span-full text-center py-12 space-y-3 glass-panel rounded-2xl">
+            <i data-lucide="bookmark" class="w-10 h-10 text-gray-500 mx-auto"></i>
+            <p class="text-gray-400 text-sm">No saved stories yet. Click the bookmark icon on any story card to save it.</p>
+          </div>
+        `;
+        lucide.createIcons();
+        return;
+      }
+
+      savedStories.forEach(story => {
+        const card = document.createElement('div');
+        card.className = 'glass-card p-6 rounded-2xl flex flex-col justify-between space-y-4 cursor-pointer relative';
+        card.onclick = () => openStoryDashboard(story.id);
+        card.innerHTML = `
+          <div class="space-y-3">
+            <span class="px-2.5 py-0.5 rounded-full bg-brand-500/20 text-brand-300 text-[11px] font-semibold">${story.topic}</span>
+            <h3 class="text-lg font-bold text-white">${story.headline}</h3>
+          </div>
+          <div class="flex items-center justify-between pt-4 border-t border-gray-800">
+            <span class="text-xs text-emerald-400 font-medium">${story.sources?.length || 4} Outlets</span>
+            <button onclick="event.stopPropagation(); toggleSaveStory('${story.id}')" class="text-xs text-rose-400 hover:underline">Remove</button>
+          </div>
+        `;
+        grid.appendChild(card);
+      });
+      lucide.createIcons();
+    }
+
+    async function toggleSaveStory(storyId) {
+      if (savedStoryIds.has(storyId)) {
+        savedStoryIds.delete(storyId);
+        await fetch(`/api/saved-stories/${storyId}`, { method: 'DELETE' });
+      } else {
+        savedStoryIds.add(storyId);
+        await fetch('/api/saved-stories', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ story_id: storyId })
+        });
+      }
+      document.getElementById('savedCountBadge').textContent = savedStoryIds.size;
+      renderStoriesGrid();
+      if (currentStory && currentStory.id === storyId) {
+        renderStoryDashboard();
+      }
+      if (currentView === 'saved') renderSavedGrid();
+    }
+
+    function toggleSaveCurrentStory() {
+      if (currentStory) {
+        toggleSaveStory(currentStory.id);
+      }
+    }
+
+    function filterTopic(topic) {
+      activeTopic = topic;
+      document.querySelectorAll('.topic-btn').forEach(b => {
+        b.classList.remove('bg-brand-600', 'text-white', 'shadow-md');
+        b.classList.add('bg-gray-800', 'text-gray-300');
+      });
+      event.target.classList.add('bg-brand-600', 'text-white', 'shadow-md');
+      event.target.classList.remove('bg-gray-800', 'text-gray-300');
+      renderStoriesGrid();
+    }
+
+    function handleSearch(e) {
+      const q = e.target.value;
+      if (e.key === 'Enter' || q.length > 2 || q.length === 0) {
+        fetchStories(q);
+      }
+    }
+
+    async function triggerIngest() {
+      const modal = document.getElementById('ingestModal');
+      const stepText = document.getElementById('ingestStepText');
+      const progressBar = document.getElementById('ingestProgressBar');
+
+      modal.classList.remove('hidden');
+      stepText.textContent = '1/3: Polling RSS news feeds across political spectrum...';
+      progressBar.style.width = '33%';
+
+      setTimeout(async () => {
+        stepText.textContent = '2/3: Generating 384-dim embeddings & clustering articles...';
+        progressBar.style.width = '66%';
+
+        setTimeout(async () => {
+          stepText.textContent = '3/3: Running Gemini 2.0 Flash framing & bias analysis...';
+          progressBar.style.width = '100%';
+
+          try {
+            await fetch('/api/ingest/trigger', { method: 'POST' });
+            await fetchStories();
+            await fetchQuotaStatus();
+          } catch (e) {}
+
+          setTimeout(() => {
+            modal.classList.add('hidden');
+          }, 800);
+        }, 1200);
+      }, 1000);
+    }
+
+    function toggleAuthModal() {
+      document.getElementById('authModal').classList.toggle('hidden');
+    }
+
+    function simulateAuth(provider) {
+      toggleAuthModal();
+      document.getElementById('userAvatarText').textContent = provider === 'google' ? 'GO' : 'US';
+      alert(`Signed in successfully via ${provider.toUpperCase()}. Your story bookmarks are now synced.`);
+    }
+  </script>
+</body>
+</html>
