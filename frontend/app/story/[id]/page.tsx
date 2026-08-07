@@ -11,6 +11,7 @@ import ComparisonGrid from '@/components/story/ComparisonGrid';
 import BiasChart from '@/components/story/BiasChart';
 import PerspectivesList from '@/components/story/PerspectivesList';
 import TimelineView from '@/components/story/TimelineView';
+import { TransparencyReportCard } from '@/components/story/TransparencyReportCard';
 import {
   Scale,
   Newspaper,
