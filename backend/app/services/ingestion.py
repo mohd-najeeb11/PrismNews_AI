@@ -51,7 +51,7 @@ class IngestionService:
 
             try:
                 parsed = feedparser.parse(feed_url)
-                for entry in parsed.entries[:5]:  # Take top 5 latest per feed
+                for entry in parsed.entries[:12]:  # Take top 12 latest per feed
                     url = entry.get("link") or entry.get("id")
                     if not url or url in self._seen_urls:
                         continue

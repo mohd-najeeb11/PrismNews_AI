@@ -1,212 +1,284 @@
 [
   {
-    "id": "a1b2c3d4-0000-0000-0000-000000000001",
-    "headline": "Global Tech Summit Reaches Landmark AI Safety Agreement",
-    "topic": "Artificial Intelligence",
-    "created_at": "2026-08-06T18:00:00Z",
-    "article_count": 3,
-    "sources": ["BBC News", "Reuters", "Fox News"],
+    "id": "story-ai-act-2026",
+    "headline": "Global AI Safety Legislation & Transparency Standards Framework Approved",
+    "topic": "Technology & Policy",
+    "category": "Technology & Policy",
+    "created_at": "2026-08-07T08:30:00Z",
+    "updated_at": "2026-08-07T10:15:00Z",
+    "article_count": 6,
+    "sources": ["Reuters", "The Wall Street Journal", "The Guardian", "Fox News", "BBC News"],
     "articles": [
       {
-        "id": "e1111111-0000-0000-0000-000000000001",
-        "source": "BBC News",
-        "title": "Nations Sign Historic AI Framework at Geneva Summit",
-        "url": "https://bbc.com/news/tech-ai-framework-2026",
-        "published_at": "2026-08-06T18:00:00Z",
-        "snippet": "Representatives from 40 nations agreed on binding safety guardrails for frontier artificial intelligence models..."
-      },
-      {
-        "id": "e2222222-0000-0000-0000-000000000002",
+        "id": "art-1",
         "source": "Reuters",
-        "title": "Global Accord Sets Limits on Autonomous AI Systems",
-        "url": "https://reuters.com/technology/global-accord-ai-2026",
-        "published_at": "2026-08-06T19:00:00Z",
-        "snippet": "An international treaty signed in Geneva mandates independent audits for advanced machine learning models prior to deployment..."
+        "source_name": "Reuters",
+        "title": "Global Lawmakers Reach Landmark Consensus on AI Transparency Rules",
+        "url": "https://reuters.com/technology/ai-transparency-rules-2026",
+        "published_at": "2026-08-07T08:30:00Z",
+        "snippet": "International negotiators agreed on mandatory source attribution and algorithmic audit standards for Frontier AI systems."
       },
       {
-        "id": "e3333333-0000-0000-0000-000000000003",
+        "id": "art-2",
+        "source": "The Wall Street Journal",
+        "source_name": "The Wall Street Journal",
+        "title": "New AI Framework Raises Compliance Burden for Tech Titans and Startups",
+        "url": "https://wsj.com/tech/ai-framework-compliance-burdens",
+        "published_at": "2026-08-07T09:00:00Z",
+        "snippet": "Industry leaders express concern that heavy-handed auditing mandates could impede startup innovation and slow capital investment."
+      },
+      {
+        "id": "art-3",
+        "source": "The Guardian",
+        "source_name": "The Guardian",
+        "title": "Public Interest Advocates Celebrate Win in Landmark AI Regulation Accord",
+        "url": "https://theguardian.com/technology/ai-regulation-win",
+        "published_at": "2026-08-07T09:30:00Z",
+        "snippet": "Civil rights coalitions praised the agreement for safeguarding public data rights and requiring explainability in automated decision systems."
+      },
+      {
+        "id": "art-4",
         "source": "Fox News",
-        "title": "New Geneva AI Deal Raises Concerns Over Tech Overregulation",
-        "url": "https://foxnews.com/tech/geneva-ai-deal-overregulation-fear",
-        "published_at": "2026-08-06T20:00:00Z",
-        "snippet": "Tech industry leaders warned that new international mandates signed in Switzerland could stifle American innovation..."
+        "source_name": "Fox News",
+        "title": "Global AI Treaty Draws Pushback Over Bureaucratic Overreach Concerns",
+        "url": "https://foxnews.com/tech/global-ai-treaty-pushback",
+        "published_at": "2026-08-07T10:00:00Z",
+        "snippet": "Critics warn that strict multinational mandates could compromise technological competitiveness against foreign adversaries."
       }
-    ],
-    "analysis": {
-      "balanced_summary": {
-        "consensus_facts": [
-          "Delegates from over 40 countries signed a safety framework in Geneva.",
-          "The agreement introduces auditing guidelines for frontier AI models.",
-          "The treaty was backed by major international tech delegations."
-        ],
-        "disputed_points": [
-          "Whether the auditing process burdens tech startups excessively.",
-          "Enforcement mechanisms and compliance rules for non-signatory nations."
-        ],
-        "neutral_summary": "Forty nations assembled in Geneva to ratify a safety agreement establishing independent audit requirements for frontier AI models. While proponents emphasize risk reduction, industry critics highlight potential headwinds for competitive innovation."
-      },
-      "comparison": [
-        {
-          "source": "BBC News",
-          "headline": "Nations Sign Historic AI Framework at Geneva Summit",
-          "tone": "neutral",
-          "emphasis": "international cooperation"
-        },
-        {
-          "source": "Reuters",
-          "headline": "Global Accord Sets Limits on Autonomous AI Systems",
-          "tone": "factual",
-          "emphasis": "regulatory mechanics"
-        },
-        {
-          "source": "Fox News",
-          "headline": "New Geneva AI Deal Raises Concerns Over Tech Overregulation",
-          "tone": "critical",
-          "emphasis": "economic impact on domestic tech"
-        }
-      ],
-      "bias_analysis": [
-        {
-          "source": "BBC News",
-          "framing": ["global cooperation", "risk reduction"],
-          "tone": "optimistic",
-          "loaded_phrases": [
-            {
-              "text": "historic milestone",
-              "reason": "Laudatory phrasing emphasizing international achievement"
-            }
-          ]
-        },
-        {
-          "source": "Fox News",
-          "framing": ["overregulation", "innovation penalty"],
-          "tone": "skeptical",
-          "loaded_phrases": [
-            {
-              "text": "stifle American innovation",
-              "reason": "Emotionally charged protectionist narrative"
-            }
-          ]
-        }
-      ],
-      "missing_perspectives": {
-        "covered": ["Government representatives", "Tech industry executives"],
-        "missing": ["Open-source developer community perspectives", "Consumer privacy advocacy groups"]
-      },
-      "timeline": [
-        {
-          "published_at": "2026-08-06T18:00:00Z",
-          "source": "BBC News",
-          "framing_shift": "Focus on summit opening and international consensus building."
-        },
-        {
-          "published_at": "2026-08-06T19:00:00Z",
-          "source": "Reuters",
-          "framing_shift": "Focus on legal language and mandatory compliance rules."
-        },
-        {
-          "published_at": "2026-08-06T20:00:00Z",
-          "source": "Fox News",
-          "framing_shift": "Pivot toward industry pushback and global market competitiveness concerns."
-        }
-      ]
-    }
+    ]
   },
   {
-    "id": "b2c3d4e5-0000-0000-0000-000000000002",
-    "headline": "Central Banks Signal Shift in Global Interest Rate Policy",
-    "topic": "Economy",
-    "created_at": "2026-08-06T14:00:00Z",
-    "article_count": 3,
-    "sources": ["Reuters", "CNN", "Associated Press"],
+    "id": "story-fed-rates-2026",
+    "headline": "Central Banks Signal Shift in Global Interest Rate Policy & Liquidity Mandates",
+    "topic": "Economy & Markets",
+    "category": "Economy & Markets",
+    "created_at": "2026-08-07T07:15:00Z",
+    "updated_at": "2026-08-07T09:45:00Z",
+    "article_count": 5,
+    "sources": ["Reuters", "CNN", "Associated Press", "Bloomberg", "Financial Times"],
     "articles": [
       {
-        "id": "e4444444-0000-0000-0000-000000000004",
+        "id": "art-rates-1",
         "source": "Reuters",
-        "title": "Fed Holds Benchmark Rate Steady Amid Mixed Inflation Indicators",
+        "source_name": "Reuters",
+        "title": "Federal Reserve Holds Rates Steady While Outlining Future Easing Pathway",
         "url": "https://reuters.com/markets/fed-rate-decision-2026",
-        "published_at": "2026-08-06T14:00:00Z",
-        "snippet": "The Federal Reserve kept interest rates unchanged while signaling a potential rate easing cycle later this year..."
+        "published_at": "2026-08-07T07:15:00Z",
+        "snippet": "Central bankers maintained benchmark rates, citing cooling inflation balanced against robust employment metrics."
       },
       {
-        "id": "e5555555-0000-0000-0000-000000000005",
+        "id": "art-rates-2",
         "source": "CNN",
-        "title": "Borrowers Facing High Rate Strain as Fed Pauses Cuts Again",
+        "source_name": "CNN",
+        "title": "Household Borrowers Face Continued Interest Strain as Fed Delays Cut",
         "url": "https://cnn.com/business/fed-rate-pause-impact-2026",
-        "published_at": "2026-08-06T15:00:00Z",
-        "snippet": "Consumer advocate groups warned that sustained high interest rates continue to pressure household debt..."
+        "published_at": "2026-08-07T08:00:00Z",
+        "snippet": "Consumer advocates warn sustained borrowing costs continue to strain home buyers and credit card holders."
       },
       {
-        "id": "e6666666-0000-0000-0000-000000000006",
-        "source": "Associated Press",
-        "title": "Central Bank Balancing Act: Inflation Cooling vs Job Growth",
-        "url": "https://apnews.com/finance/central-bank-policy-2026",
-        "published_at": "2026-08-06T16:00:00Z",
-        "snippet": "Economists noted that central bankers are carefully navigating labor market stability against inflation targets..."
+        "id": "art-rates-3",
+        "source": "Bloomberg",
+        "source_name": "Bloomberg",
+        "title": "Global Bond Yields React as Central Banks Align Monetary Policy Guidance",
+        "url": "https://bloomberg.com/markets/bond-yields-central-banks-2026",
+        "published_at": "2026-08-07T08:45:00Z",
+        "snippet": "Global sovereign debt yields stabilized across European and Asian trading desks following coordinated central bank statements."
       }
-    ],
-    "analysis": {
-      "balanced_summary": {
-        "consensus_facts": [
-          "The Federal Reserve maintained benchmark interest rates at current levels.",
-          "Policymakers cited stabilizing inflation alongside steady labor market metrics.",
-          "Further economic data will dictate future monetary policy adjustments."
-        ],
-        "disputed_points": [
-          "The ideal timeline for initiating interest rate reductions.",
-          "Whether current borrowing costs unfairly penalize low-income consumers."
-        ],
-        "neutral_summary": "Central bankers opted to hold benchmark borrowing rates steady, weighing inflation trends against labor market durability. Proponents point to economic stability, while critics emphasize persistent pressure on consumer debt."
+    ]
+  },
+  {
+    "id": "story-clean-energy-2026",
+    "headline": "Global Renewable Grid Accord & Next-Gen Nuclear Energy Deployment Approved",
+    "topic": "Energy & Environment",
+    "category": "Energy & Environment",
+    "created_at": "2026-08-07T06:00:00Z",
+    "updated_at": "2026-08-07T08:30:00Z",
+    "article_count": 5,
+    "sources": ["BBC News", "The Guardian", "The Wall Street Journal", "Reuters"],
+    "articles": [
+      {
+        "id": "art-energy-1",
+        "source": "BBC News",
+        "source_name": "BBC News",
+        "title": "Multinational Grid Agreement Accelerates Cross-Border Offshore Wind Energy",
+        "url": "https://bbc.com/news/energy-clean-grid-2026",
+        "published_at": "2026-08-07T06:00:00Z",
+        "snippet": "European and North American energy ministers signed an interconnectivity accord to balance regional renewable grid loads."
       },
-      "comparison": [
-        {
-          "source": "Reuters",
-          "headline": "Fed Holds Benchmark Rate Steady Amid Mixed Inflation Indicators",
-          "tone": "objective",
-          "emphasis": "market data and policy signals"
-        },
-        {
-          "source": "CNN",
-          "headline": "Borrowers Facing High Rate Strain as Fed Pauses Cuts Again",
-          "tone": "critical",
-          "emphasis": "consumer and household financial stress"
-        },
-        {
-          "source": "Associated Press",
-          "headline": "Central Bank Balancing Act: Inflation Cooling vs Job Growth",
-          "tone": "balanced",
-          "emphasis": "dual-mandate economic trade-offs"
-        }
-      ],
-      "bias_analysis": [
-        {
-          "source": "CNN",
-          "framing": ["consumer hardship", "delayed relief"],
-          "tone": "concerned",
-          "loaded_phrases": [
-            {
-              "text": "high rate strain",
-              "reason": "Emphasizes negative impact on ordinary borrowers"
-            }
-          ]
-        }
-      ],
-      "missing_perspectives": {
-        "covered": ["Central bank officials", "Financial market analysts"],
-        "missing": ["Small business loan applicants", "Mortgage broker industry reps"]
+      {
+        "id": "art-energy-2",
+        "source": "The Wall Street Journal",
+        "source_name": "The Wall Street Journal",
+        "title": "Small Modular Reactor Permits Expedited to Meet AI Data Center Energy Demand",
+        "url": "https://wsj.com/business/modular-nuclear-reactors-ai-grid",
+        "published_at": "2026-08-07T07:00:00Z",
+        "snippet": "Regulators streamlined environmental review for next-generation nuclear plants to supply baseload power for hyperscale data centers."
+      }
+    ]
+  },
+  {
+    "id": "story-tech-antitrust-2026",
+    "headline": "Tech Monopoly Antitrust Ruling Orders Open Platform & Ecosystem Interoperability",
+    "topic": "Technology & Policy",
+    "category": "Technology & Policy",
+    "created_at": "2026-08-06T16:20:00Z",
+    "updated_at": "2026-08-07T05:10:00Z",
+    "article_count": 4,
+    "sources": ["The New York Times", "The Wall Street Journal", "Reuters", "TechCrunch"],
+    "articles": [
+      {
+        "id": "art-anti-1",
+        "source": "The New York Times",
+        "source_name": "The New York Times",
+        "title": "Federal Judge Issues Sweeping Interoperability Mandate in Big Tech Lawsuit",
+        "url": "https://nytimes.com/tech/antitrust-ruling-interoperability-2026",
+        "published_at": "2026-08-06T16:20:00Z",
+        "snippet": "A federal court ruled that dominant app store operators must allow un-throttled third-party payment engines and side-loading."
       },
-      "timeline": [
-        {
-          "published_at": "2026-08-06T14:00:00Z",
-          "source": "Reuters",
-          "framing_shift": "Immediate reporting on policy statement release."
-        },
-        {
-          "published_at": "2026-08-06T15:00:00Z",
-          "source": "CNN",
-          "framing_shift": "Shift focus to mortgage rates and personal financial impact."
-        }
-      ]
-    }
+      {
+        "id": "art-anti-2",
+        "source": "TechCrunch",
+        "source_name": "TechCrunch",
+        "title": "Developer Community Hails Open App Ecosystem Mandate as Win for Startups",
+        "url": "https://techcrunch.com/2026/08/app-store-antitrust-ruling-reaction",
+        "published_at": "2026-08-06T17:30:00Z",
+        "snippet": "Software founders applauded the elimination of platform fees, citing new opportunities for direct customer relationships."
+      }
+    ]
+  },
+  {
+    "id": "story-space-artemis-2026",
+    "headline": "International Lunar Outpost Mission Achieves Historic Landing Benchmark",
+    "topic": "World News",
+    "category": "World News",
+    "created_at": "2026-08-06T14:10:00Z",
+    "updated_at": "2026-08-07T04:00:00Z",
+    "article_count": 5,
+    "sources": ["Associated Press", "BBC News", "Reuters", "CNN"],
+    "articles": [
+      {
+        "id": "art-space-1",
+        "source": "Associated Press",
+        "source_name": "Associated Press",
+        "title": "Joint International Lunar Module Successfully Touches Down at South Pole",
+        "url": "https://apnews.com/science/lunar-landing-artemis-2026",
+        "published_at": "2026-08-06T14:10:00Z",
+        "snippet": "Astronauts established the baseline infrastructure for a permanent scientific base near Lunar water ice reservoirs."
+      },
+      {
+        "id": "art-space-2",
+        "source": "BBC News",
+        "source_name": "BBC News",
+        "title": "Scientific Equipment Operational as Lunar Colony Construction Begins",
+        "url": "https://bbc.com/news/science-space-lunar-base-2026",
+        "published_at": "2026-08-06T15:30:00Z",
+        "snippet": "Engineers confirmed solar power collectors and communication relays are online, marking a milestone in human space exploration."
+      }
+    ]
+  },
+  {
+    "id": "story-cyber-infrastructure-2026",
+    "headline": "Critical National Infrastructure Cyber Defense Accord Signed by Allied Nations",
+    "topic": "Technology & Policy",
+    "category": "Technology & Policy",
+    "created_at": "2026-08-06T11:00:00Z",
+    "updated_at": "2026-08-07T02:00:00Z",
+    "article_count": 4,
+    "sources": ["Reuters", "The Washington Post", "Fox News", "NPR"],
+    "articles": [
+      {
+        "id": "art-cyber-1",
+        "source": "Reuters",
+        "source_name": "Reuters",
+        "title": "Allied Defense Ministers Form Joint Cyber Threat Rapid Response Network",
+        "url": "https://reuters.com/world/cyber-threat-rapid-response-2026",
+        "published_at": "2026-08-06T11:00:00Z",
+        "snippet": "A new intelligence-sharing pact mandates real-time telemetry sharing to defend power grids and water filtration plants from state-sponsored hacks."
+      }
+    ]
+  },
+  {
+    "id": "story-biotech-gene-2026",
+    "headline": "Breakthrough In-Vivo Gene Therapy Receives Multinational Health Approval",
+    "topic": "World News",
+    "category": "World News",
+    "created_at": "2026-08-06T09:30:00Z",
+    "updated_at": "2026-08-06T23:00:00Z",
+    "article_count": 4,
+    "sources": ["Nature", "The Guardian", "CNN", "BBC News"],
+    "articles": [
+      {
+        "id": "art-bio-1",
+        "source": "The Guardian",
+        "source_name": "The Guardian",
+        "title": "Single-Dose CRISPR Therapy Approved for Rare Genetic Cardiovascular Disorders",
+        "url": "https://theguardian.com/science/crispr-therapy-approval-2026",
+        "published_at": "2026-08-06T09:30:00Z",
+        "snippet": "Health regulators cleared a revolutionary precision gene therapy that permanently corrects inherited cardiac mutations in adults."
+      }
+    ]
+  },
+  {
+    "id": "story-global-trade-2026",
+    "headline": "Multilateral Supply Chain Resiliency & Critical Minerals Trade Pact Ratified",
+    "topic": "Economy & Markets",
+    "category": "Economy & Markets",
+    "created_at": "2026-08-06T08:00:00Z",
+    "updated_at": "2026-08-06T21:00:00Z",
+    "article_count": 5,
+    "sources": ["Financial Times", "Reuters", "The Wall Street Journal", "Bloomberg"],
+    "articles": [
+      {
+        "id": "art-trade-1",
+        "source": "Financial Times",
+        "source_name": "Financial Times",
+        "title": "Pacific Rim Nations Sign Strategic Critical Minerals Processing Partnership",
+        "url": "https://ft.com/content/critical-minerals-trade-pact-2026",
+        "published_at": "2026-08-06T08:00:00Z",
+        "snippet": "Member countries established reduced tariffs and mutual stockpiling guarantees for lithium, cobalt, and rare earth elements."
+      }
+    ]
+  },
+  {
+    "id": "story-quantum-breakthrough-2026",
+    "headline": "Post-Quantum Encryption Standard Adopted Across International Banking Networks",
+    "topic": "Technology & Policy",
+    "category": "Technology & Policy",
+    "created_at": "2026-08-06T06:15:00Z",
+    "updated_at": "2026-08-06T18:00:00Z",
+    "article_count": 4,
+    "sources": ["Reuters", "The Wall Street Journal", "Bloomberg", "WIRED"],
+    "articles": [
+      {
+        "id": "art-quant-1",
+        "source": "Bloomberg",
+        "source_name": "Bloomberg",
+        "title": "Global Banking Consortium Migrates Core Settlement Systems to Quantum-Safe Cryptography",
+        "url": "https://bloomberg.com/tech/post-quantum-banking-migration",
+        "published_at": "2026-08-06T06:15:00Z",
+        "snippet": "Financial institutions finalized the deployment of lattice-based encryption algorithms to future-proof wire transfers against quantum decryption."
+      }
+    ]
+  },
+  {
+    "id": "story-climate-cop31-2026",
+    "headline": "COP31 Climate Accord Reaches Binding Loss and Damage Infrastructure Pact",
+    "topic": "Energy & Environment",
+    "category": "Energy & Environment",
+    "created_at": "2026-08-05T20:00:00Z",
+    "updated_at": "2026-08-06T16:00:00Z",
+    "article_count": 5,
+    "sources": ["The Guardian", "BBC News", "Associated Press", "Reuters"],
+    "articles": [
+      {
+        "id": "art-cop-1",
+        "source": "The Guardian",
+        "source_name": "The Guardian",
+        "title": "Developing Nations Secure $100B Resilience Fund at COP31 Summit",
+        "url": "https://theguardian.com/environment/cop31-resilience-fund-deal",
+        "published_at": "2026-08-05T20:00:00Z",
+        "snippet": "Delegates approved an operational facility providing direct grant financing for coastal defense and climate adaptation projects."
+      }
+    ]
   }
 ]

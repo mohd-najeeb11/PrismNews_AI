@@ -451,5 +451,166 @@ export const SEED_STORIES: Story[] = [
         }
       ]
     }
+  },
+  {
+    id: 'story-tech-antitrust-2026',
+    title: 'Tech Monopoly Antitrust Ruling Orders Open Platform & Ecosystem Interoperability',
+    category: 'Technology & Policy',
+    created_at: '2026-08-06T16:20:00Z',
+    updated_at: '2026-08-07T05:10:00Z',
+    article_count: 4,
+    sources_count: 4,
+    dominant_bias: 'center',
+    articles: [
+      {
+        id: 'art-anti-1',
+        source_id: 'nytimes',
+        source_name: 'The New York Times',
+        source_bias: 'lean_left',
+        title: 'Federal Judge Issues Sweeping Interoperability Mandate in Big Tech Lawsuit',
+        url: 'https://nytimes.com/tech/antitrust-ruling-interoperability-2026',
+        published_at: '2026-08-06T16:20:00Z',
+        summary: 'A federal court ruled that dominant app store operators must allow un-throttled third-party payment engines.',
+        tone: 'neutral'
+      }
+    ]
+  },
+  {
+    id: 'story-space-artemis-2026',
+    title: 'International Lunar Outpost Mission Achieves Historic Landing Benchmark',
+    category: 'World News',
+    created_at: '2026-08-06T14:10:00Z',
+    updated_at: '2026-08-07T04:00:00Z',
+    article_count: 5,
+    sources_count: 4,
+    dominant_bias: 'center',
+    articles: [
+      {
+        id: 'art-space-1',
+        source_id: 'ap',
+        source_name: 'Associated Press',
+        source_bias: 'center',
+        title: 'Joint International Lunar Module Successfully Touches Down at South Pole',
+        url: 'https://apnews.com/science/lunar-landing-artemis-2026',
+        published_at: '2026-08-06T14:10:00Z',
+        summary: 'Astronauts established the baseline infrastructure for a permanent scientific base.',
+        tone: 'neutral'
+      }
+    ]
+  },
+  {
+    id: 'story-cyber-infrastructure-2026',
+    title: 'Critical National Infrastructure Cyber Defense Accord Signed by Allied Nations',
+    category: 'Technology & Policy',
+    created_at: '2026-08-06T11:00:00Z',
+    updated_at: '2026-08-07T02:00:00Z',
+    article_count: 4,
+    sources_count: 4,
+    dominant_bias: 'lean_right',
+    articles: [
+      {
+        id: 'art-cyber-1',
+        source_id: 'reuters',
+        source_name: 'Reuters',
+        source_bias: 'center',
+        title: 'Allied Defense Ministers Form Joint Cyber Threat Rapid Response Network',
+        url: 'https://reuters.com/world/cyber-threat-rapid-response-2026',
+        published_at: '2026-08-06T11:00:00Z',
+        summary: 'A new intelligence-sharing pact mandates real-time telemetry sharing to defend power grids.',
+        tone: 'neutral'
+      }
+    ]
+  },
+  {
+    id: 'story-biotech-gene-2026',
+    title: 'Breakthrough In-Vivo Gene Therapy Receives Multinational Health Approval',
+    category: 'World News',
+    created_at: '2026-08-06T09:30:00Z',
+    updated_at: '2026-08-06T23:00:00Z',
+    article_count: 4,
+    sources_count: 4,
+    dominant_bias: 'left',
+    articles: [
+      {
+        id: 'art-bio-1',
+        source_id: 'guardian',
+        source_name: 'The Guardian',
+        source_bias: 'left',
+        title: 'Single-Dose CRISPR Therapy Approved for Rare Genetic Cardiac Disorders',
+        url: 'https://theguardian.com/science/crispr-therapy-approval-2026',
+        published_at: '2026-08-06T09:30:00Z',
+        summary: 'Health regulators cleared a precision gene therapy that permanently corrects inherited cardiac mutations.',
+        tone: 'optimistic'
+      }
+    ]
+  },
+  {
+    id: 'story-global-trade-2026',
+    title: 'Multilateral Supply Chain Resiliency & Critical Minerals Trade Pact Ratified',
+    category: 'Economy & Markets',
+    created_at: '2026-08-06T08:00:00Z',
+    updated_at: '2026-08-06T21:00:00Z',
+    article_count: 5,
+    sources_count: 4,
+    dominant_bias: 'center',
+    articles: [
+      {
+        id: 'art-trade-1',
+        source_id: 'ft',
+        source_name: 'Financial Times',
+        source_bias: 'center',
+        title: 'Pacific Rim Nations Sign Strategic Critical Minerals Processing Partnership',
+        url: 'https://ft.com/content/critical-minerals-trade-pact-2026',
+        published_at: '2026-08-06T08:00:00Z',
+        summary: 'Member countries established reduced tariffs and mutual stockpiling guarantees for rare earths.',
+        tone: 'neutral'
+      }
+    ]
+  },
+  {
+    id: 'story-quantum-breakthrough-2026',
+    title: 'Post-Quantum Encryption Standard Adopted Across International Banking Networks',
+    category: 'Technology & Policy',
+    created_at: '2026-08-06T06:15:00Z',
+    updated_at: '2026-08-06T18:00:00Z',
+    article_count: 4,
+    sources_count: 4,
+    dominant_bias: 'center',
+    articles: [
+      {
+        id: 'art-quant-1',
+        source_id: 'bloomberg',
+        source_name: 'Bloomberg',
+        source_bias: 'center',
+        title: 'Global Banking Consortium Migrates Core Settlement Systems to Quantum-Safe Cryptography',
+        url: 'https://bloomberg.com/tech/post-quantum-banking-migration',
+        published_at: '2026-08-06T06:15:00Z',
+        summary: 'Financial institutions finalized deployment of lattice-based encryption algorithms.',
+        tone: 'neutral'
+      }
+    ]
+  },
+  {
+    id: 'story-climate-cop31-2026',
+    title: 'COP31 Climate Accord Reaches Binding Loss and Damage Infrastructure Pact',
+    category: 'Energy & Environment',
+    created_at: '2026-08-05T20:00:00Z',
+    updated_at: '2026-08-06T16:00:00Z',
+    article_count: 5,
+    sources_count: 4,
+    dominant_bias: 'left',
+    articles: [
+      {
+        id: 'art-cop-1',
+        source_id: 'guardian',
+        source_name: 'The Guardian',
+        source_bias: 'left',
+        title: 'Developing Nations Secure $100B Resilience Fund at COP31 Summit',
+        url: 'https://theguardian.com/environment/cop31-resilience-fund-deal',
+        published_at: '2026-08-05T20:00:00Z',
+        summary: 'Delegates approved an operational facility providing direct grant financing for climate adaptation.',
+        tone: 'optimistic'
+      }
+    ]
   }
 ];
