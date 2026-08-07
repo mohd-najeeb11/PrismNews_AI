@@ -54,6 +54,14 @@ export interface MissingPerspective {
   missing_from_outlets: string[];
 }
 
+export interface TimelineEvent {
+  timestamp: string;
+  outlet: string;
+  headline: string;
+  framing_shift: string;
+  url?: string;
+}
+
 export type NarrativeCategory =
   | 'Breaking News'
   | 'Government Response'
