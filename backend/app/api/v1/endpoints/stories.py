@@ -24,6 +24,11 @@ async def analyze_live_query(req: LiveQueryRequest) -> StoryDetailResponse:
     Fetches real-time coverage from Google News RSS & NewsAPI, clusters publishers, and returns full analysis.
     """
     q = req.query.strip()
+    try:
+        q = urllib.parse.unquote(q)
+    except Exception:
+        pass
+
     if not q:
         raise HTTPException(status_code=400, detail="Query string cannot be empty.")
 
@@ -33,6 +38,7 @@ async def analyze_live_query(req: LiveQueryRequest) -> StoryDetailResponse:
         story = await live_fetcher.fetch_by_topic(q)
 
     return StoryDetailResponse(**story)
+
 
 
 from app.services.clustering import clustering_service

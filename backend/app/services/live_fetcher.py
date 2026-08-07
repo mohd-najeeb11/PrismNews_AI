@@ -61,9 +61,14 @@ class LiveFetcherService:
             return "News Outlet"
 
     def fetch_google_news_rss(self, query: str) -> List[NormalizedArticle]:
+        try:
+            query = urllib.parse.unquote(query)
+        except Exception:
+            pass
         encoded_q = urllib.parse.quote(query)
         feed_url = f"https://news.google.com/rss/search?q={encoded_q}&hl=en-US&gl=US&ceid=US:en"
         articles: List[NormalizedArticle] = []
+
 
         try:
             logger.info(f"Polling Google News RSS for live query: '{query}'...")

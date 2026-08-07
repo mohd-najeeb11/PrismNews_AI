@@ -13,21 +13,41 @@ const CATEGORIES = ['All', 'Technology & Policy', 'Economy & Markets', 'Energy &
 function HomeContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const queryParam = searchParams.get('query') || '';
+
+  const cleanUnquote = (val: string): string => {
+    if (!val) return '';
+    try {
+      let res = val;
+      for (let i = 0; i < 3; i++) {
+        if (res.includes('%')) {
+          const next = decodeURIComponent(res);
+          if (next === res) break;
+          res = next;
+        } else break;
+      }
+      return res;
+    } catch (e) {
+      return val;
+    }
+  };
+
+  const rawQuery = cleanUnquote(searchParams.get('query') || '');
   const { t } = useLanguage();
 
   const [stories, setStories] = useState<Story[]>([]);
   const [loading, setLoading] = useState(true);
   const [liveSearching, setLiveSearching] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState('All');
-  const [searchTerm, setSearchTerm] = useState(queryParam);
+  const [searchTerm, setSearchTerm] = useState(rawQuery);
 
   useEffect(() => {
-    setSearchTerm(queryParam);
-    if (queryParam && queryParam.trim()) {
-      handleSearchSubmit(queryParam.trim());
+    const unquoted = cleanUnquote(rawQuery);
+    setSearchTerm(unquoted);
+    if (unquoted && unquoted.trim()) {
+      handleSearchSubmit(unquoted.trim());
     }
-  }, [queryParam]);
+  }, [rawQuery]);
+
 
   const handleSearchSubmit = async (query: string) => {
     if (!query || !query.trim()) return;

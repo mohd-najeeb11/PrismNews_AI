@@ -59,15 +59,32 @@ export default function NavBar() {
 
   const [isAnalyzing, setIsAnalyzing] = useState(false);
 
+  const cleanUnquote = (val: string): string => {
+    if (!val) return '';
+    try {
+      let res = val;
+      for (let i = 0; i < 3; i++) {
+        if (res.includes('%')) {
+          const next = decodeURIComponent(res);
+          if (next === res) break;
+          res = next;
+        } else break;
+      }
+      return res;
+    } catch (e) {
+      return val;
+    }
+  };
+
   const handleSearchSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const q = searchQuery.trim();
-    if (!q) return;
+    const rawQ = cleanUnquote(searchQuery.trim());
+    if (!rawQ) return;
 
     setIsAnalyzing(true);
     try {
       const { fetchLiveStoryByQuery } = await import('@/lib/api');
-      const liveStory = await fetchLiveStoryByQuery(q);
+      const liveStory = await fetchLiveStoryByQuery(rawQ);
       if (liveStory && liveStory.id) {
         router.push(`/story/${liveStory.id}`);
         return;
@@ -77,8 +94,9 @@ export default function NavBar() {
     } finally {
       setIsAnalyzing(false);
     }
-    router.push(`/?query=${encodeURIComponent(q)}`);
+    router.push(`/?query=${encodeURIComponent(rawQ)}`);
   };
+
 
   return (
     <header className="sticky top-0 z-50 w-full glass-panel border-b border-slate-800/80 bg-slate-950/80 backdrop-blur-md">
