@@ -7,15 +7,32 @@ export async function fetchStories(category?: string, query?: string): Promise<S
   try {
     let url = `${API_BASE_URL}/stories`;
     const params = new URLSearchParams();
-    if (category) params.append('category', category);
-    if (query) params.append('query', query);
+    if (category && category !== 'All') params.append('category', category);
+    if (query && query.trim()) {
+      params.append('q', query.trim());
+      params.append('query', query.trim());
+    }
     if (params.toString()) url += `?${params.toString()}`;
 
     const res = await fetch(url, { cache: 'no-store', next: { revalidate: 0 } });
     if (res.ok) {
       const data = await res.json();
       if (Array.isArray(data) && data.length > 0) {
-        return data;
+        return data.map((item: any) => ({
+          ...item,
+          id: item.id || `story-${Math.random()}`,
+          title: item.title || item.headline || 'Untitled Story Cluster',
+          category: item.category || item.topic || 'General',
+          sources_count: item.sources_count || item.article_count || (item.articles ? item.articles.length : 5),
+          articles: item.articles || [],
+          analysis: item.analysis || {
+            balanced_summary: {
+              overview: item.headline || item.title || 'Story cluster aggregated across multiple outlets.',
+              consensus_points: [],
+              key_disagreements: []
+            }
+          }
+        }));
       }
     }
   } catch (error) {
@@ -27,17 +44,19 @@ export async function fetchStories(category?: string, query?: string): Promise<S
   if (category && category !== 'All') {
     stories = stories.filter((s) => s.category.toLowerCase().includes(category.toLowerCase()));
   }
-  if (query) {
-    const q = query.toLowerCase();
+  if (query && query.trim()) {
+    const q = query.trim().toLowerCase();
     stories = stories.filter(
       (s) =>
         s.title.toLowerCase().includes(q) ||
         s.category.toLowerCase().includes(q) ||
+        (s.analysis && s.analysis.balanced_summary && s.analysis.balanced_summary.overview && s.analysis.balanced_summary.overview.toLowerCase().includes(q)) ||
         s.articles?.some((a) => a.title.toLowerCase().includes(q) || a.source_name.toLowerCase().includes(q))
     );
   }
   return stories;
 }
+
 
 export async function fetchStoryById(id: string): Promise<Story | null> {
   try {
