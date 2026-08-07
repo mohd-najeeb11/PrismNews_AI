@@ -123,19 +123,7 @@ class LiveFetcherService:
                     if img_match:
                         image_url = img_match.group(1)
 
-                # Fallback to curated topic image if no image found
-                if not image_url:
-                    q_lower = query.lower()
-                    if any(k in q_lower for k in ["ai", "chip", "tech", "nvidia", "silicon"]):
-                        image_url = "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=1200&auto=format&fit=crop"
-                    elif any(k in q_lower for k in ["economy", "fed", "rate", "stock", "market"]):
-                        image_url = "https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?q=80&w=1200&auto=format&fit=crop"
-                    elif any(k in q_lower for k in ["climate", "energy", "oil", "green"]):
-                        image_url = "https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?q=80&w=1200&auto=format&fit=crop"
-                    elif any(k in q_lower for k in ["election", "policy", "white house", "court"]):
-                        image_url = "https://images.unsplash.com/photo-1541872703-74c5e44368f9?q=80&w=1200&auto=format&fit=crop"
-                    else:
-                        image_url = "https://images.unsplash.com/photo-1504711434969-e33886168f5c?q=80&w=1200&auto=format&fit=crop"
+
 
                 text_for_embed = f"{title_clean}. {clean_content[:500]}"
                 vector = embed_text(text_for_embed)
@@ -254,7 +242,7 @@ class LiveFetcherService:
         story_id = str(uuid.uuid4())
         sources = list(dict.fromkeys(a.source_name for a in articles if a.source_name))
 
-        top_image = next((a.image_url for a in articles if a.image_url), "https://images.unsplash.com/photo-1504711434969-e33886168f5c?q=80&w=1200&auto=format&fit=crop")
+        top_image = next((a.image_url for a in articles if a.image_url), None)
 
         raw_articles = []
         for a in articles:
@@ -265,9 +253,10 @@ class LiveFetcherService:
                 "title": a.title,
                 "url": a.url,
                 "published_at": a.published_at,
-                "image_url": a.image_url or top_image,
+                "image_url": a.image_url,
                 "snippet": a.content[:300] if a.content else "",
             })
+
 
         story = {
             "id": story_id,
