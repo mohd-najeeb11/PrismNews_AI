@@ -52,11 +52,12 @@ function LoginContent() {
   return (
     <div className="max-w-md mx-auto py-12 px-4 space-y-6">
       <div className="text-center space-y-2">
-        <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-blue-500 to-purple-600 p-0.5 mx-auto shadow-lg shadow-blue-500/20">
-          <div className="w-full h-full bg-slate-950 rounded-[14px] flex items-center justify-center">
-            <Sparkles className="w-6 h-6 text-blue-400" />
-          </div>
-        </div>
+        <img
+          src="/logo.png"
+          alt="PrismNews AI"
+          className="w-14 h-14 rounded-2xl mx-auto shadow-xl shadow-purple-500/20 object-contain hover:scale-105 transition-transform"
+        />
+
         <h1 className="text-2xl font-bold text-white">Welcome Back</h1>
         <p className="text-xs text-slate-400">
           Sign in to access bookmarked story clusters & saved reading history

@@ -51,11 +51,12 @@ export default function SignupPage() {
   return (
     <div className="max-w-md mx-auto py-12 px-4 space-y-6">
       <div className="text-center space-y-2">
-        <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-purple-500 to-pink-600 p-0.5 mx-auto shadow-lg shadow-purple-500/20">
-          <div className="w-full h-full bg-slate-950 rounded-[14px] flex items-center justify-center">
-            <Sparkles className="w-6 h-6 text-purple-400" />
-          </div>
-        </div>
+        <img
+          src="/logo.png"
+          alt="PrismNews AI"
+          className="w-14 h-14 rounded-2xl mx-auto shadow-xl shadow-purple-500/20 object-contain hover:scale-105 transition-transform"
+        />
+
         <h1 className="text-2xl font-bold text-white">Create an Account</h1>
         <p className="text-xs text-slate-400">
           Join PrismNews AI to track framing across your favorite topics
