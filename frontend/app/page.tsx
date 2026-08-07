@@ -8,7 +8,8 @@ import { fetchStories, fetchLiveStoryByQuery } from '@/lib/api';
 import { useLanguage } from '@/lib/LanguageContext';
 import { Sparkles, Layers, ArrowRight, Compass, Scale, Newspaper, EyeOff, Clock, Search, Loader2 } from 'lucide-react';
 
-const CATEGORIES = ['All', 'Technology & Policy', 'Economy & Markets', 'Energy & Environment', 'World News'];
+const CATEGORIES = ['All', 'Technology & Policy', 'Economy & Markets', 'Energy & Environment', 'Entertainment & Media', 'World News'];
+
 
 function HomeContent() {
   const router = useRouter();
@@ -167,18 +168,27 @@ function HomeContent() {
             <Clock className="w-4 h-4 text-emerald-400" /> {t('feat_timelines')}
           </span>
         </div>
+
+        {/* Live Search Status Banner */}
+        {liveSearching && (
+          <div className="p-4 rounded-2xl bg-blue-950/40 border border-blue-800/40 text-xs text-blue-300 flex items-center justify-center space-x-3 max-w-md mx-auto animate-pulse">
+            <Loader2 className="w-4 h-4 animate-spin text-blue-400" />
+            <span>Analyzing real-time multi-outlet coverage for your query...</span>
+          </div>
+        )}
       </section>
 
-      {/* Filter & Search Bar */}
-      <section className="space-y-4">
+
+      {/* Main Story Feed Controls */}
+      <section className="space-y-6">
         <div className="flex flex-col sm:flex-row items-center justify-between gap-4 border-b border-slate-800/80 pb-4">
-          {/* Category Tabs */}
-          <div className="flex flex-wrap gap-2">
+          {/* Category Filter Pills */}
+          <div className="flex items-center gap-2 overflow-x-auto w-full sm:w-auto pb-2 sm:pb-0">
             {CATEGORIES.map((cat) => (
               <button
                 key={cat}
                 onClick={() => setSelectedCategory(cat)}
-                className={`px-3.5 py-1.5 rounded-xl text-xs font-semibold transition-all ${
+                className={`px-3.5 py-1.5 rounded-xl text-xs font-semibold transition-all whitespace-nowrap ${
                   selectedCategory === cat
                     ? 'bg-blue-600 text-white shadow-md shadow-blue-500/20'
                     : 'bg-slate-900/80 text-slate-400 hover:bg-slate-800 hover:text-slate-200 border border-slate-800'
@@ -190,7 +200,7 @@ function HomeContent() {
           </div>
 
           <div className="text-xs text-slate-400 font-medium">
-            {t('showing_clusters')} <strong className="text-slate-200">{stories.length}</strong> {t('story_clusters')}
+            {t('showing_clusters')} <strong className="text-slate-200">{displayStories.length}</strong> {t('story_clusters')}
           </div>
         </div>
 
@@ -205,7 +215,7 @@ function HomeContent() {
               </div>
             ))}
           </div>
-        ) : stories.length === 0 ? (
+        ) : displayStories.length === 0 ? (
           <div className="text-center py-12 glass-card rounded-2xl space-y-3">
             <Compass className="w-10 h-10 text-slate-600 mx-auto" />
             <h3 className="text-base font-bold text-slate-300">{t('no_stories_found')}</h3>
@@ -213,7 +223,7 @@ function HomeContent() {
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {stories.map((story) => (
+            {displayStories.map((story) => (
               <Link
                 key={story.id}
                 href={`/story/${story.id}`}
@@ -222,9 +232,10 @@ function HomeContent() {
                 <div className="space-y-3">
                   {/* Category & Badge */}
                   <div className="flex items-center justify-between">
-                    <span className="text-[11px] font-bold uppercase tracking-wider text-blue-400 bg-blue-950/60 px-2.5 py-0.5 rounded-md border border-blue-800/40">
-                      {story.category}
+                    <span className="text-[11px] font-bold uppercase tracking-wider text-blue-400 bg-blue-950/60 px-2.5 py-0.5 rounded-md border border-blue-800/40 max-w-[170px] truncate">
+                      {story.category || 'World News'}
                     </span>
+
                     <span className="text-xs text-slate-400 flex items-center gap-1 font-medium bg-slate-900 px-2 py-0.5 rounded-md border border-slate-800">
                       <Layers className="w-3 h-3 text-purple-400" />
                       {story.sources_count} {t('outlets_count')}

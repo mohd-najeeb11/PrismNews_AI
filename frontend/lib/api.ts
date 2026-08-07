@@ -402,12 +402,74 @@ export function normalizeStory(raw: any): Story {
     ];
   }
 
+  function cleanCategoryName(rawCat?: string, title?: string): string {
+    if (!rawCat) return 'World News';
+    const combined = (String(rawCat) + ' ' + String(title || '')).toLowerCase();
+    if (
+      combined.includes('batman') ||
+      combined.includes('movie') ||
+      combined.includes('film') ||
+      combined.includes('entertainment') ||
+      combined.includes('hollywood') ||
+      combined.includes('actor') ||
+      combined.includes('recipe') ||
+      combined.includes('bake') ||
+      combined.includes('music') ||
+      combined.includes('show')
+    ) {
+      return 'Entertainment & Media';
+    }
+    if (
+      combined.includes('tech') ||
+      combined.includes('ai') ||
+      combined.includes('chip') ||
+      combined.includes('nvidia') ||
+      combined.includes('apple') ||
+      combined.includes('google') ||
+      combined.includes('software') ||
+      combined.includes('cyber') ||
+      combined.includes('policy')
+    ) {
+      return 'Technology & Policy';
+    }
+    if (
+      combined.includes('market') ||
+      combined.includes('economy') ||
+      combined.includes('stock') ||
+      combined.includes('bank') ||
+      combined.includes('fed') ||
+      combined.includes('rate') ||
+      combined.includes('trade') ||
+      combined.includes('price')
+    ) {
+      return 'Economy & Markets';
+    }
+    if (
+      combined.includes('energy') ||
+      combined.includes('climate') ||
+      combined.includes('oil') ||
+      combined.includes('green') ||
+      combined.includes('environment') ||
+      combined.includes('solar')
+    ) {
+      return 'Energy & Environment';
+    }
+    if (rawCat.length > 25) {
+      return 'World News';
+    }
+    return rawCat;
+  }
+
+  const storyTitle = raw.title || raw.headline || 'Global News Cluster';
+  const category = cleanCategoryName(raw.category || raw.topic, storyTitle);
+
   return {
     id: raw.id || 'story-ai-act-2026',
-    title: raw.title || raw.headline || 'Global News Cluster',
-    category: raw.category || raw.topic || 'Technology & Policy',
+    title: storyTitle,
+    category,
     created_at: raw.created_at || new Date().toISOString(),
     updated_at: raw.updated_at || new Date().toISOString(),
+
     article_count: raw.article_count || (raw.articles ? raw.articles.length : 5),
     sources_count: raw.sources_count || raw.article_count || 5,
     articles: raw.articles || [],

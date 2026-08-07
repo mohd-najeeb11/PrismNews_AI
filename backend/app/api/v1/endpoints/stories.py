@@ -92,20 +92,46 @@ async def get_stories(q: Optional[str] = Query(None, description="Topic or headl
             if filtered:
                 stories = filtered
 
+    def clean_topic_name(raw_topic: str, headline: str = "") -> str:
+        if not raw_topic:
+            return "World News"
+        combined = (str(raw_topic) + " " + str(headline)).lower()
+        if any(k in combined for k in ["batman", "movie", "film", "hollywood", "actor", "cinema", "entertainment", "recipe", "bake"]):
+            return "Entertainment & Media"
+        elif any(k in combined for k in ["ai", "tech", "chip", "nvidia", "apple", "google", "software", "policy", "cyber"]):
+            return "Technology & Policy"
+        elif any(k in combined for k in ["market", "economy", "stock", "bank", "fed", "rate", "trade", "finance"]):
+            return "Economy & Markets"
+        elif any(k in combined for k in ["energy", "climate", "oil", "green", "environment", "solar"]):
+            return "Energy & Environment"
+        elif len(raw_topic) > 25:
+            return "World News"
+        return raw_topic
+
     summary_list = []
+    seen_headlines = set()
     for story in stories:
+        headline = story.get("headline") or story.get("title") or "Untitled Story"
+        norm_h = headline.lower().strip()
+        if norm_h in seen_headlines:
+            continue
+        seen_headlines.add(norm_h)
+
+        cleaned_topic = clean_topic_name(story.get("topic") or story.get("category"), headline)
+
         summary_list.append(
             StorySummaryResponse(
                 id=story["id"],
-                headline=story["headline"],
-                topic=story["topic"],
-                created_at=story["created_at"],
+                headline=headline,
+                topic=cleaned_topic,
+                created_at=story.get("created_at") or datetime.now(timezone.utc).isoformat(),
                 article_count=story.get("article_count", len(story.get("articles", []))),
                 sources=story.get("sources", []),
                 articles=story.get("articles", []),
             )
         )
     return summary_list
+
 
 
 @router.get("/stories/{id}", response_model=StoryDetailResponse, summary="Get Story Detail & Full Analysis")
