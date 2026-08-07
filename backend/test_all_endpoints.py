@@ -11,10 +11,20 @@ def run_tests():
     assert res.status_code == 200, f"Health check failed: {res.text}"
     print("[OK] Health Check Passed:", res.json()["status"])
 
-    # 2. Quota status
+    # 2. Quota status & mode toggle
     res = client.get("/api/quota")
     assert res.status_code == 200, f"Quota status failed: {res.text}"
     print("[OK] Quota Status Passed:", res.json()["api_mode"])
+
+    res = client.post("/api/quota/mode", json={"mode": "seed"})
+    assert res.status_code == 200, f"Mode toggle failed: {res.text}"
+    assert res.json()["api_mode"] == "seed"
+    print("[OK] API Mode Dropdown Endpoint (POST /api/quota/mode) Passed: switched to 'seed'")
+
+    res = client.post("/api/quota/mode", json={"mode": "live"})
+    assert res.status_code == 200, f"Mode toggle failed: {res.text}"
+    assert res.json()["api_mode"] == "live"
+    print("[OK] API Mode Switch Back Passed: restored to 'live'")
 
     # 3. Browse stories
     res = client.get("/api/stories")
@@ -75,7 +85,21 @@ def run_tests():
     assert "PrismNews" in res.text, "Root UI HTML missing title"
     print("[OK] Web UI Serve at Root (/) Passed")
 
-    print("\nALL 11 API & FRONTEND VERIFICATION TESTS PASSED SUCCESSFULLY!")
+    # 12. Edge Case: Non-existent story detail -> 404
+    res = client.get("/api/stories/nonexistent_story_id_9999")
+    assert res.status_code == 404, f"Expected 404 for invalid story ID, got {res.status_code}"
+    print("[OK] Invalid Story ID Handled (404 Passed)")
+
+    # 13. Edge Case: Non-existent compare & timeline -> 404
+    res = client.get("/api/stories/nonexistent_story_id_9999/compare")
+    assert res.status_code == 404, f"Expected 404 for invalid compare ID, got {res.status_code}"
+    print("[OK] Invalid Compare Request Handled (404 Passed)")
+
+    res = client.get("/api/stories/nonexistent_story_id_9999/timeline")
+    assert res.status_code == 404, f"Expected 404 for invalid timeline ID, got {res.status_code}"
+    print("[OK] Invalid Timeline Request Handled (404 Passed)")
+
+    print("\nALL 14 API & FRONTEND VERIFICATION TESTS PASSED SUCCESSFULLY!")
 
 if __name__ == "__main__":
     run_tests()

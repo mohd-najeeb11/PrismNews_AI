@@ -24,10 +24,19 @@ function HomeContent() {
   }, [queryParam]);
 
   useEffect(() => {
-    setLoading(true);
-    fetchStories(selectedCategory === 'All' ? undefined : selectedCategory, searchTerm)
-      .then(setStories)
-      .finally(() => setLoading(false));
+    const loadData = () => {
+      setLoading(true);
+      fetchStories(selectedCategory === 'All' ? undefined : selectedCategory, searchTerm)
+        .then(setStories)
+        .finally(() => setLoading(false));
+    };
+
+    loadData();
+
+    if (typeof window !== 'undefined') {
+      window.addEventListener('apiModeChanged', loadData);
+      return () => window.removeEventListener('apiModeChanged', loadData);
+    }
   }, [selectedCategory, searchTerm]);
 
   return (

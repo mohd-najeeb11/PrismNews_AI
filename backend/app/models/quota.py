@@ -15,3 +15,8 @@ class QuotaStatusResponse(BaseModel):
     api_mode: str = Field(..., example="seed")
     services: Dict[str, ServiceQuotaStatus]
     reset_at_utc: str = Field(..., example="2026-08-08T00:00:00Z")
+
+
+class SetApiModeRequest(BaseModel):
+    mode: str = Field(..., example="live", description="API Mode: 'seed', 'rss', or 'live'")
+

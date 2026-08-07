@@ -41,6 +41,15 @@ class QuotaManager:
     def get_api_mode(self) -> str:
         return settings.API_MODE.lower()
 
+    def set_api_mode(self, mode: str) -> str:
+        valid_modes = {"seed", "rss", "live"}
+        cleaned_mode = mode.lower().strip()
+        if cleaned_mode in valid_modes:
+            settings.API_MODE = cleaned_mode
+            logger.info(f"[QuotaManager] Dynamic API_MODE set to '{cleaned_mode}'")
+            return cleaned_mode
+        raise ValueError(f"Invalid API mode '{mode}'. Must be one of: {valid_modes}")
+
     def can_call(self, service: str) -> bool:
         """
         Checks if an external service call is permitted under active API_MODE and daily budget caps.

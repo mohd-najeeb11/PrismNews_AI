@@ -1,5 +1,5 @@
 from contextlib import asynccontextmanager
-from fastapi import Depends, FastAPI
+from fastapi import Body, Depends, FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from app.api.v1.endpoints.saved_stories import SaveStoryRequest
@@ -8,7 +8,7 @@ from app.core.auth import get_current_user
 from app.core.config import settings
 from app.core.logging import logger
 from app.models.health import HealthCheckResponse
-from app.models.quota import QuotaStatusResponse
+from app.models.quota import QuotaStatusResponse, SetApiModeRequest
 
 
 
@@ -66,6 +66,12 @@ async def top_level_health() -> HealthCheckResponse:
 async def top_level_quota() -> QuotaStatusResponse:
     from app.services.quota_manager import quota_manager
     return quota_manager.get_quota_status()
+
+
+@app.post("/api/quota/mode", response_model=QuotaStatusResponse, tags=["Quota"], summary="Update Active API Mode")
+async def top_level_update_api_mode(req: SetApiModeRequest = Body(...)):
+    from app.api.v1.endpoints.quota import update_api_mode
+    return await update_api_mode(req=req)
 
 
 # Top-level stories route aliases (documented in API.md)

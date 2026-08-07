@@ -49,11 +49,11 @@ class TimelineItem(BaseModel):
 
 
 class StoryAnalysisSchema(BaseModel):
-    balanced_summary: BalancedSummary
-    comparison: List[ComparisonItem]
-    bias_analysis: List[BiasAnalysisItem]
-    missing_perspectives: MissingPerspectives
-    timeline: List[TimelineItem]
+    balanced_summary: Dict[str, Any]
+    comparison: List[Dict[str, Any]]
+    bias_analysis: Any
+    missing_perspectives: Any
+    timeline: List[Dict[str, Any]]
 
 
 class StorySummaryResponse(BaseModel):

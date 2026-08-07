@@ -112,7 +112,13 @@ class DatabaseService:
 
     def get_story_detail(self, story_id: str) -> Optional[Dict[str, Any]]:
         client = get_supabase_client()
-        if not client:
+        if not client or not story_id:
+            return None
+
+        # Validate UUID format before querying Postgres UUID column
+        try:
+            uuid.UUID(str(story_id))
+        except (ValueError, AttributeError):
             return None
 
         try:

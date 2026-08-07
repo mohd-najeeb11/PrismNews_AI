@@ -13,12 +13,11 @@ const nextConfig = {
     return [
       {
         source: '/api/:path*',
-        destination: 'https://prismnews-ai.onrender.com/api/:path*',
+        destination: process.env.BACKEND_INTERNAL_URL || 'http://localhost:8000/api/:path*',
       },
     ];
   },
 };
-
 
 export default nextConfig;
 

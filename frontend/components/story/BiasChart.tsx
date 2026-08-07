@@ -142,7 +142,7 @@ export default function BiasChart({ biasAnalysis }: Props) {
                     <RefreshCw className="w-3 h-3 text-emerald-400" />
                     Recommended Neutral Alternative:
                   </span>
-                  <p className="text-xs font-medium text-emerald-200 bg-emerald-950/30 p-3 rounded-lg border border-emerald-800/40">
+                  <p className="text-xs font-medium text-emerald-200 bg-emerald-950/30 p-3 rounded-lg border border-emerald-800/40 break-words leading-relaxed">
                     "{biasAnalysis.loaded_phrases[activePhraseIndex].neutral_alternative}"
                   </p>
                 </div>
