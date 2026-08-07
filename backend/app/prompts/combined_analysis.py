@@ -75,6 +75,18 @@ OUTPUT JSON SCHEMA:
       "headline": "Full article headline",
       "framing_shift": "Detailed explanation of how narrative emphasis evolved at this timestamp."
     }
+  ],
+  "narrative_shifts": [
+    {
+      "stage_type": "Initial Narrative | Intermediate Shift | Current Dominant Narrative",
+      "timestamp": "ISO timestamp or formatted time",
+      "narrative_title": "Descriptive title of the narrative stage",
+      "category": "Breaking News | Government Response | Humanitarian Impact | Economic Impact | Political Debate | Scientific Findings | International Reaction | Legal Developments",
+      "short_explanation": "One-sentence overview of this narrative focus.",
+      "full_shift_rationale": "Detailed 2-sentence explanation of why the story focus evolved to this stage.",
+      "main_stakeholders": ["Key Stakeholder 1", "Key Stakeholder 2"],
+      "supporting_publishers": ["Exact Publisher Name A", "Exact Publisher Name B"]
+    }
   ]
 }
 """

@@ -54,6 +54,8 @@ class StoryAnalysisSchema(BaseModel):
     bias_analysis: Any
     missing_perspectives: Any
     timeline: List[Dict[str, Any]]
+    transparency_report: Optional[Dict[str, Any]] = None
+    narrative_shifts: Optional[List[Dict[str, Any]]] = None
 
 
 class StorySummaryResponse(BaseModel):

@@ -137,6 +137,9 @@ export default function StoryDashboardPage() {
         </h1>
       </div>
 
+      {/* AI Transparency Report Card */}
+      <TransparencyReportCard report={analysis?.transparency_report} isLoading={loading} />
+
       {/* 5 Analytical Dashboard Navigation Tabs */}
       <div className="border-b border-slate-800">
         <nav className="flex space-x-2 sm:space-x-4 overflow-x-auto pb-px" aria-label="Tabs">
@@ -197,7 +200,7 @@ export default function StoryDashboardPage() {
             }`}
           >
             <Clock className="w-4 h-4" />
-            <span>5. Narrative Timeline</span>
+            <span>5. Narrative Shift Detector</span>
           </button>
         </nav>
       </div>
@@ -208,7 +211,7 @@ export default function StoryDashboardPage() {
         {activeTab === 'compare' && <ComparisonGrid comparison={analysis?.comparison} />}
         {activeTab === 'bias' && <BiasChart biasAnalysis={analysis?.bias_analysis} />}
         {activeTab === 'perspectives' && <PerspectivesList perspectives={analysis?.missing_perspectives} />}
-        {activeTab === 'timeline' && <TimelineView timeline={analysis?.timeline} />}
+        {activeTab === 'timeline' && <TimelineView timeline={analysis?.timeline} narrativeShifts={analysis?.narrative_shifts} />}
       </div>
     </div>
   );

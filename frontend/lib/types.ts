@@ -54,12 +54,51 @@ export interface MissingPerspective {
   missing_from_outlets: string[];
 }
 
-export interface TimelineEvent {
+export type NarrativeCategory =
+  | 'Breaking News'
+  | 'Government Response'
+  | 'Humanitarian Impact'
+  | 'Economic Impact'
+  | 'Political Debate'
+  | 'Scientific Findings'
+  | 'International Reaction'
+  | 'Legal Developments';
+
+export interface NarrativeShiftStage {
+  id?: string;
+  stage_type: 'Initial Narrative' | 'Intermediate Shift' | 'Current Dominant Narrative';
   timestamp: string;
-  outlet: string;
-  headline: string;
-  framing_shift: string;
-  url?: string;
+  narrative_title: string;
+  category: NarrativeCategory;
+  short_explanation: string;
+  full_shift_rationale: string;
+  main_stakeholders: string[];
+  supporting_publishers: string[];
+  supporting_articles?: Array<{
+    title: string;
+    url: string;
+    publisher: string;
+  }>;
+}
+
+export interface TransparencyReport {
+  ai_model_used: string;
+  articles_analyzed_count: number;
+  publishers_count: number;
+  cluster_size: number;
+  processing_time_ms: number;
+  confidence_score: number;
+  confidence_level: 'High' | 'Medium' | 'Low';
+  analyzed_at: string;
+  cache_status: 'Cached' | 'Fresh';
+  sources_used: string[];
+  metrics_summary: {
+    consensus_facts_count: number;
+    disputed_claims_count: number;
+    missing_perspectives_count: number;
+    bias_indicators_count: number;
+    timeline_events_count: number;
+  };
 }
 
 export interface StoryAnalysis {
@@ -70,6 +109,8 @@ export interface StoryAnalysis {
   bias_analysis: BiasAnalysis;
   missing_perspectives: MissingPerspective[];
   timeline: TimelineEvent[];
+  transparency_report?: TransparencyReport;
+  narrative_shifts?: NarrativeShiftStage[];
 }
 
 export interface Story {
