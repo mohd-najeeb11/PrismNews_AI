@@ -23,6 +23,12 @@ class LiveFetcherService:
     Clusters competing publisher coverage, runs Gemini/Groq AI analysis, and saves to DB.
     """
 
+    def __init__(self):
+        self._cache: Dict[str, Dict[str, Any]] = {}
+
+    def get_cached_story(self, story_id: str) -> Optional[Dict[str, Any]]:
+        return self._cache.get(story_id)
+
     def extract_domain_publisher(self, url: str) -> str:
         try:
             domain = urllib.parse.urlparse(url).netloc.lower()
@@ -234,7 +240,11 @@ class LiveFetcherService:
         analysis = await ai_analysis_service.analyze_story(story)
         story["analysis"] = analysis
 
+        # Store in memory cache for instant GET /stories/{id} retrieval
+        self._cache[story_id] = story
+
         # Save to live database if enabled
+        db_service.save_story_cluster(story)
         if settings.API_MODE != "seed":
             db_service.save_story_analysis(story_id, analysis)
 

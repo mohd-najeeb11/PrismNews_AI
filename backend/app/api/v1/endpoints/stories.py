@@ -107,22 +107,27 @@ async def get_story_by_id(id: str) -> StoryDetailResponse:
     """
     Returns full story metadata and cached AI analysis for all dashboard tabs.
     """
-    story = None
-    if settings.API_MODE != "seed":
+    # 1. Check live in-memory fetcher cache
+    story = live_fetcher.get_cached_story(id)
+
+    # 2. Check Supabase DB
+    if not story and settings.API_MODE != "seed":
         story = db_service.get_story_detail(id)
 
+    # 3. Check pre-baked seed dataset
     if not story:
         story = quota_manager.get_seed_story(id)
 
     if not story:
         raise HTTPException(status_code=404, detail=f"Story with ID '{id}' not found")
 
-    analysis = await ai_analysis_service.analyze_story(story)
-    story["analysis"] = analysis
+    if "analysis" not in story or not story["analysis"]:
+        analysis = await ai_analysis_service.analyze_story(story)
+        story["analysis"] = analysis
 
-    # Persist generated analysis back to Supabase if live
-    if settings.API_MODE != "seed":
-        db_service.save_story_analysis(id, analysis)
+        # Persist generated analysis back to Supabase if live
+        if settings.API_MODE != "seed":
+            db_service.save_story_analysis(id, analysis)
 
     return StoryDetailResponse(**story)
 

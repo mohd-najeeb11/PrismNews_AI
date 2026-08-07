@@ -458,6 +458,8 @@ export async function fetchStories(category?: string, query?: string): Promise<S
   return stories;
 }
 
+const LOCAL_LIVE_STORY_CACHE: Record<string, Story> = {};
+
 export async function fetchLiveStoryByQuery(queryOrUrl: string): Promise<Story> {
   try {
     const res = await fetch(`${API_BASE_URL}/stories/live`, {
@@ -467,7 +469,11 @@ export async function fetchLiveStoryByQuery(queryOrUrl: string): Promise<Story> 
     });
     if (res.ok) {
       const data = await res.json();
-      return normalizeStory(data);
+      const normalized = normalizeStory(data);
+      if (normalized && normalized.id) {
+        LOCAL_LIVE_STORY_CACHE[normalized.id] = normalized;
+        return normalized;
+      }
     }
   } catch (e) {
     console.warn('POST /stories/live failed, falling back to GET /stories search:', e);
@@ -477,18 +483,28 @@ export async function fetchLiveStoryByQuery(queryOrUrl: string): Promise<Story> 
   const stories = await fetchStories(undefined, queryOrUrl);
   if (stories && stories.length > 0) {
     const detail = await fetchStoryById(stories[0].id);
-    if (detail) return detail;
+    if (detail) {
+      LOCAL_LIVE_STORY_CACHE[detail.id] = detail;
+      return detail;
+    }
   }
   return normalizeStory(SEED_STORIES[0]);
 }
 
 export async function fetchStoryById(id: string): Promise<Story | null> {
+  // Check local in-memory cache first
+  if (LOCAL_LIVE_STORY_CACHE[id]) {
+    return LOCAL_LIVE_STORY_CACHE[id];
+  }
+
   try {
     const res = await fetch(`${API_BASE_URL}/stories/${id}`, { cache: 'no-store' });
     if (res.ok) {
       const data = await res.json();
       if (data && (data.id || data.headline || data.title)) {
-        return normalizeStory(data);
+        const normalized = normalizeStory(data);
+        LOCAL_LIVE_STORY_CACHE[normalized.id] = normalized;
+        return normalized;
       }
     }
   } catch (error) {
@@ -496,7 +512,11 @@ export async function fetchStoryById(id: string): Promise<Story | null> {
   }
 
   const found = SEED_STORIES.find((s) => s.id === id);
-  return normalizeStory(found || SEED_STORIES[0]);
+  if (found) {
+    return normalizeStory(found);
+  }
+
+  return null;
 }
 
 export async function fetchQuotaStatus(): Promise<QuotaStatus> {
