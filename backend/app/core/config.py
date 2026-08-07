@@ -29,6 +29,14 @@ class Settings(BaseSettings):
     # API Mode Discipline: seed | rss | live
     API_MODE: str = "seed"
 
+    # API Keys & Third Party Integrations
+    GEMINI_API_KEY: Union[str, None] = None
+    GROQ_API_KEY: Union[str, None] = None
+    NEWSAPI_KEY: Union[str, None] = None
+    SUPABASE_URL: Union[str, None] = None
+    SUPABASE_SERVICE_ROLE_KEY: Union[str, None] = None
+    SUPABASE_JWT_SECRET: Union[str, None] = None
+
     model_config = SettingsConfigDict(
         env_file=".env",
         env_file_encoding="utf-8",

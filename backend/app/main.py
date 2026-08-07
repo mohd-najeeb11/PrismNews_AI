@@ -1,8 +1,10 @@
 from contextlib import asynccontextmanager
-from fastapi import FastAPI
+from fastapi import Depends, FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
+from app.api.v1.endpoints.saved_stories import SaveStoryRequest
 from app.api.v1.router import api_v1_router
+from app.core.auth import get_current_user
 from app.core.config import settings
 from app.core.logging import logger
 from app.models.health import HealthCheckResponse
@@ -10,11 +12,18 @@ from app.models.quota import QuotaStatusResponse
 
 
 
+
+from app.services.scheduler import ingestion_scheduler
+
+
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     logger.info(f"Starting {settings.PROJECT_NAME} backend in {settings.ENV} mode (API_MODE={settings.API_MODE})...")
+    await ingestion_scheduler.start()
     yield
+    await ingestion_scheduler.stop()
     logger.info(f"Shutting down {settings.PROJECT_NAME} backend...")
+
 
 
 app = FastAPI(
@@ -84,10 +93,50 @@ async def top_level_story_timeline(id: str):
     return await get_story_timeline(id=id)
 
 
+# Top-level ingest trigger route alias (documented in API.md)
+@app.post("/api/ingest/trigger", tags=["Ingestion"], summary="Top-level Ingest Trigger")
+async def top_level_ingest_trigger():
+    from app.api.v1.endpoints.ingest import trigger_ingest
+    return await trigger_ingest()
 
+
+# Top-level Auth & User aliases (documented in API.md)
+@app.get("/api/me", tags=["User"], summary="Top-level Current User Profile")
+async def top_level_me(user=Depends(get_current_user)):
+    from app.api.v1.endpoints.user import get_me
+    return await get_me(user=user)
+
+
+@app.get("/api/saved-stories", tags=["Saved Stories"], summary="Top-level Get Saved Stories")
+async def top_level_get_saved_stories(user=Depends(get_current_user)):
+    from app.api.v1.endpoints.saved_stories import get_saved_stories
+    return await get_saved_stories(user=user)
+
+
+@app.post("/api/saved-stories", tags=["Saved Stories"], summary="Top-level Bookmark Story")
+async def top_level_post_saved_story(req: SaveStoryRequest, user=Depends(get_current_user)):
+    from app.api.v1.endpoints.saved_stories import save_story
+    return await save_story(req=req, user=user)
+
+
+@app.delete("/api/saved-stories/{id}", tags=["Saved Stories"], summary="Top-level Remove Bookmark")
+async def top_level_delete_saved_story(id: str, user=Depends(get_current_user)):
+    from app.api.v1.endpoints.saved_stories import delete_saved_story
+    return await delete_saved_story(id=id, user=user)
+
+
+
+
+
+
+from pathlib import Path
+from fastapi.responses import FileResponse
 
 @app.get("/", tags=["Root"])
 async def root():
+    frontend_index = Path(__file__).resolve().parent.parent.parent / "frontend" / "public" / "index.html"
+    if frontend_index.exists():
+        return FileResponse(frontend_index)
     return {
         "project": settings.PROJECT_NAME,
         "version": settings.VERSION,
@@ -95,3 +144,4 @@ async def root():
         "health": "/api/health",
         "api_v1": f"{settings.API_V1_STR}/health"
     }
+
