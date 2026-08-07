@@ -147,11 +147,17 @@ class LiveFetcherService:
 
     async def fetch_by_url(self, target_url: str) -> Dict[str, Any]:
         """
-        Scrapes target URL and searches competing outlets covering the same story.
+        Scrapes target URL, extracts title, content, og:image, and searches competing outlets covering the same story.
         """
+        try:
+            target_url = urllib.parse.unquote(target_url)
+        except Exception:
+            pass
+
         logger.info(f"Live URL Ingestion triggered for: '{target_url}'")
         target_title = ""
         target_content = ""
+        target_image = None
         publisher = self.extract_domain_publisher(target_url)
 
         try:
@@ -160,11 +166,16 @@ class LiveFetcherService:
                 resp = await client.get(target_url, headers=headers)
                 if resp.status_code == 200:
                     html = resp.text
-                    # Extract title tag or og:title
-                    title_match = re.search(r"<title[^>]*>(.*?)</title>", html, re.IGNORECASE | re.DOTALL)
-                    if title_match:
-                        target_title = re.sub(r"<[^>]+>", "", title_match.group(1)).strip()
-                    # Clean title
+                    # Extract og:title or title tag
+                    og_title = re.search(r'<meta[^>]*property=["\']og:title["\'][^>]*content=["\'](.*?)["\']', html, re.IGNORECASE)
+                    if og_title:
+                        target_title = og_title.group(1).strip()
+                    else:
+                        title_match = re.search(r"<title[^>]*>(.*?)</title>", html, re.IGNORECASE | re.DOTALL)
+                        if title_match:
+                            target_title = re.sub(r"<[^>]+>", "", title_match.group(1)).strip()
+
+                    # Clean title separators (e.g. "Headline - Reuters")
                     if " - " in target_title:
                         target_title = target_title.split(" - ")[0].strip()
                     elif " | " in target_title:
@@ -176,6 +187,13 @@ class LiveFetcherService:
                         desc_match = re.search(r'<meta[^>]*name=["\']description["\'][^>]*content=["\'](.*?)["\']', html, re.IGNORECASE)
                     if desc_match:
                         target_content = desc_match.group(1).strip()
+
+                    # Extract og:image or twitter:image
+                    img_match = re.search(r'<meta[^>]*property=["\']og:image["\'][^>]*content=["\'](.*?)["\']', html, re.IGNORECASE)
+                    if not img_match:
+                        img_match = re.search(r'<meta[^>]*name=["\']twitter:image["\'][^>]*content=["\'](.*?)["\']', html, re.IGNORECASE)
+                    if img_match:
+                        target_image = img_match.group(1).strip()
         except Exception as e:
             logger.warning(f"Direct HTML scrape failed for URL '{target_url}': {e}")
 
@@ -185,8 +203,8 @@ class LiveFetcherService:
             cleaned_slug = re.sub(r"[-_/]+", " ", path).strip()
             target_title = cleaned_slug.title() if len(cleaned_slug) > 10 else f"Breaking Story from {publisher}"
 
-        # Extract core search query from headline (first 5 meaningful words)
-        words = [w for w in re.findall(r"\w+", target_title) if len(w) > 3 and w.lower() not in ["http", "https", "com", "www"]]
+        # Extract core search query from headline (first 4 meaningful words)
+        words = [w for w in re.findall(r"\w+", target_title) if len(w) > 3 and w.lower() not in ["http", "https", "com", "www", "news", "report"]]
         search_query = " ".join(words[:4]) if words else publisher
 
         # Fetch competing outlet articles via Google News RSS
@@ -200,11 +218,13 @@ class LiveFetcherService:
             url=target_url,
             content=target_content or f"Direct coverage report from {publisher} regarding '{target_title}'.",
             published_at=datetime.now(timezone.utc).isoformat(),
+            image_url=target_image,
             embedding=embed_text(f"{target_title}. {target_content}"),
         )
 
         all_articles = [target_art] + [a for a in rss_articles if a.url != target_url][:5]
         return await self._create_and_analyze_cluster(target_title, search_query or "Breaking News", all_articles)
+
 
     async def fetch_by_topic(self, topic_query: str) -> Dict[str, Any]:
         """
