@@ -74,6 +74,13 @@
     ],
     "analysis": {
       "balanced_summary": {
+        "overview": "A tragic school shooting took place in Thailand, where a student attacked his school after killing his grandparents, leaving multiple teachers and possibly others dead. The incident has sparked concern over school safety and the motivations behind such violent acts. The attack has been widely reported, with varying details on the number of casualties. The community is left to grapple with the aftermath and implications of this horrific event.",
+        "neutral_summary": "A tragic school shooting took place in Thailand, where a student attacked his school after killing his grandparents, leaving multiple teachers and possibly others dead. The incident has sparked concern over school safety and the motivations behind such violent acts. The attack has been widely reported, with varying details on the number of casualties. The community is left to grapple with the aftermath and implications of this horrific event.",
+        "consensus_points": [
+          "A school shooting occurred in Thailand, resulting in the deaths of at least 5 teachers and potentially others.",
+          "The shooter was a student who also killed his grandparents before the school attack.",
+          "The incident has caused widespread shock and concern about school safety."
+        ],
         "consensus_facts": [
           "A school shooting occurred in Thailand, resulting in the deaths of at least 5 teachers and potentially others.",
           "The shooter was a student who also killed his grandparents before the school attack.",
@@ -83,45 +90,92 @@
           "The exact number of casualties, with reports varying between 5 and 7 dead.",
           "The motivations behind the shooter's actions, which have not been fully disclosed."
         ],
-        "neutral_summary": "A tragic school shooting took place in Thailand, where a student attacked his school after killing his grandparents, leaving multiple teachers and possibly others dead. The incident has sparked concern over school safety and the motivations behind such violent acts. The attack has been widely reported, with varying details on the number of casualties. The community is left to grapple with the aftermath and implications of this horrific event.",
         "key_takeaway": "The Thailand school shooting is a devastating incident that highlights concerns about school safety and the need for understanding the factors that lead to such violent acts. The varying reports on casualties underscore the importance of accurate and timely information in the aftermath of such tragedies."
       },
       "comparison": [
         {
+          "outlet_name": "BBC News",
           "source": "BBC News",
+          "bias_rating": "center",
+          "article_title": "Thailand school shooting: Pupil describes harrowing moment teacher was shot in front of her",
           "headline": "Thailand school shooting: Pupil describes harrowing moment teacher was shot in front of her",
+          "article_url": "#",
           "tone": "neutral",
-          "emphasis": "Personal account of a pupil, focusing on the human impact of the tragedy."
+          "framing_summary": "Personal account of a pupil, focusing on the human impact of the tragedy.",
+          "emphasis": "Personal account of a pupil, focusing on the human impact of the tragedy.",
+          "key_quotes": [
+            "Thailand school shooting: Pupil describes harrowing moment teacher was shot in front of her"
+          ]
         },
         {
+          "outlet_name": "nbcnews.com",
           "source": "nbcnews.com",
+          "bias_rating": "center",
+          "article_title": "Student kills at least 5 at Thai school after fatally shooting his grandparents",
           "headline": "Student kills at least 5 at Thai school after fatally shooting his grandparents",
+          "article_url": "#",
           "tone": "informative",
-          "emphasis": "Reporting the facts of the incident, including the sequence of events and the number of casualties."
+          "framing_summary": "Reporting the facts of the incident, including the sequence of events and the number of casualties.",
+          "emphasis": "Reporting the facts of the incident, including the sequence of events and the number of casualties.",
+          "key_quotes": [
+            "Student kills at least 5 at Thai school after fatally shooting his grandparents"
+          ]
         },
         {
+          "outlet_name": "Straight Arrow",
           "source": "Straight Arrow",
+          "bias_rating": "center",
+          "article_title": "At least 6 killed in Thailand school shooting after gunman kills grandparents: Police",
           "headline": "At least 6 killed in Thailand school shooting after gunman kills grandparents: Police",
+          "article_url": "#",
           "tone": "objective",
-          "emphasis": "Providing an update based on police reports, focusing on the official account of the incident."
+          "framing_summary": "Providing an update based on police reports, focusing on the official account of the incident.",
+          "emphasis": "Providing an update based on police reports, focusing on the official account of the incident.",
+          "key_quotes": [
+            "At least 6 killed in Thailand school shooting after gunman kills grandparents: Police"
+          ]
         },
         {
+          "outlet_name": "South China Morning Post",
           "source": "South China Morning Post",
+          "bias_rating": "center",
+          "article_title": "7 dead as teen gunman goes on rampage at Thai school",
           "headline": "7 dead as teen gunman goes on rampage at Thai school",
+          "article_url": "#",
           "tone": "detailed",
-          "emphasis": "Reporting the incident with a focus on the number of casualties and the actions of the gunman."
+          "framing_summary": "Reporting the incident with a focus on the number of casualties and the actions of the gunman.",
+          "emphasis": "Reporting the incident with a focus on the number of casualties and the actions of the gunman.",
+          "key_quotes": [
+            "7 dead as teen gunman goes on rampage at Thai school"
+          ]
         },
         {
+          "outlet_name": "The Times",
           "source": "The Times",
+          "bias_rating": "center",
+          "article_title": "Thailand school shooting: seven dead after teenager opens fire",
           "headline": "Thailand school shooting: seven dead after teenager opens fire",
+          "article_url": "#",
           "tone": "informative",
-          "emphasis": "Providing a concise summary of the incident, including the number of dead and the perpetrator's actions."
+          "framing_summary": "Providing a concise summary of the incident, including the number of dead and the perpetrator's actions.",
+          "emphasis": "Providing a concise summary of the incident, including the number of dead and the perpetrator's actions.",
+          "key_quotes": [
+            "Thailand school shooting: seven dead after teenager opens fire"
+          ]
         },
         {
+          "outlet_name": "thenationalnews.com",
           "source": "thenationalnews.com",
+          "bias_rating": "center",
+          "article_title": "Teachers and pupils among six killed in Thailand school shooting",
           "headline": "Teachers and pupils among six killed in Thailand school shooting",
+          "article_url": "#",
           "tone": "neutral",
-          "emphasis": "Reporting the incident with a focus on the victims, including both teachers and pupils."
+          "framing_summary": "Reporting the incident with a focus on the victims, including both teachers and pupils.",
+          "emphasis": "Reporting the incident with a focus on the victims, including both teachers and pupils.",
+          "key_quotes": [
+            "Teachers and pupils among six killed in Thailand school shooting"
+          ]
         }
       ],
       "bias_analysis": {
@@ -129,6 +183,7 @@
         "dominant_framing": "Tragic event with a focus on human impact and school safety",
         "loaded_phrases": [
           {
+            "phrase": "harrowing moment",
             "text": "harrowing moment",
             "outlet": "BBC News",
             "bias": "neutral",
@@ -136,13 +191,21 @@
             "neutral_alternative": "A pupil witnessed a teacher being shot."
           },
           {
+            "phrase": "goes on rampage",
             "text": "goes on rampage",
             "outlet": "South China Morning Post",
             "bias": "slightly sensational",
             "reason": "The use of 'rampage' might slightly sensationalize the event, emphasizing the chaotic and violent nature of the incident.",
             "neutral_alternative": "The gunman opened fire at the school."
           }
-        ]
+        ],
+        "source_bias_distribution": {
+          "left": 0,
+          "lean_left": 1,
+          "center": 1,
+          "lean_right": 1,
+          "right": 0
+        }
       },
       "missing_perspectives": [
         {
@@ -168,22 +231,31 @@
       ],
       "timeline": [
         {
+          "timestamp": "2026-08-07T03:55:48+00:00",
           "published_at": "2026-08-07T03:55:48+00:00",
+          "outlet": "South China Morning Post",
           "source": "South China Morning Post",
           "headline": "7 dead as teen gunman goes on rampage at Thai school",
-          "framing_shift": "Initial reports focused on the number of casualties and the basic facts of the incident."
+          "framing_shift": "Initial reports focused on the number of casualties and the basic facts of the incident.",
+          "url": "#"
         },
         {
+          "timestamp": "2026-08-07T07:02:42+00:00",
           "published_at": "2026-08-07T07:02:42+00:00",
+          "outlet": "thenationalnews.com",
           "source": "thenationalnews.com",
           "headline": "Teachers and pupils among six killed in Thailand school shooting",
-          "framing_shift": "As the day progressed, reports began to include more details about the victims, including both teachers and pupils."
+          "framing_shift": "As the day progressed, reports began to include more details about the victims, including both teachers and pupils.",
+          "url": "#"
         },
         {
+          "timestamp": "2026-08-07T10:43:00+00:00",
           "published_at": "2026-08-07T10:43:00+00:00",
+          "outlet": "nbcnews.com",
           "source": "nbcnews.com",
           "headline": "Student kills at least 5 at Thai school after fatally shooting his grandparents",
-          "framing_shift": "Later in the morning, the focus expanded to include the shooter's actions prior to the school attack, including the killing of his grandparents."
+          "framing_shift": "Later in the morning, the focus expanded to include the shooter's actions prior to the school attack, including the killing of his grandparents.",
+          "url": "#"
         }
       ],
       "transparency_report": null,

@@ -3,8 +3,9 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'next/navigation';
 import Link from 'next/link';
-import { Story } from '@/lib/types';
-import { fetchStoryById, triggerReanalysis } from '@/lib/api';
+import { Story, StoryAnalysis } from '@/lib/types';
+import { fetchStoryById, triggerReanalysis, fetchStoryTranslation } from '@/lib/api';
+import { useLanguage, SUPPORTED_LANGUAGES } from '@/lib/LanguageContext';
 import SaveButton from '@/components/story/SaveButton';
 import SummaryTab from '@/components/story/SummaryTab';
 import ComparisonGrid from '@/components/story/ComparisonGrid';
@@ -22,7 +23,11 @@ import {
   RefreshCw,
   Layers,
   Sparkles,
+  Globe,
+  Languages,
   CheckCircle2,
+  AlertCircle,
+  Loader2,
 } from 'lucide-react';
 
 type TabType = 'summary' | 'compare' | 'bias' | 'perspectives' | 'timeline';
@@ -30,10 +35,18 @@ type TabType = 'summary' | 'compare' | 'bias' | 'perspectives' | 'timeline';
 export default function StoryDashboardPage() {
   const params = useParams();
   const storyId = (params.id as string) || 'story-ai-act-2026';
+  const { language, t } = useLanguage();
 
   const [story, setStory] = useState<Story | null>(null);
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState<TabType>('summary');
+
+  // Translation state
+  const [isTranslatedView, setIsTranslatedView] = useState(false);
+  const [translating, setTranslating] = useState(false);
+  const [translatedAnalysis, setTranslatedAnalysis] = useState<StoryAnalysis | null>(null);
+  const [translationStatusMsg, setTranslationStatusMsg] = useState<string | null>(null);
+  const [cacheStatus, setCacheStatus] = useState<string | null>(null);
 
   // Re-analysis state
   const [analyzing, setAnalyzing] = useState(false);
@@ -45,6 +58,40 @@ export default function StoryDashboardPage() {
       .then(setStory)
       .finally(() => setLoading(false));
   }, [storyId]);
+
+  // Load translation when language changes or translated mode is toggled
+  useEffect(() => {
+    if (language === 'en') {
+      setIsTranslatedView(false);
+      setTranslatedAnalysis(null);
+      setTranslationStatusMsg(null);
+      return;
+    }
+
+    // Auto-fetch translation if non-English language selected
+    setIsTranslatedView(true);
+    handleFetchTranslation(language);
+  }, [language, storyId]);
+
+  const handleFetchTranslation = async (targetLang: string) => {
+    setTranslating(true);
+    setTranslationStatusMsg(null);
+    try {
+      const res = await fetchStoryTranslation(storyId, targetLang);
+      if (res.success && res.content) {
+        setTranslatedAnalysis(res.content);
+        setCacheStatus(res.cache_status || 'Fresh');
+      } else {
+        setTranslationStatusMsg(t('translation_unavailable'));
+        setIsTranslatedView(false);
+      }
+    } catch (err) {
+      setTranslationStatusMsg(t('translation_unavailable'));
+      setIsTranslatedView(false);
+    } finally {
+      setTranslating(false);
+    }
+  };
 
   const handleReanalyze = async () => {
     setAnalyzing(true);
@@ -64,6 +111,10 @@ export default function StoryDashboardPage() {
     setStory(updated);
     setAnalyzing(false);
     setAnalysisStep('');
+
+    if (language !== 'en') {
+      handleFetchTranslation(language);
+    }
   };
 
   if (loading) {
@@ -88,7 +139,8 @@ export default function StoryDashboardPage() {
     );
   }
 
-  const analysis = story.analysis;
+  const activeLangObj = SUPPORTED_LANGUAGES.find((l) => l.code === language) || SUPPORTED_LANGUAGES[0];
+  const activeAnalysis = (isTranslatedView && translatedAnalysis) ? translatedAnalysis : story.analysis;
 
   return (
     <div className="space-y-8 pb-12">
@@ -99,11 +151,42 @@ export default function StoryDashboardPage() {
           className="inline-flex items-center gap-1.5 text-xs text-slate-400 hover:text-white font-medium transition-colors"
         >
           <ArrowLeft className="w-4 h-4" />
-          <span>Back to Story Clusters</span>
+          <span>{t('story_detail_back')}</span>
         </Link>
 
-        <div className="flex items-center gap-3">
-          {/* Manual Re-analysis button with progress simulation */}
+        <div className="flex flex-wrap items-center gap-3">
+          {/* Multilingual Translation Toggle Button */}
+          {language !== 'en' && (
+            <div className="flex items-center rounded-xl bg-slate-900 border border-slate-800 p-0.5 shadow-sm text-xs font-medium">
+              <button
+                onClick={() => setIsTranslatedView(false)}
+                className={`px-3 py-1.5 rounded-lg transition-all ${
+                  !isTranslatedView
+                    ? 'bg-blue-600 text-white font-semibold shadow-sm'
+                    : 'text-slate-400 hover:text-white'
+                }`}
+              >
+                {t('original_english')}
+              </button>
+              <button
+                onClick={() => {
+                  setIsTranslatedView(true);
+                  if (!translatedAnalysis) handleFetchTranslation(language);
+                }}
+                disabled={translating}
+                className={`px-3 py-1.5 rounded-lg flex items-center gap-1.5 transition-all ${
+                  isTranslatedView
+                    ? 'bg-purple-600 text-white font-semibold shadow-sm'
+                    : 'text-slate-400 hover:text-white'
+                }`}
+              >
+                {translating ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <span>{activeLangObj.flag}</span>}
+                <span>{activeLangObj.nativeName}</span>
+              </button>
+            </div>
+          )}
+
+          {/* Manual Re-analysis button */}
           <button
             onClick={handleReanalyze}
             disabled={analyzing}
@@ -114,9 +197,23 @@ export default function StoryDashboardPage() {
           </button>
 
           <SaveButton storyId={story.id} story={story} />
-
         </div>
       </div>
+
+      {/* Translation Progress or Status Notification Banner */}
+      {translating && (
+        <div className="p-4 bg-purple-950/40 border border-purple-800/40 rounded-2xl text-xs text-purple-300 flex items-center space-x-3 animate-pulse">
+          <Loader2 className="w-4.5 h-4.5 animate-spin text-purple-400 shrink-0" />
+          <span>{t('translating_content')} <strong>{activeLangObj.nativeName} ({activeLangObj.name})</strong>...</span>
+        </div>
+      )}
+
+      {translationStatusMsg && !translating && (
+        <div className="p-4 bg-amber-950/40 border border-amber-800/40 rounded-2xl text-xs text-amber-300 flex items-center space-x-2">
+          <AlertCircle className="w-4 h-4 text-amber-400 shrink-0" />
+          <span>{translationStatusMsg}</span>
+        </div>
+      )}
 
       {/* Story Hero Info Header */}
       <div className="glass-panel p-6 sm:p-8 rounded-3xl space-y-4 relative overflow-hidden">
@@ -126,10 +223,16 @@ export default function StoryDashboardPage() {
           </span>
           <span className="text-xs text-slate-400 flex items-center gap-1.5 bg-slate-900/90 px-3 py-1 rounded-lg border border-slate-800 font-medium">
             <Layers className="w-3.5 h-3.5 text-purple-400" />
-            {story.sources_count || 5} Media Outlets Clustered
+            {story.sources_count || 5} {t('outlets_count')} Clustered
           </span>
+          {isTranslatedView && cacheStatus && (
+            <span className="text-xs text-emerald-400 bg-emerald-950/50 border border-emerald-800/50 px-2.5 py-1 rounded-lg font-medium flex items-center gap-1">
+              <CheckCircle2 className="w-3 h-3 text-emerald-400" />
+              {activeLangObj.nativeName} ({cacheStatus})
+            </span>
+          )}
           <span className="text-xs text-slate-400 font-mono">
-            Analyzed: {analysis?.analyzed_at ? new Date(analysis.analyzed_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : 'Just now'}
+            Analyzed: {activeAnalysis?.analyzed_at ? new Date(activeAnalysis.analyzed_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : 'Just now'}
           </span>
         </div>
 
@@ -139,7 +242,7 @@ export default function StoryDashboardPage() {
       </div>
 
       {/* AI Transparency Report Card */}
-      <TransparencyReportCard report={analysis?.transparency_report} isLoading={loading} />
+      <TransparencyReportCard report={activeAnalysis?.transparency_report} isLoading={loading} />
 
       {/* 5 Analytical Dashboard Navigation Tabs */}
       <div className="border-b border-slate-800">
@@ -153,7 +256,7 @@ export default function StoryDashboardPage() {
             }`}
           >
             <Scale className="w-4 h-4" />
-            <span>1. Balanced Summary</span>
+            <span>1. {t('tab_summary')}</span>
           </button>
 
           <button
@@ -165,7 +268,7 @@ export default function StoryDashboardPage() {
             }`}
           >
             <Newspaper className="w-4 h-4" />
-            <span>2. Side-by-Side Compare</span>
+            <span>2. {t('tab_comparison')}</span>
           </button>
 
           <button
@@ -177,7 +280,7 @@ export default function StoryDashboardPage() {
             }`}
           >
             <ShieldAlert className="w-4 h-4" />
-            <span>3. Explainable Bias</span>
+            <span>3. {t('tab_bias')}</span>
           </button>
 
           <button
@@ -189,7 +292,7 @@ export default function StoryDashboardPage() {
             }`}
           >
             <EyeOff className="w-4 h-4" />
-            <span>4. Missing Perspectives</span>
+            <span>4. {t('tab_blindspots')}</span>
           </button>
 
           <button
@@ -201,18 +304,18 @@ export default function StoryDashboardPage() {
             }`}
           >
             <Clock className="w-4 h-4" />
-            <span>5. Narrative Shift Detector</span>
+            <span>5. {t('tab_timeline')}</span>
           </button>
         </nav>
       </div>
 
       {/* Tab Panel Content Display */}
       <div className="pt-2">
-        {activeTab === 'summary' && <SummaryTab summary={analysis?.balanced_summary} />}
-        {activeTab === 'compare' && <ComparisonGrid comparison={analysis?.comparison} />}
-        {activeTab === 'bias' && <BiasChart biasAnalysis={analysis?.bias_analysis} />}
-        {activeTab === 'perspectives' && <PerspectivesList perspectives={analysis?.missing_perspectives} />}
-        {activeTab === 'timeline' && <TimelineView timeline={analysis?.timeline} narrativeShifts={analysis?.narrative_shifts} />}
+        {activeTab === 'summary' && <SummaryTab summary={activeAnalysis?.balanced_summary} />}
+        {activeTab === 'compare' && <ComparisonGrid comparison={activeAnalysis?.comparison} />}
+        {activeTab === 'bias' && <BiasChart biasAnalysis={activeAnalysis?.bias_analysis} />}
+        {activeTab === 'perspectives' && <PerspectivesList perspectives={activeAnalysis?.missing_perspectives} />}
+        {activeTab === 'timeline' && <TimelineView timeline={activeAnalysis?.timeline} narrativeShifts={activeAnalysis?.narrative_shifts} />}
       </div>
     </div>
   );

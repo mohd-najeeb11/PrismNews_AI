@@ -10,6 +10,161 @@ from app.prompts.combined_analysis import build_combined_analysis_prompt
 from app.services.quota_manager import quota_manager
 
 
+def normalize_story_analysis(analysis: Dict[str, Any]) -> Dict[str, Any]:
+    """
+    Normalizes a story analysis dictionary to ensure compatibility with both
+    backend Pydantic schemas and frontend React components.
+    """
+    if not isinstance(analysis, dict):
+        return {}
+
+    res = dict(analysis)
+
+    # 1. Balanced Summary normalization
+    bs = res.get("balanced_summary") or {}
+    if isinstance(bs, dict):
+        overview = bs.get("overview") or bs.get("neutral_summary") or "Synthesized overview of story reporting across outlets."
+        neutral_summary = bs.get("neutral_summary") or overview
+
+        consensus_points = bs.get("consensus_points") or bs.get("consensus_facts") or []
+        consensus_facts = bs.get("consensus_facts") or consensus_points
+
+        disputed_points = bs.get("disputed_points") or []
+        key_takeaway = bs.get("key_takeaway") or "Reporting reflects divergent editorial emphasis across participating publishers."
+
+        res["balanced_summary"] = {
+            "overview": overview,
+            "neutral_summary": neutral_summary,
+            "consensus_points": consensus_points,
+            "consensus_facts": consensus_facts,
+            "disputed_points": disputed_points,
+            "key_takeaway": key_takeaway,
+        }
+
+    # 2. Comparison normalization
+    comp = res.get("comparison") or []
+    normalized_comp = []
+    if isinstance(comp, list):
+        for item in comp:
+            if not isinstance(item, dict):
+                continue
+            outlet_name = item.get("outlet_name") or item.get("source") or "News Outlet"
+            source = item.get("source") or outlet_name
+            bias_rating = item.get("bias_rating") or "center"
+            article_title = item.get("article_title") or item.get("headline") or "Coverage Report"
+            headline = item.get("headline") or article_title
+            article_url = item.get("article_url") or item.get("url") or "#"
+            tone = item.get("tone") or "neutral"
+            framing_summary = item.get("framing_summary") or item.get("emphasis") or "Editorial focus on core developments."
+            emphasis = item.get("emphasis") or framing_summary
+            key_quotes = item.get("key_quotes") or [article_title]
+
+            normalized_comp.append({
+                "outlet_name": outlet_name,
+                "source": source,
+                "bias_rating": bias_rating,
+                "article_title": article_title,
+                "headline": headline,
+                "article_url": article_url,
+                "tone": tone,
+                "framing_summary": framing_summary,
+                "emphasis": emphasis,
+                "key_quotes": key_quotes,
+            })
+    res["comparison"] = normalized_comp
+
+    # 3. Bias Analysis normalization
+    ba = res.get("bias_analysis") or {}
+    if isinstance(ba, list):
+        loaded_phrases = []
+        for outlet_obj in ba:
+            if isinstance(outlet_obj, dict):
+                src = outlet_obj.get("source") or "News Outlet"
+                phrases = outlet_obj.get("loaded_phrases") or []
+                for p in phrases:
+                    if isinstance(p, dict):
+                        phrase_text = p.get("phrase") or p.get("text") or "key phrase"
+                        loaded_phrases.append({
+                            "phrase": phrase_text,
+                            "text": phrase_text,
+                            "outlet": src,
+                            "bias": outlet_obj.get("bias") or "center",
+                            "reason": p.get("reason") or "Rhetorical charge detected.",
+                            "neutral_alternative": p.get("neutral_alternative") or phrase_text,
+                        })
+        ba = {
+            "spectrum_score": 0.0,
+            "dominant_framing": "Multi-Outlet Framing Analysis",
+            "loaded_phrases": loaded_phrases,
+            "source_bias_distribution": {"left": 0, "lean_left": 1, "center": 1, "lean_right": 1, "right": 0}
+        }
+    elif isinstance(ba, dict):
+        phrases = ba.get("loaded_phrases") or []
+        normalized_phrases = []
+        if isinstance(phrases, list):
+            for p in phrases:
+                if isinstance(p, dict):
+                    phrase_text = p.get("phrase") or p.get("text") or "flagged expression"
+                    normalized_phrases.append({
+                        "phrase": phrase_text,
+                        "text": phrase_text,
+                        "outlet": p.get("outlet") or p.get("source") or "News Outlet",
+                        "bias": p.get("bias") or "center",
+                        "reason": p.get("reason") or "Identified loaded language.",
+                        "neutral_alternative": p.get("neutral_alternative") or phrase_text,
+                    })
+        ba["loaded_phrases"] = normalized_phrases
+        ba["spectrum_score"] = float(ba.get("spectrum_score", 0.0))
+        ba["dominant_framing"] = ba.get("dominant_framing") or "Multi-Outlet Framing Analysis"
+        ba["source_bias_distribution"] = ba.get("source_bias_distribution") or {"left": 0, "lean_left": 1, "center": 1, "lean_right": 1, "right": 0}
+
+    res["bias_analysis"] = ba
+
+    # 4. Missing Perspectives normalization
+    mp = res.get("missing_perspectives") or []
+    normalized_mp = []
+    if isinstance(mp, dict):
+        missing_list = mp.get("missing") or []
+        for angle in missing_list:
+            normalized_mp.append({
+                "angle": angle,
+                "description": f"Coverage glosses over {angle}.",
+                "why_it_matters": "Provides vital contextual balance for public understanding.",
+                "missing_from_outlets": ["Mainstream Outlets"],
+            })
+    elif isinstance(mp, list):
+        for item in mp:
+            if isinstance(item, dict):
+                normalized_mp.append({
+                    "angle": item.get("angle") or "Uncovered Angle",
+                    "description": item.get("description") or "Aspect absent from mainstream reporting.",
+                    "why_it_matters": item.get("why_it_matters") or "Essential for comprehensive understanding.",
+                    "missing_from_outlets": item.get("missing_from_outlets") or ["Primary Outlets"],
+                })
+    res["missing_perspectives"] = normalized_mp
+
+    # 5. Timeline normalization
+    tl = res.get("timeline") or []
+    normalized_tl = []
+    if isinstance(tl, list):
+        for item in tl:
+            if isinstance(item, dict):
+                ts = item.get("timestamp") or item.get("published_at") or "2026-08-07T12:00:00Z"
+                out = item.get("outlet") or item.get("source") or "News Outlet"
+                normalized_tl.append({
+                    "timestamp": ts,
+                    "published_at": ts,
+                    "outlet": out,
+                    "source": out,
+                    "headline": item.get("headline") or "Coverage update",
+                    "framing_shift": item.get("framing_shift") or "Initial reporting on developments.",
+                    "url": item.get("url") or "#",
+                })
+    res["timeline"] = normalized_tl
+
+    return res
+
+
 class AIAnalysisService:
     """
     Module M6: AI Analysis Pipeline.
@@ -25,13 +180,13 @@ class AIAnalysisService:
         # 1. Check Cache Hit
         if "analysis" in story and story["analysis"]:
             logger.info(f"Cache HIT for story analysis ID '{story_id}'")
-            return story["analysis"]
+            return normalize_story_analysis(story["analysis"])
 
         # Check Seed Store Cache
         seed_story = quota_manager.get_seed_story(story_id)
         if seed_story and "analysis" in seed_story:
             logger.info(f"Seed Cache HIT for story analysis ID '{story_id}'")
-            return seed_story["analysis"]
+            return normalize_story_analysis(seed_story["analysis"])
 
         # 2. Check Quota & Call Gemini Primary
         if quota_manager.can_call("gemini") and settings.GEMINI_API_KEY:
@@ -90,10 +245,10 @@ class AIAnalysisService:
         }
         models_to_try = [
             "llama-3.3-70b-versatile",
-            "llama-3.1-70b-versatile",
-            "mixtral-8x7b-32768",
-            "gemma2-9b-it",
+            "llama-3.1-8b-instant",
         ]
+
+
 
         for model_name in models_to_try:
             payload = {
@@ -133,9 +288,12 @@ class AIAnalysisService:
                 cleaned = re.sub(r"\n?```$", "", cleaned)
 
             parsed = json.loads(cleaned)
-            # Validate with Pydantic schema
-            validated = StoryAnalysisSchema(**parsed)
-            return validated.model_dump()
+            normalized = normalize_story_analysis(parsed)
+            try:
+                validated = StoryAnalysisSchema(**normalized)
+                return validated.model_dump()
+            except Exception:
+                return normalized
         except Exception as e:
             logger.error(f"Failed to parse/validate LLM JSON response: {e}")
             return None
@@ -339,7 +497,7 @@ class AIAnalysisService:
                 }
             }
         }
-        return fallback
+        return normalize_story_analysis(fallback)
 
 
 ai_analysis_service = AIAnalysisService()

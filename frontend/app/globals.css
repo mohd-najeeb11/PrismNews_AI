@@ -4,97 +4,134 @@
 
 @layer base {
   :root {
-    --background: 222.2 84% 4.9%;
+    --background: 232 45% 5%;
     --foreground: 210 40% 98%;
-    --card: 222.2 84% 7.5%;
+    --card: 232 35% 8%;
     --card-foreground: 210 40% 98%;
-    --primary: 217.2 91.2% 59.8%;
-    --primary-foreground: 222.2 47.4% 11.2%;
-    --secondary: 217.2 32.6% 17.5%;
+    --primary: 260 90% 65%;
+    --primary-foreground: 210 40% 98%;
+    --secondary: 220 30% 15%;
     --secondary-foreground: 210 40% 98%;
-    --muted: 217.2 32.6% 17.5%;
+    --muted: 220 30% 15%;
     --muted-foreground: 215 20.2% 65.1%;
-    --accent: 217.2 32.6% 17.5%;
+    --accent: 280 80% 60%;
     --accent-foreground: 210 40% 98%;
-    --border: 217.2 32.6% 17.5%;
-    --radius: 0.75rem;
+    --border: 220 30% 18%;
+    --radius: 0.85rem;
   }
 }
 
 body {
-  background-color: hsl(var(--background));
+  background-color: #070913;
   color: hsl(var(--foreground));
   font-feature-settings: "rlig" 1, "calt" 1;
+  overflow-x: hidden;
 }
 
+/* Glassmorphism Panels with Prismatic Rainbow Border Accents */
 .glass-panel {
-  background: rgba(15, 23, 42, 0.7);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(11, 15, 29, 0.72);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow: 0 10px 40px -10px rgba(0, 0, 0, 0.5),
+              0 0 25px -5px rgba(120, 80, 255, 0.15);
 }
 
 .glass-card {
-  background: rgba(30, 41, 59, 0.5);
-  backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.06);
-  transition: all 0.2s ease-in-out;
+  background: rgba(15, 20, 36, 0.65);
+  backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  position: relative;
 }
 
 .glass-card:hover {
-  background: rgba(30, 41, 59, 0.75);
-  border-color: rgba(99, 102, 241, 0.3);
-  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
+  background: rgba(22, 28, 50, 0.82);
+  border-color: rgba(168, 85, 247, 0.4);
+  box-shadow: 0 12px 35px -5px rgba(0, 0, 0, 0.6),
+              0 0 30px 2px rgba(147, 51, 234, 0.25),
+              0 0 15px 1px rgba(59, 130, 246, 0.2);
+  transform: translateY(-2px);
 }
 
+/* Vibrant Rainbow Spectral Gradient Text */
 .gradient-text {
-  background: linear-gradient(135deg, #60a5fa 0%, #a855f7 50%, #ec4899 100%);
+  background: linear-gradient(135deg, #38bdf8 0%, #a855f7 35%, #ec4899 70%, #f59e0b 100%);
+  background-size: 200% 200%;
+  animation: spectralShift 8s ease infinite;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
 
+@keyframes spectralShift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* Rainbow Glow Badge & Buttons */
+.rainbow-glow-border {
+  position: relative;
+}
+
+.rainbow-glow-border::before {
+  content: '';
+  position: absolute;
+  inset: -1px;
+  border-radius: inherit;
+  padding: 1px;
+  background: linear-gradient(135deg, #ef4444, #f59e0b, #10b981, #06b6d4, #3b82f6, #8b5cf6, #ec4899);
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  opacity: 0.6;
+  pointer-events: none;
+}
+
+/* Media Bias Badges */
 .bias-badge-left {
-  background-color: rgba(59, 130, 246, 0.15);
+  background-color: rgba(59, 130, 246, 0.18);
   color: #60a5fa;
-  border: 1px solid rgba(59, 130, 246, 0.3);
+  border: 1px solid rgba(59, 130, 246, 0.4);
 }
 
 .bias-badge-lean-left {
-  background-color: rgba(96, 165, 250, 0.15);
+  background-color: rgba(96, 165, 250, 0.18);
   color: #93c5fd;
-  border: 1px solid rgba(96, 165, 250, 0.3);
+  border: 1px solid rgba(96, 165, 250, 0.4);
 }
 
 .bias-badge-center {
-  background-color: rgba(168, 85, 247, 0.15);
+  background-color: rgba(168, 85, 247, 0.18);
   color: #c084fc;
-  border: 1px solid rgba(168, 85, 247, 0.3);
+  border: 1px solid rgba(168, 85, 247, 0.4);
 }
 
 .bias-badge-lean-right {
-  background-color: rgba(248, 113, 113, 0.15);
+  background-color: rgba(248, 113, 113, 0.18);
   color: #fca5a5;
-  border: 1px solid rgba(248, 113, 113, 0.3);
+  border: 1px solid rgba(248, 113, 113, 0.4);
 }
 
 .bias-badge-right {
-  background-color: rgba(239, 68, 68, 0.15);
+  background-color: rgba(239, 68, 68, 0.18);
   color: #f87171;
-  border: 1px solid rgba(239, 68, 68, 0.3);
+  border: 1px solid rgba(239, 68, 68, 0.4);
 }
 
-/* Custom scrollbar */
+/* Custom Rainbow Scrollbar */
 ::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
+  width: 7px;
+  height: 7px;
 }
 ::-webkit-scrollbar-track {
-  background: rgba(15, 23, 42, 0.5);
+  background: rgba(7, 9, 19, 0.9);
 }
 ::-webkit-scrollbar-thumb {
-  background: rgba(100, 116, 139, 0.4);
-  border-radius: 4px;
+  background: linear-gradient(180deg, #3b82f6, #8b5cf6, #ec4899);
+  border-radius: 6px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(148, 163, 184, 0.6);
+  background: linear-gradient(180deg, #60a5fa, #c084fc, #f472b6);
 }

@@ -34,17 +34,25 @@ RULES FOR HIGH CONTEXTUAL DEPTH:
 OUTPUT JSON SCHEMA:
 {
   "balanced_summary": {
+    "overview": "Comprehensive 3-4 sentence neutral overview of the story synthesis.",
+    "neutral_summary": "Comprehensive 3-4 sentence neutral overview of the story synthesis.",
+    "consensus_points": ["Detailed fact 1", "Detailed fact 2", "Detailed fact 3"],
     "consensus_facts": ["Detailed fact 1", "Detailed fact 2", "Detailed fact 3"],
     "disputed_points": ["Detailed disagreement point 1 with context", "Detailed disagreement point 2"],
-    "neutral_summary": "Comprehensive 3-4 sentence neutral overview of the story synthesis.",
     "key_takeaway": "Detailed 2-sentence executive summary of narrative divergence."
   },
   "comparison": [
     {
+      "outlet_name": "Outlet Name",
       "source": "Outlet Name",
+      "bias_rating": "left | lean_left | center | lean_right | right",
+      "article_title": "Headline or central claim",
       "headline": "Headline or central claim",
+      "article_url": "https://example.com/article",
       "tone": "neutral | critical | supportive | alarmed | pragmatic",
-      "emphasis": "Detailed 2-3 sentence breakdown of editorial emphasis and framing stance."
+      "framing_summary": "Detailed 2-3 sentence breakdown of editorial emphasis and framing stance.",
+      "emphasis": "Detailed 2-3 sentence breakdown of editorial emphasis and framing stance.",
+      "key_quotes": ["Quoted text from article"]
     }
   ],
   "bias_analysis": {
@@ -52,13 +60,21 @@ OUTPUT JSON SCHEMA:
     "dominant_framing": "Detailed description of overall cluster framing",
     "loaded_phrases": [
       {
+        "phrase": "Exact quoted phrase from article",
         "text": "Exact quoted phrase from article",
         "outlet": "Outlet Name",
         "bias": "left | lean_left | center | lean_right | right",
         "reason": "Detailed 2-sentence explanation of emotional charge and rhetorical intent.",
         "neutral_alternative": "Complete objective re-framing statement."
       }
-    ]
+    ],
+    "source_bias_distribution": {
+      "left": 0,
+      "lean_left": 1,
+      "center": 1,
+      "lean_right": 1,
+      "right": 0
+    }
   },
   "missing_perspectives": [
     {
@@ -70,7 +86,9 @@ OUTPUT JSON SCHEMA:
   ],
   "timeline": [
     {
+      "timestamp": "ISO timestamp or formatted time",
       "published_at": "ISO timestamp or formatted time",
+      "outlet": "Outlet Name",
       "source": "Outlet Name",
       "headline": "Full article headline",
       "framing_shift": "Detailed explanation of how narrative emphasis evolved at this timestamp."
@@ -100,66 +118,90 @@ Article 2 (Global Watchdog): "Privacy advocates blast tech firm over stealth dat
 EXAMPLE JSON OUTPUT:
 {
   "balanced_summary": {
+    "overview": "A major tech company introduced an updated AI data processing policy. While supporters view it as an advancement in openness, critics raise privacy concerns.",
+    "neutral_summary": "A major tech company introduced an updated AI data processing policy. While supporters view it as an advancement in openness, critics raise privacy concerns.",
+    "consensus_points": [
+      "Tech firm released a new AI data ingestion policy today."
+    ],
     "consensus_facts": [
       "Tech firm released a new AI data ingestion policy today."
     ],
     "disputed_points": [
       "Whether the policy serves public interest or compromises user data privacy."
     ],
-    "neutral_summary": "A major tech company introduced a updated AI data processing policy. While supporters view it as an advancement in openness, critics raise privacy concerns."
+    "key_takeaway": "Media coverage divides on whether open data access outweighs privacy risks."
   },
   "comparison": [
     {
+      "outlet_name": "TechDaily",
       "source": "TechDaily",
+      "bias_rating": "lean_left",
+      "article_title": "Tech giant unveils revolutionary open AI data policy",
       "headline": "Tech giant unveils revolutionary open AI data policy",
+      "article_url": "https://example.com/techdaily",
       "tone": "supportive",
-      "emphasis": "Innovation and public benefits"
+      "framing_summary": "Focuses on technological progress and openness.",
+      "emphasis": "Focuses on technological progress and openness.",
+      "key_quotes": ["unveils revolutionary open AI data policy"]
     },
     {
+      "outlet_name": "Global Watchdog",
       "source": "Global Watchdog",
+      "bias_rating": "left",
+      "article_title": "Privacy advocates blast tech firm over stealth data harvesting policy",
       "headline": "Privacy advocates blast tech firm over stealth data harvesting policy",
+      "article_url": "https://example.com/globalwatchdog",
       "tone": "critical",
-      "emphasis": "Privacy risks and user consent"
+      "framing_summary": "Focuses on privacy risks and corporate overreach.",
+      "emphasis": "Focuses on privacy risks and corporate overreach.",
+      "key_quotes": ["stealth data harvesting policy"]
     }
   ],
-  "bias_analysis": [
-    {
-      "source": "TechDaily",
-      "framing": ["technological progress", "transparency"],
-      "tone": "supportive",
-      "loaded_phrases": [
-        {
-          "text": "revolutionary open AI data policy",
-          "reason": "Uses celebratory language ('revolutionary') to frame commercial policy change"
-        }
-      ]
-    },
-    {
-      "source": "Global Watchdog",
-      "framing": ["surveillance", "corporate overreach"],
-      "tone": "critical",
-      "loaded_phrases": [
-        {
-          "text": "stealth data harvesting",
-          "reason": "Uses accusatory terminology ('stealth data harvesting') implying deceptive intent"
-        }
-      ]
+  "bias_analysis": {
+    "spectrum_score": -0.2,
+    "dominant_framing": "Technological innovation vs. consumer data privacy concerns",
+    "loaded_phrases": [
+      {
+        "phrase": "revolutionary open AI data policy",
+        "text": "revolutionary open AI data policy",
+        "outlet": "TechDaily",
+        "bias": "lean_left",
+        "reason": "Uses celebratory language ('revolutionary') to frame commercial policy change.",
+        "neutral_alternative": "updated public AI data processing policy"
+      },
+      {
+        "phrase": "stealth data harvesting",
+        "text": "stealth data harvesting",
+        "outlet": "Global Watchdog",
+        "bias": "left",
+        "reason": "Uses accusatory terminology ('stealth data harvesting') implying deceptive intent.",
+        "neutral_alternative": "automated data collection practices"
+      }
+    ],
+    "source_bias_distribution": {
+      "left": 1,
+      "lean_left": 1,
+      "center": 0,
+      "lean_right": 0,
+      "right": 0
     }
-  ],
-  "missing_perspectives": {
-    "covered": ["Industry developers", "Privacy advocacy groups"],
-    "missing": ["Independent security auditors", "End users and consumer protection regulators"]
   },
+  "missing_perspectives": [
+    {
+      "angle": "Independent Security & Audit Capacity",
+      "description": "Coverage glosses over independent security verification mechanisms.",
+      "why_it_matters": "Without independent auditing, users must rely solely on corporate assurances.",
+      "missing_from_outlets": ["TechDaily", "Global Watchdog"]
+    }
+  ],
   "timeline": [
     {
+      "timestamp": "2026-08-06T08:00:00Z",
       "published_at": "2026-08-06T08:00:00Z",
+      "outlet": "TechDaily",
       "source": "TechDaily",
+      "headline": "Tech giant unveils revolutionary open AI data policy",
       "framing_shift": "Initial announcement focused on open technology benefits"
-    },
-    {
-      "source": "Global Watchdog",
-      "published_at": "2026-08-06T10:30:00Z",
-      "framing_shift": "Response coverage shifted focus to regulatory and privacy critiques"
     }
   ]
 }

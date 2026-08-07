@@ -71,7 +71,7 @@ export default function PerspectivesList({ perspectives }: Props) {
                   Outlets Omitting This Perspective
                 </span>
                 <div className="flex flex-wrap gap-1.5 pt-1">
-                  {item.missing_from_outlets.map((outlet, oIdx) => (
+                  {(item.missing_from_outlets || []).map((outlet, oIdx) => (
                     <span
                       key={oIdx}
                       className="px-2 py-0.5 rounded-md bg-rose-950/40 border border-rose-800/40 text-rose-300 font-medium text-[11px]"

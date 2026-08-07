@@ -17,6 +17,11 @@ export default function SummaryTab({ summary }: Props) {
     );
   }
 
+  const overviewText = summary.overview || (summary as any).neutral_summary || 'Synthesized multi-outlet overview of story developments.';
+  const consensusPoints = summary.consensus_points || (summary as any).consensus_facts || [];
+  const disputedPoints = summary.disputed_points || [];
+  const takeawayText = summary.key_takeaway || 'Media coverage displays divergent framing priorities across participating publishers.';
+
   return (
     <div className="space-y-6">
       {/* Overview Hero Box */}
@@ -33,7 +38,7 @@ export default function SummaryTab({ summary }: Props) {
               </span>
             </h3>
             <p className="text-sm text-slate-300 leading-relaxed">
-              {summary.overview}
+              {overviewText}
             </p>
           </div>
         </div>
@@ -47,7 +52,7 @@ export default function SummaryTab({ summary }: Props) {
             <h4>Points of Consensus across Outlets</h4>
           </div>
           <ul className="space-y-3">
-            {summary.consensus_points.map((point, idx) => (
+            {consensusPoints.map((point: string, idx: number) => (
               <li key={idx} className="flex items-start gap-3 text-sm text-slate-300">
                 <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 mt-2 shrink-0" />
                 <span>{point}</span>
@@ -63,7 +68,7 @@ export default function SummaryTab({ summary }: Props) {
             <h4>Points of Framing Disputed & Conflict</h4>
           </div>
           <ul className="space-y-3">
-            {summary.disputed_points.map((point, idx) => (
+            {disputedPoints.map((point: string, idx: number) => (
               <li key={idx} className="flex items-start gap-3 text-sm text-slate-300">
                 <span className="w-1.5 h-1.5 rounded-full bg-amber-400 mt-2 shrink-0" />
                 <span>{point}</span>
@@ -81,7 +86,7 @@ export default function SummaryTab({ summary }: Props) {
             Critical Media Literacy Takeaway
           </span>
           <p className="text-sm text-slate-200 font-medium">
-            {summary.key_takeaway}
+            {takeawayText}
           </p>
         </div>
       </div>

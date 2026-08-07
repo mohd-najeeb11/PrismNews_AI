@@ -5,8 +5,8 @@ import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { Story } from '@/lib/types';
 import { fetchStories, fetchLiveStoryByQuery } from '@/lib/api';
+import { useLanguage } from '@/lib/LanguageContext';
 import { Sparkles, Layers, ArrowRight, Compass, Scale, Newspaper, EyeOff, Clock, Search, Loader2 } from 'lucide-react';
-
 
 const CATEGORIES = ['All', 'Technology & Policy', 'Economy & Markets', 'Energy & Environment', 'World News'];
 
@@ -14,6 +14,7 @@ function HomeContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const queryParam = searchParams.get('query') || '';
+  const { t } = useLanguage();
 
   const [stories, setStories] = useState<Story[]>([]);
   const [loading, setLoading] = useState(true);
@@ -66,16 +67,16 @@ function HomeContent() {
       <section className="text-center space-y-6 pt-4 max-w-4xl mx-auto">
         <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-blue-500/10 border border-blue-500/20 text-xs font-semibold text-blue-300">
           <Sparkles className="w-3.5 h-3.5 text-blue-400" />
-          <span>Explainable AI News Transparency Engine</span>
+          <span>{t('hero_badge')}</span>
         </div>
 
         <h1 className="text-4xl sm:text-5xl lg:text-6xl font-black tracking-tight text-white leading-tight">
-          Unpack the News from <br />
-          <span className="gradient-text">Every Angle & Framing</span>
+          {t('hero_title_line1')} <br />
+          <span className="gradient-text">{t('hero_title_line2')}</span>
         </h1>
 
         <p className="text-base sm:text-lg text-slate-300 max-w-2xl mx-auto leading-relaxed">
-          See how different news outlets cover the same story side-by-side. Uncover hidden bias, detect missing perspectives, and track how narrative framing shifts in real time.
+          {t('hero_subtitle')}
         </p>
 
         {/* Interactive Search Bar & Topic Chips */}
@@ -91,7 +92,7 @@ function HomeContent() {
               type="text"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              placeholder="Search any live news topic, event, or URL (e.g. Nvidia AI, https://reuters.com/...)..."
+              placeholder={t('search_placeholder')}
               className="w-full bg-slate-900/90 text-sm text-slate-100 placeholder-slate-500 rounded-2xl pl-11 pr-28 py-3.5 border border-slate-800 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 focus:outline-none transition-all"
             />
             <Search className="w-5 h-5 text-slate-400 absolute left-3.5 top-4" />
@@ -101,20 +102,20 @@ function HomeContent() {
               className="absolute right-2 px-3.5 py-1.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-xs font-semibold text-white transition-colors flex items-center gap-1.5 shadow-md"
             >
               {liveSearching ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Sparkles className="w-3.5 h-3.5" />}
-              <span>{liveSearching ? 'Fetching...' : 'Analyze'}</span>
+              <span>{liveSearching ? t('search_fetching') : t('search_button')}</span>
             </button>
           </form>
 
           {liveSearching && (
             <div className="p-3 bg-blue-950/40 border border-blue-800/40 rounded-xl text-xs text-blue-300 flex items-center justify-center space-x-2 animate-pulse">
               <Loader2 className="w-4 h-4 animate-spin text-blue-400" />
-              <span>Fetching live news coverage & running Gemini AI analysis for "{searchTerm}"...</span>
+              <span>{t('search_live_banner')} "{searchTerm}"...</span>
             </div>
           )}
 
           {/* Quick Topic Chips */}
           <div className="flex flex-wrap justify-center items-center gap-2 text-xs font-medium text-slate-400">
-            <span className="text-slate-500">Popular Topics:</span>
+            <span className="text-slate-500">{t('popular_topics')}</span>
             {['AI Policy', 'Election 2024', 'Climate Summit', 'Federal Reserve', 'Tech Stocks'].map((topic) => (
               <button
                 key={topic}
@@ -134,20 +135,19 @@ function HomeContent() {
         {/* Feature Pill Highlights */}
         <div className="flex flex-wrap justify-center gap-3 pt-2 text-xs font-semibold text-slate-300">
           <span className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-900 border border-slate-800">
-            <Scale className="w-4 h-4 text-blue-400" /> Balanced Summaries
+            <Scale className="w-4 h-4 text-blue-400" /> {t('feat_balanced')}
           </span>
           <span className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-900 border border-slate-800">
-            <Newspaper className="w-4 h-4 text-purple-400" /> Side-by-Side Comparison
+            <Newspaper className="w-4 h-4 text-purple-400" /> {t('feat_comparison')}
           </span>
           <span className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-900 border border-slate-800">
-            <EyeOff className="w-4 h-4 text-amber-400" /> Blindspot Detection
+            <EyeOff className="w-4 h-4 text-amber-400" /> {t('feat_blindspots')}
           </span>
           <span className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-900 border border-slate-800">
-            <Clock className="w-4 h-4 text-emerald-400" /> Narrative Timelines
+            <Clock className="w-4 h-4 text-emerald-400" /> {t('feat_timelines')}
           </span>
         </div>
       </section>
-
 
       {/* Filter & Search Bar */}
       <section className="space-y-4">
@@ -164,13 +164,13 @@ function HomeContent() {
                     : 'bg-slate-900/80 text-slate-400 hover:bg-slate-800 hover:text-slate-200 border border-slate-800'
                 }`}
               >
-                {cat}
+                {cat === 'All' ? t('cat_all') : cat}
               </button>
             ))}
           </div>
 
           <div className="text-xs text-slate-400 font-medium">
-            Showing <strong className="text-slate-200">{stories.length}</strong> story clusters
+            {t('showing_clusters')} <strong className="text-slate-200">{stories.length}</strong> {t('story_clusters')}
           </div>
         </div>
 
@@ -188,8 +188,8 @@ function HomeContent() {
         ) : stories.length === 0 ? (
           <div className="text-center py-12 glass-card rounded-2xl space-y-3">
             <Compass className="w-10 h-10 text-slate-600 mx-auto" />
-            <h3 className="text-base font-bold text-slate-300">No Story Clusters Found</h3>
-            <p className="text-xs text-slate-500">Try clearing your search query or selecting a different topic category.</p>
+            <h3 className="text-base font-bold text-slate-300">{t('no_stories_found')}</h3>
+            <p className="text-xs text-slate-500">{t('no_stories_sub')}</p>
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -207,7 +207,7 @@ function HomeContent() {
                     </span>
                     <span className="text-xs text-slate-400 flex items-center gap-1 font-medium bg-slate-900 px-2 py-0.5 rounded-md border border-slate-800">
                       <Layers className="w-3 h-3 text-purple-400" />
-                      {story.sources_count} Outlets
+                      {story.sources_count} {t('outlets_count')}
                     </span>
                   </div>
 
@@ -226,7 +226,7 @@ function HomeContent() {
 
                 {/* Footer Link */}
                 <div className="pt-3 border-t border-slate-800/80 flex items-center justify-between text-xs text-slate-400 group-hover:text-blue-400 transition-colors">
-                  <span className="font-semibold text-slate-300">View Full 5-Tab Analysis</span>
+                  <span className="font-semibold text-slate-300">{t('view_full_analysis')}</span>
                   <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                 </div>
               </Link>
@@ -238,10 +238,8 @@ function HomeContent() {
       {/* How It Works Section */}
       <section className="glass-card p-8 rounded-3xl border border-slate-800/80 space-y-6 mt-8">
         <div className="text-center space-y-2 max-w-xl mx-auto">
-          <h2 className="text-2xl font-bold text-white">How PrismNews AI Works</h2>
-          <p className="text-xs text-slate-400">
-            An automated, transparent pipeline converting raw news feeds into unbiased media literacy metrics.
-          </p>
+          <h2 className="text-2xl font-bold text-white">{t('how_it_works_title')}</h2>
+          <p className="text-xs text-slate-400">{t('how_it_works_sub')}</p>
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 pt-2">
@@ -249,40 +247,32 @@ function HomeContent() {
             <div className="w-8 h-8 rounded-xl bg-blue-500/10 text-blue-400 flex items-center justify-center font-bold text-sm">
               1
             </div>
-            <h4 className="font-bold text-sm text-white">Multi-Spectrum Ingest</h4>
-            <p className="text-xs text-slate-400 leading-relaxed">
-              Ingests RSS feeds and news APIs continuously across left, center, and right outlets.
-            </p>
+            <h4 className="font-bold text-sm text-white">{t('step1_title')}</h4>
+            <p className="text-xs text-slate-400 leading-relaxed">{t('step1_desc')}</p>
           </div>
 
           <div className="bg-slate-900/60 p-5 rounded-2xl border border-slate-800/80 space-y-2">
             <div className="w-8 h-8 rounded-xl bg-purple-500/10 text-purple-400 flex items-center justify-center font-bold text-sm">
               2
             </div>
-            <h4 className="font-bold text-sm text-white">Vector Clustering</h4>
-            <p className="text-xs text-slate-400 leading-relaxed">
-              Groups matching stories from different publishers using local sentence embeddings.
-            </p>
+            <h4 className="font-bold text-sm text-white">{t('step2_title')}</h4>
+            <p className="text-xs text-slate-400 leading-relaxed">{t('step2_desc')}</p>
           </div>
 
           <div className="bg-slate-900/60 p-5 rounded-2xl border border-slate-800/80 space-y-2">
             <div className="w-8 h-8 rounded-xl bg-amber-500/10 text-amber-400 flex items-center justify-center font-bold text-sm">
               3
             </div>
-            <h4 className="font-bold text-sm text-white">Explainable Bias AI</h4>
-            <p className="text-xs text-slate-400 leading-relaxed">
-              Gemini 2.0 Flash extracts loaded language, evaluates tone, and highlights unsaid perspectives.
-            </p>
+            <h4 className="font-bold text-sm text-white">{t('step3_title')}</h4>
+            <p className="text-xs text-slate-400 leading-relaxed">{t('step3_desc')}</p>
           </div>
 
           <div className="bg-slate-900/60 p-5 rounded-2xl border border-slate-800/80 space-y-2">
             <div className="w-8 h-8 rounded-xl bg-emerald-500/10 text-emerald-400 flex items-center justify-center font-bold text-sm">
               4
             </div>
-            <h4 className="font-bold text-sm text-white">Transparent Reading</h4>
-            <p className="text-xs text-slate-400 leading-relaxed">
-              Readers view consensus facts, side-by-side outlet grid, and timeline narrative shifts.
-            </p>
+            <h4 className="font-bold text-sm text-white">{t('step4_title')}</h4>
+            <p className="text-xs text-slate-400 leading-relaxed">{t('step4_desc')}</p>
           </div>
         </div>
       </section>

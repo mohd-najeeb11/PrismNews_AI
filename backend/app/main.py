@@ -3,6 +3,7 @@ from fastapi import Body, Depends, FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from app.api.v1.endpoints.saved_stories import SaveStoryRequest
+from app.api.v1.endpoints.stories import LiveQueryRequest
 from app.api.v1.router import api_v1_router
 from app.core.auth import get_current_user
 from app.core.config import settings
@@ -135,6 +136,26 @@ async def top_level_post_saved_story(req: SaveStoryRequest, user=Depends(get_cur
 async def top_level_delete_saved_story(id: str, user=Depends(get_current_user)):
     from app.api.v1.endpoints.saved_stories import delete_saved_story
     return await delete_saved_story(id=id, user=user)
+
+
+# Top-level Multilingual Translation aliases (documented in API.md)
+@app.get("/api/languages", tags=["Translations"], summary="Top-level Supported Languages")
+async def top_level_get_languages():
+    from app.api.v1.endpoints.translations import get_supported_languages
+    return await get_supported_languages()
+
+
+@app.get("/api/stories/{id}/translations/{language}", tags=["Translations"], summary="Top-level Get Story Translation")
+async def top_level_get_story_translation(id: str, language: str):
+    from app.api.v1.endpoints.translations import get_story_translation
+    return await get_story_translation(id=id, language=language)
+
+
+@app.post("/api/stories/{id}/translate", tags=["Translations"], summary="Top-level Translate Story Analysis")
+async def top_level_translate_story(id: str, req=Body(...)):
+    from app.api.v1.endpoints.translations import TranslateStoryRequest, translate_story
+    return await translate_story(id=id, req=TranslateStoryRequest(**req))
+
 
 
 

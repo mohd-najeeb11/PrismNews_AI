@@ -8,6 +8,8 @@ import QuotaBadge from './QuotaBadge';
 import { Search, Bookmark, LogIn, User, Sparkles, LogOut, Loader2 } from 'lucide-react';
 import { createClient } from '@/lib/supabase/client';
 
+import LanguageSelector from './LanguageSelector';
+
 export default function NavBar() {
   const [searchQuery, setSearchQuery] = useState('');
   const [user, setUser] = useState<{ email: string; name?: string } | null>(null);
@@ -120,6 +122,8 @@ export default function NavBar() {
           <div className="hidden lg:block">
             <QuotaBadge />
           </div>
+
+          <LanguageSelector />
 
           <Link
             href="/saved"

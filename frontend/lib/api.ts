@@ -793,3 +793,31 @@ export async function getSavedStories(token?: string): Promise<SavedStory[]> {
   return [];
 }
 
+
+export async function fetchStoryTranslation(storyId: string, language: string): Promise<{ success: boolean; content?: any; cache_status?: string }> {
+  if (!language || language === 'en' || language === 'english') {
+    return { success: true, cache_status: 'Original' };
+  }
+  try {
+    const res = await fetch(`${API_BASE_URL}/stories/${storyId}/translate`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ language }),
+    });
+    if (res.ok) {
+      const data = await res.json();
+      if (data && data.translated_content) {
+        return {
+          success: data.cache_status !== 'Unavailable',
+          content: data.translated_content,
+          cache_status: data.cache_status || 'Fresh',
+        };
+      }
+    }
+  } catch (e) {
+    console.warn(`Translation API call failed for story '${storyId}' (${language}):`, e);
+  }
+  return { success: false, cache_status: 'Unavailable' };
+}
+
+

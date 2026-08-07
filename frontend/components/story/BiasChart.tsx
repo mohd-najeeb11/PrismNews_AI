@@ -85,76 +85,85 @@ export default function BiasChart({ biasAnalysis }: Props) {
         </div>
 
         {/* Phrases List & Rationale Card */}
-        <div className="grid grid-cols-1 md:grid-cols-12 gap-6 pt-2">
-          {/* List of Phrases */}
-          <div className="md:col-span-6 space-y-3">
-            <span className="text-xs font-bold text-slate-400 uppercase tracking-wider block mb-2">
-              Detected Loaded Phrases ({biasAnalysis.loaded_phrases.length})
-            </span>
-            {biasAnalysis.loaded_phrases.map((phraseObj, idx) => (
-              <button
-                key={idx}
-                onClick={() => setActivePhraseIndex(idx)}
-                className={`w-full text-left p-3.5 rounded-xl border text-xs transition-all flex items-start justify-between gap-3 ${
-                  activePhraseIndex === idx
-                    ? 'bg-purple-900/30 border-purple-500 text-white shadow-md shadow-purple-500/10'
-                    : 'bg-slate-900/60 border-slate-800 text-slate-300 hover:bg-slate-800/80 hover:text-white'
-                }`}
-              >
-                <div className="space-y-1">
-                  <div className="font-semibold text-sm text-yellow-300 bg-yellow-950/40 px-2 py-0.5 rounded inline-block">
-                    "{phraseObj.phrase}"
-                  </div>
-                  <div className="text-[11px] text-slate-400">
-                    Source: <span className="font-medium text-slate-300">{phraseObj.outlet}</span> ({phraseObj.bias})
-                  </div>
-                </div>
-                <Info className={`w-4 h-4 mt-1 shrink-0 ${activePhraseIndex === idx ? 'text-purple-400' : 'text-slate-500'}`} />
-              </button>
-            ))}
-          </div>
-
-          {/* Rationale Inspector Panel */}
-          <div className="md:col-span-6">
-            {activePhraseIndex !== null && biasAnalysis.loaded_phrases[activePhraseIndex] ? (
-              <div className="bg-slate-900/90 border border-purple-500/40 p-5 rounded-xl space-y-4 shadow-xl">
-                <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-purple-400 border-b border-slate-800 pb-2">
-                  <Sparkles className="w-4 h-4 text-purple-400" />
-                  NLP Bias Rationale Inspector
-                </div>
-
-                <div className="space-y-2">
-                  <span className="text-xs text-slate-400 font-semibold block">Target Phrase:</span>
-                  <p className="text-sm font-semibold text-yellow-300 bg-yellow-950/30 p-2.5 rounded-lg border border-yellow-800/30">
-                    "{biasAnalysis.loaded_phrases[activePhraseIndex].phrase}"
-                  </p>
-                </div>
-
-                <div className="space-y-1.5">
-                  <span className="text-xs text-slate-400 font-semibold block">Why It's Flagged:</span>
-                  <p className="text-xs text-slate-300 leading-relaxed bg-slate-950 p-3 rounded-lg border border-slate-800">
-                    {biasAnalysis.loaded_phrases[activePhraseIndex].reason}
-                  </p>
-                </div>
-
-                <div className="space-y-1.5 pt-1">
-                  <span className="text-xs text-emerald-400 font-semibold flex items-center gap-1">
-                    <RefreshCw className="w-3 h-3 text-emerald-400" />
-                    Recommended Neutral Alternative:
-                  </span>
-                  <p className="text-xs font-medium text-emerald-200 bg-emerald-950/30 p-3 rounded-lg border border-emerald-800/40 break-words leading-relaxed">
-                    "{biasAnalysis.loaded_phrases[activePhraseIndex].neutral_alternative}"
-                  </p>
-                </div>
+        {(() => {
+          const loadedPhrases = biasAnalysis.loaded_phrases || [];
+          return (
+            <div className="grid grid-cols-1 md:grid-cols-12 gap-6 pt-2">
+              {/* List of Phrases */}
+              <div className="md:col-span-6 space-y-3">
+                <span className="text-xs font-bold text-slate-400 uppercase tracking-wider block mb-2">
+                  Detected Loaded Phrases ({loadedPhrases.length})
+                </span>
+                {loadedPhrases.map((phraseObj, idx) => {
+                  const phraseText = phraseObj.phrase || (phraseObj as any).text || 'Key Phrase';
+                  return (
+                    <button
+                      key={idx}
+                      onClick={() => setActivePhraseIndex(idx)}
+                      className={`w-full text-left p-3.5 rounded-xl border text-xs transition-all flex items-start justify-between gap-3 ${
+                        activePhraseIndex === idx
+                          ? 'bg-purple-900/30 border-purple-500 text-white shadow-md shadow-purple-500/10'
+                          : 'bg-slate-900/60 border-slate-800 text-slate-300 hover:bg-slate-800/80 hover:text-white'
+                      }`}
+                    >
+                      <div className="space-y-1">
+                        <div className="font-semibold text-sm text-yellow-300 bg-yellow-950/40 px-2 py-0.5 rounded inline-block">
+                          "{phraseText}"
+                        </div>
+                        <div className="text-[11px] text-slate-400">
+                          Source: <span className="font-medium text-slate-300">{phraseObj.outlet}</span> ({phraseObj.bias})
+                        </div>
+                      </div>
+                      <Info className={`w-4 h-4 mt-1 shrink-0 ${activePhraseIndex === idx ? 'text-purple-400' : 'text-slate-500'}`} />
+                    </button>
+                  );
+                })}
               </div>
-            ) : (
-              <div className="h-full min-h-[220px] flex items-center justify-center p-6 border border-dashed border-slate-800 rounded-xl text-xs text-slate-500">
-                Select a loaded phrase to inspect its bias rationale.
+
+              {/* Rationale Inspector Panel */}
+              <div className="md:col-span-6">
+                {activePhraseIndex !== null && loadedPhrases[activePhraseIndex] ? (
+                  <div className="bg-slate-900/90 border border-purple-500/40 p-5 rounded-xl space-y-4 shadow-xl">
+                    <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-purple-400 border-b border-slate-800 pb-2">
+                      <Sparkles className="w-4 h-4 text-purple-400" />
+                      NLP Bias Rationale Inspector
+                    </div>
+
+                    <div className="space-y-2">
+                      <span className="text-xs text-slate-400 font-semibold block">Target Phrase:</span>
+                      <p className="text-sm font-semibold text-yellow-300 bg-yellow-950/30 p-2.5 rounded-lg border border-yellow-800/30">
+                        "{loadedPhrases[activePhraseIndex].phrase || (loadedPhrases[activePhraseIndex] as any).text}"
+                      </p>
+                    </div>
+
+                    <div className="space-y-1.5">
+                      <span className="text-xs text-slate-400 font-semibold block">Why It's Flagged:</span>
+                      <p className="text-xs text-slate-300 leading-relaxed bg-slate-950 p-3 rounded-lg border border-slate-800">
+                        {loadedPhrases[activePhraseIndex].reason}
+                      </p>
+                    </div>
+
+                    <div className="space-y-1.5 pt-1">
+                      <span className="text-xs text-emerald-400 font-semibold flex items-center gap-1">
+                        <RefreshCw className="w-3 h-3 text-emerald-400" />
+                        Recommended Neutral Alternative:
+                      </span>
+                      <p className="text-xs font-medium text-emerald-200 bg-emerald-950/30 p-3 rounded-lg border border-emerald-800/40 break-words leading-relaxed">
+                        "{loadedPhrases[activePhraseIndex].neutral_alternative}"
+                      </p>
+                    </div>
+                  </div>
+                ) : (
+                  <div className="h-full min-h-[220px] flex items-center justify-center p-6 border border-dashed border-slate-800 rounded-xl text-xs text-slate-500">
+                    Select a loaded phrase to inspect its bias rationale.
+                  </div>
+                )}
               </div>
-            )}
-          </div>
-        </div>
+            </div>
+          );
+        })()}
       </div>
     </div>
   );
 }
+

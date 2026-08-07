@@ -166,10 +166,26 @@ class DatabaseService:
 
         return []
 
+    def ensure_guest_profile(self, user_id: str):
+        client = get_supabase_client()
+        if not client or not user_id:
+            return
+        try:
+            profile_row = {
+                "id": user_id,
+                "display_name": "Prism Reader",
+                "created_at": datetime.now(timezone.utc).isoformat(),
+            }
+            client.table("profiles").upsert(profile_row, on_conflict="id").execute()
+        except Exception:
+            pass
+
     def save_bookmark(self, user_id: str, story_id: str) -> bool:
         client = get_supabase_client()
         if not client or not user_id or not story_id:
             return False
+
+        self.ensure_guest_profile(user_id)
 
         try:
             row = {"user_id": user_id, "story_id": story_id}
