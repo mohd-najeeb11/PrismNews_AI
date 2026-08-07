@@ -476,9 +476,10 @@ export async function fetchLiveStoryByQuery(queryOrUrl: string): Promise<Story> 
   // Fallback to GET /stories?q=...
   const stories = await fetchStories(undefined, queryOrUrl);
   if (stories && stories.length > 0) {
-    return fetchStoryById(stories[0].id);
+    const detail = await fetchStoryById(stories[0].id);
+    if (detail) return detail;
   }
-  return SEED_STORIES[0];
+  return normalizeStory(SEED_STORIES[0]);
 }
 
 export async function fetchStoryById(id: string): Promise<Story | null> {
