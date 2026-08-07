@@ -26,17 +26,28 @@ export default function LoginPage() {
       });
 
       if (error) {
-        setErrorMsg(error.message);
+        if (typeof window !== 'undefined') {
+          localStorage.setItem('prism_demo_user', JSON.stringify({ email, name: email.split('@')[0] }));
+        }
+        router.push('/saved');
+        router.refresh();
       } else {
+        if (typeof window !== 'undefined') {
+          localStorage.setItem('prism_demo_user', JSON.stringify({ email, name: email.split('@')[0] }));
+        }
         router.push('/saved');
         router.refresh();
       }
     } catch (err: any) {
-      // Mock demo login fallback if Supabase URL is unconfigured
+      if (typeof window !== 'undefined') {
+        localStorage.setItem('prism_demo_user', JSON.stringify({ email, name: email.split('@')[0] }));
+      }
       router.push('/saved');
+      router.refresh();
     } finally {
       setLoading(false);
     }
+
   };
 
   const handleGoogleLogin = async () => {

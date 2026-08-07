@@ -9,6 +9,15 @@ const nextConfig = {
       },
     ],
   },
+  async rewrites() {
+    return [
+      {
+        source: '/api/:path*',
+        destination: 'https://backend-beta-lovat-zapar2k22e.vercel.app/api/:path*',
+      },
+    ];
+  },
 };
 
 export default nextConfig;
+

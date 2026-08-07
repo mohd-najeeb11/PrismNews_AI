@@ -1,0 +1,13 @@
+services:
+  - type: web
+    name: prismnews-ai-backend
+    runtime: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn app.main:app --host 0.0.0.0 --port $PORT
+    envVars:
+      - key: ENV
+        value: production
+      - key: API_MODE
+        value: live
+      - key: API_V1_STR
+        value: /api/v1

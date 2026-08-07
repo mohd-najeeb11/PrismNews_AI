@@ -1,7 +1,7 @@
 import { Story, QuotaStatus, SavedStory } from './types';
 import { SEED_STORIES, INITIAL_QUOTA } from './seedData';
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000/api/v1';
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || '/api/v1';
 
 export async function fetchStories(category?: string, query?: string): Promise<Story[]> {
   try {
