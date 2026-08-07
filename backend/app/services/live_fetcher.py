@@ -96,6 +96,42 @@ class LiveFetcherService:
                     except Exception:
                         pass
 
+                # Extract related image URL from RSS metadata or summary HTML
+                image_url = None
+                if hasattr(entry, "media_content") and entry.media_content:
+                    for m in entry.media_content:
+                        if isinstance(m, dict) and m.get("url"):
+                            image_url = m["url"]
+                            break
+                if not image_url and hasattr(entry, "media_thumbnail") and entry.media_thumbnail:
+                    for m in entry.media_thumbnail:
+                        if isinstance(m, dict) and m.get("url"):
+                            image_url = m["url"]
+                            break
+                if not image_url and hasattr(entry, "links") and entry.links:
+                    for link_obj in entry.links:
+                        if isinstance(link_obj, dict) and link_obj.get("type", "").startswith("image/") and link_obj.get("href"):
+                            image_url = link_obj["href"]
+                            break
+                if not image_url:
+                    img_match = re.search(r'<img[^>]+src=["\']([^"\']+)["\']', summary, re.IGNORECASE)
+                    if img_match:
+                        image_url = img_match.group(1)
+
+                # Fallback to curated topic image if no image found
+                if not image_url:
+                    q_lower = query.lower()
+                    if any(k in q_lower for k in ["ai", "chip", "tech", "nvidia", "silicon"]):
+                        image_url = "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=1200&auto=format&fit=crop"
+                    elif any(k in q_lower for k in ["economy", "fed", "rate", "stock", "market"]):
+                        image_url = "https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?q=80&w=1200&auto=format&fit=crop"
+                    elif any(k in q_lower for k in ["climate", "energy", "oil", "green"]):
+                        image_url = "https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?q=80&w=1200&auto=format&fit=crop"
+                    elif any(k in q_lower for k in ["election", "policy", "white house", "court"]):
+                        image_url = "https://images.unsplash.com/photo-1541872703-74c5e44368f9?q=80&w=1200&auto=format&fit=crop"
+                    else:
+                        image_url = "https://images.unsplash.com/photo-1504711434969-e33886168f5c?q=80&w=1200&auto=format&fit=crop"
+
                 text_for_embed = f"{title_clean}. {clean_content[:500]}"
                 vector = embed_text(text_for_embed)
 
@@ -106,6 +142,7 @@ class LiveFetcherService:
                     url=link,
                     content=clean_content,
                     published_at=published_at,
+                    image_url=image_url,
                     embedding=vector,
                 )
                 articles.append(art)
@@ -113,6 +150,7 @@ class LiveFetcherService:
             logger.error(f"Failed to fetch Google News RSS for query '{query}': {e}")
 
         return articles
+
 
     async def fetch_by_url(self, target_url: str) -> Dict[str, Any]:
         """
@@ -211,6 +249,8 @@ class LiveFetcherService:
         story_id = str(uuid.uuid4())
         sources = list(dict.fromkeys(a.source_name for a in articles if a.source_name))
 
+        top_image = next((a.image_url for a in articles if a.image_url), "https://images.unsplash.com/photo-1504711434969-e33886168f5c?q=80&w=1200&auto=format&fit=crop")
+
         raw_articles = []
         for a in articles:
             raw_articles.append({
@@ -220,14 +260,18 @@ class LiveFetcherService:
                 "title": a.title,
                 "url": a.url,
                 "published_at": a.published_at,
+                "image_url": a.image_url or top_image,
                 "snippet": a.content[:300] if a.content else "",
             })
 
         story = {
             "id": story_id,
             "headline": headline,
+            "title": headline,
             "topic": topic,
             "category": topic,
+            "image_url": top_image,
+            "story_image_url": top_image,
             "created_at": datetime.now(timezone.utc).isoformat(),
             "updated_at": datetime.now(timezone.utc).isoformat(),
             "article_count": len(raw_articles),
@@ -238,7 +282,10 @@ class LiveFetcherService:
 
         # Execute single-pass AI Analysis
         analysis = await ai_analysis_service.analyze_story(story)
+        if isinstance(analysis, dict) and "balanced_summary" in analysis and isinstance(analysis["balanced_summary"], dict):
+            analysis["balanced_summary"]["image_url"] = top_image
         story["analysis"] = analysis
+
 
         # Store in memory cache for instant GET /stories/{id} retrieval
         self._cache[story_id] = story

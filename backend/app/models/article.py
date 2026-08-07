@@ -11,7 +11,9 @@ class NormalizedArticle(BaseModel):
     url: str
     content: str
     published_at: str
+    image_url: Optional[str] = None
     embedding: Optional[List[float]] = None
+
 
 
 class IngestBatchResult(BaseModel):

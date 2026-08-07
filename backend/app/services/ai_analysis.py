@@ -31,6 +31,7 @@ def normalize_story_analysis(analysis: Dict[str, Any]) -> Dict[str, Any]:
 
         disputed_points = bs.get("disputed_points") or []
         key_takeaway = bs.get("key_takeaway") or "Reporting reflects divergent editorial emphasis across participating publishers."
+        image_url = bs.get("image_url") or res.get("image_url") or res.get("story_image_url")
 
         res["balanced_summary"] = {
             "overview": overview,
@@ -39,7 +40,9 @@ def normalize_story_analysis(analysis: Dict[str, Any]) -> Dict[str, Any]:
             "consensus_facts": consensus_facts,
             "disputed_points": disputed_points,
             "key_takeaway": key_takeaway,
+            "image_url": image_url,
         }
+
 
     # 2. Comparison normalization
     comp = res.get("comparison") or []

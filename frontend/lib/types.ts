@@ -12,6 +12,7 @@ export interface Article {
   published_at: string;
   summary?: string;
   content?: string;
+  image_url?: string;
   tone?: ToneType;
 }
 
@@ -20,7 +21,9 @@ export interface BalancedSummary {
   consensus_points: string[];
   disputed_points: string[];
   key_takeaway: string;
+  image_url?: string;
 }
+
 
 export interface ComparisonItem {
   outlet_name: string;

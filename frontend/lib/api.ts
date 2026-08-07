@@ -60,7 +60,14 @@ export function normalizeStory(raw: any): Story {
     key_takeaway:
       rawSummary.key_takeaway ||
       `While fundamental facts regarding '${storyHeadline}' are universally acknowledged, media coverage divides on whether the primary concern is economic compliance burden or public interest protection.`,
+    image_url:
+      rawSummary.image_url ||
+      raw.image_url ||
+      raw.story_image_url ||
+      raw.urlToImage ||
+      (Array.isArray(raw.articles) ? raw.articles.find((a: any) => a.image_url || a.urlToImage)?.image_url : undefined),
   };
+
 
   // 2. Comparison Matrix
   const rawComparison = Array.isArray(analysis.comparison) ? analysis.comparison : [];

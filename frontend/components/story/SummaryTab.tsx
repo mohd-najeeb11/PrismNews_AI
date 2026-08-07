@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { BalancedSummary } from '@/lib/types';
-import { CheckCircle2, AlertTriangle, Lightbulb, Scale } from 'lucide-react';
+import { CheckCircle2, AlertTriangle, Lightbulb, Scale, ImageIcon } from 'lucide-react';
 
 interface Props {
   summary?: BalancedSummary;
@@ -21,9 +21,37 @@ export default function SummaryTab({ summary }: Props) {
   const consensusPoints = summary.consensus_points || (summary as any).consensus_facts || [];
   const disputedPoints = summary.disputed_points || [];
   const takeawayText = summary.key_takeaway || 'Media coverage displays divergent framing priorities across participating publishers.';
+  const imageUrl = summary.image_url || (summary as any).story_image_url || (summary as any).urlToImage;
 
   return (
     <div className="space-y-6">
+      {/* Extracted Related News Article Image */}
+      {imageUrl && (
+        <div className="glass-card rounded-2xl overflow-hidden border border-slate-800/80 relative group max-h-80 shadow-2xl">
+          <img
+            src={imageUrl}
+            alt="Clustered News Story Coverage"
+            className="w-full h-80 object-cover group-hover:scale-105 transition-transform duration-500"
+            onError={(e) => {
+              // Hide broken image smoothly
+              const parent = (e.target as HTMLElement).parentElement;
+              if (parent) parent.style.display = 'none';
+            }}
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/40 to-transparent p-6 flex flex-col justify-end">
+            <div className="flex items-center gap-2 mb-1">
+              <span className="text-[10px] uppercase tracking-wider font-mono font-bold text-blue-300 bg-blue-950/90 border border-blue-500/40 px-2.5 py-1 rounded-md flex items-center gap-1">
+                <ImageIcon className="w-3 h-3 text-blue-400" />
+                Featured Article Image
+              </span>
+            </div>
+            <p className="text-xs text-slate-300 line-clamp-1 font-medium">
+              Extracted directly from top clustered news outlet reporting during AI synthesis.
+            </p>
+          </div>
+        </div>
+      )}
+
       {/* Overview Hero Box */}
       <div className="glass-card p-6 rounded-2xl border-l-4 border-l-blue-500 relative overflow-hidden">
         <div className="flex items-start gap-4">
