@@ -1,4 +1,4 @@
-import { Story, QuotaStatus, SavedStory, BalancedSummary, ComparisonItem, LoadedPhrase, BiasAnalysis, MissingPerspective, TimelineEvent, BiasRating } from './types';
+import { Story, QuotaStatus, SavedStory, BalancedSummary, ComparisonItem, LoadedPhrase, BiasAnalysis, MissingPerspective, TimelineEvent, BiasRating, TransparencyReport, NarrativeShiftStage } from './types';
 import { SEED_STORIES, INITIAL_QUOTA } from './seedData';
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || '/api/v1';
