@@ -35,28 +35,46 @@ async def analyze_live_query(req: LiveQueryRequest) -> StoryDetailResponse:
     return StoryDetailResponse(**story)
 
 
+from app.services.clustering import clustering_service
+from app.services.ingestion import ingestion_service
+
+
 @router.get("/stories", response_model=List[StorySummaryResponse], summary="Search/Browse Story Clusters")
 async def get_stories(q: Optional[str] = Query(None, description="Topic or headline keyword filter")) -> List[StorySummaryResponse]:
     """
     Returns a list of story cluster summaries.
     Reads from live Supabase DB first, falling back to seed dataset or live on-demand fetch.
+    Respects active quota_manager.get_api_mode() ('seed', 'rss', 'live').
     """
+    mode = quota_manager.get_api_mode()
     stories = []
-    if settings.API_MODE != "seed":
-        stories = db_service.get_stories(q)
 
-    # If query is provided and no local stories match, trigger live fetching on-demand
-    if q and not stories and settings.API_MODE != "seed":
+    # 1. RSS Mode: Run live RSS ingestion & clustering on demand
+    if mode == "rss":
         try:
-            if q.startswith("http://") or q.startswith("https://"):
-                live_story = await live_fetcher.fetch_by_url(q)
-            else:
-                live_story = await live_fetcher.fetch_by_topic(q)
-            if live_story:
-                stories = [live_story]
+            logger.info("Executing RSS Mode ingestion across feeds...")
+            articles = ingestion_service.ingest_rss()
+            if articles:
+                stories = clustering_service.cluster_articles(articles, threshold=0.55)
         except Exception as e:
-            logger.warning(f"On-demand live fetch for query '{q}' failed: {e}")
+            logger.error(f"RSS Mode ingestion failed: {e}")
 
+    # 2. Live Mode: Fetch from live Supabase DB or trigger live fetcher
+    elif mode == "live":
+        stories = db_service.get_stories(q)
+        if not stories:
+            try:
+                topic_to_fetch = q if q else "Technology Policy"
+                if topic_to_fetch.startswith("http://") or topic_to_fetch.startswith("https://"):
+                    live_story = await live_fetcher.fetch_by_url(topic_to_fetch)
+                else:
+                    live_story = await live_fetcher.fetch_by_topic(topic_to_fetch)
+                if live_story:
+                    stories = [live_story]
+            except Exception as e:
+                logger.warning(f"Live mode fetch failed: {e}")
+
+    # 3. Seed Mode or Fallback when no stories found
     if not stories:
         stories = quota_manager.load_seed_stories()
         if q:

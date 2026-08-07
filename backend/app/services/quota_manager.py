@@ -62,8 +62,8 @@ class QuotaManager:
             logger.info(f"[QuotaManager] API_MODE=seed. Blocked call to '{service}'.")
             return False
 
-        # In rss mode, newsapi and LLM calls are blocked
-        if mode == "rss" and service in ("newsapi", "gemini", "groq"):
+        # In rss mode, newsapi is blocked, but LLM analysis (gemini/groq) is permitted
+        if mode == "rss" and service.lower() == "newsapi":
             logger.info(f"[QuotaManager] API_MODE=rss. Blocked call to '{service}'.")
             return False
 
