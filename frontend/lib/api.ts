@@ -289,7 +289,7 @@ export async function triggerReanalysis(storyId: string): Promise<{ success: boo
   return { success: true, message: `Story ${storyId} re-analyzed successfully (Seed fallback mode)` };
 }
 
-export async function saveStoryToSavedList(storyId: string, token?: string): Promise<boolean> {
+export async function saveStoryToSavedList(storyId: string, token?: string, storyObject?: Story): Promise<boolean> {
   try {
     if (token) {
       const res = await fetch(`${API_BASE_URL}/saved-stories`, {
@@ -312,10 +312,16 @@ export async function saveStoryToSavedList(storyId: string, token?: string): Pro
       saved.push(storyId);
       localStorage.setItem('prism_saved_stories', JSON.stringify(saved));
     }
+    if (storyObject) {
+      const savedMap = JSON.parse(localStorage.getItem('prism_saved_stories_map') || '{}');
+      savedMap[storyId] = normalizeStory(storyObject);
+      localStorage.setItem('prism_saved_stories_map', JSON.stringify(savedMap));
+    }
     return true;
   }
   return false;
 }
+
 
 export async function getSavedStories(token?: string): Promise<SavedStory[]> {
   try {
@@ -342,14 +348,23 @@ export async function getSavedStories(token?: string): Promise<SavedStory[]> {
 
   if (typeof window !== 'undefined') {
     const savedIds: string[] = JSON.parse(localStorage.getItem('prism_saved_stories') || '[]');
-    const matching = SEED_STORIES.filter((s) => savedIds.includes(s.id));
-    return matching.map((story) => ({
-      id: `saved-${story.id}`,
-      user_id: 'user-demo',
-      story_id: story.id,
-      saved_at: new Date().toISOString(),
-      story: normalizeStory(story),
-    }));
+    const savedMap = JSON.parse(localStorage.getItem('prism_saved_stories_map') || '{}');
+    const resultList: SavedStory[] = [];
+
+    for (const id of savedIds) {
+      const storyObj = savedMap[id] || SEED_STORIES.find((s) => s.id === id);
+      if (storyObj) {
+        resultList.push({
+          id: `saved-${id}`,
+          user_id: 'user-demo',
+          story_id: id,
+          saved_at: new Date().toISOString(),
+          story: normalizeStory(storyObj),
+        });
+      }
+    }
+    return resultList;
   }
   return [];
 }
+
