@@ -1,5 +1,231 @@
 [
   {
+    "id": "live-f99f614e-b2c5-48d1-a7d7-cf11765c2469",
+    "headline": "Thailand school shooting: Pupil describes harrowing moment teacher was shot in front of her",
+    "topic": "Thailand school shooting Pupil",
+    "category": "Thailand school shooting Pupil",
+    "created_at": "2026-08-07T14:14:57.441588+00:00",
+    "updated_at": "2026-08-07T14:14:57.441599+00:00",
+    "article_count": 6,
+    "sources_count": 6,
+    "sources": [
+      "BBC News",
+      "nbcnews.com",
+      "Straight Arrow",
+      "South China Morning Post",
+      "The Times",
+      "thenationalnews.com"
+    ],
+    "articles": [
+      {
+        "id": "b99044cb-9b39-46c8-8acf-5c09e29ab116",
+        "source": "BBC News",
+        "source_name": "BBC News",
+        "title": "Thailand school shooting: Pupil describes harrowing moment teacher was shot in front of her",
+        "url": "https://www.bbc.com/news/articles/c07rxz03034o",
+        "published_at": "2026-08-07T14:14:57.427748+00:00",
+        "snippet": "The student says she feared never seeing her mother again after the attack killed five teachers."
+      },
+      {
+        "id": "31c4ccb4-7443-4175-984a-1dcc8c73c98d",
+        "source": "nbcnews.com",
+        "source_name": "nbcnews.com",
+        "title": "Student kills at least 5 at Thai school after fatally shooting his grandparents",
+        "url": "https://news.google.com/rss/articles/CBMiogFBVV95cUxQOS1FLUNqSkR4SVhGMWVBdU00dm03amRkaTItanZnTjhHeEpiMWViRmtkR1hGWTJicjVrdmZ6eVZudWpJcEpteTlYb21tbDNJQWpBVzI2eERmdnJrSHZBTGdVdXdzSEZIN0E2d0pHa1Y0ci1kWG1pcTQ3YVVzbml5eWFjbGNTejVxM0RHX0ZLTkRWUHVWYWdqMnpodjM5Q0NQLUE?oc=5",
+        "published_at": "2026-08-07T10:43:00+00:00",
+        "snippet": "Student kills at least 5 at Thai school after fatally shooting his grandparents&nbsp;&nbsp;nbcnews.com"
+      },
+      {
+        "id": "b21ccc8b-27d7-43a0-9baa-66d080526f97",
+        "source": "Straight Arrow",
+        "source_name": "Straight Arrow",
+        "title": "At least 6 killed in Thailand school shooting after gunman kills grandparents: Police",
+        "url": "https://news.google.com/rss/articles/CBMipwFBVV95cUxOLXJhWmQ2MDdELWNLRGFVaGpuQWw2cVFiZVlwT1pkN1k4VWwzcG5ZT0RfRjFsUGNMYVN5cFY5WnZEVXQyT1ltcmtBNFhwNllOQ0NRaFpaRVZpZHc1R1B1NURfLUpSMDBRWmx5dlNHRXJiNEZlTUhrTy1hTFEwTTl4UU1tc1Bib1pWNVAwbzRUVUZJWDBsQXY5TjliMUI2LUhqYzBxMkpPWQ?oc=5",
+        "published_at": "2026-08-07T12:30:00+00:00",
+        "snippet": "At least 6 killed in Thailand school shooting after gunman kills grandparents: Police&nbsp;&nbsp;Straight Arrow"
+      },
+      {
+        "id": "ca56a68d-9270-44b0-bf85-6a9629215626",
+        "source": "South China Morning Post",
+        "source_name": "South China Morning Post",
+        "title": "7 dead as teen gunman goes on rampage at Thai school",
+        "url": "https://news.google.com/rss/articles/CBMirAFBVV95cUxOSFBJZ0ZwQ1RwYmxwYmZPX1JTOTd6X1FZSnFTWENBVmo5dWdIR0xHX1lHTi15clh2ZG1OZUFwS3czREltM05nYlJTd2dlSkFOR1NpYmthdkN6Zzh4MEs2RUZ3NGM3VFB4OEhDUV8xTi1Sanl6cmRmZm5SVVBuaFhUdUI5RFo2SVZNSmlLb3pEeWowX0hwWlgtQTlyQ1llV1JqcmV3dkJzX2FTNDFl0gGsAUFVX3lxTE9QNEpRR2hNVUFtRm5IcmFrSVpxT19HV096WkIwS09GbFI3SkxxekdLbGtIWkFFS3dKeTFab0FGT2czUEE3cGQ4SFYzRmQzekRmLTQ1NDFydGJWQ3EwWFdWNVgwV1RERzVqNTByZHA5MFQyTzBnc1BVNkxRODRaLUU3QTVETi15OFh5RG8xWmp2NHpOekw0ZXhjMUItMFpFYnZ3T21fRi02ekR0MjY?oc=5",
+        "published_at": "2026-08-07T03:55:48+00:00",
+        "snippet": "7 dead as teen gunman goes on rampage at Thai school&nbsp;&nbsp;South China Morning Post"
+      },
+      {
+        "id": "a9945498-998c-46ef-8d37-2fa3cb492685",
+        "source": "The Times",
+        "source_name": "The Times",
+        "title": "Thailand school shooting: seven dead after teenager opens fire",
+        "url": "https://news.google.com/rss/articles/CBMimAFBVV95cUxQbW5sS3I3dkc3YURzbUhkS2pFVDZLekFjMlVyWnFuWjBacmxBcHNXN2tsRTdqRGdGelpYMGg2RExVeUJQUzJJSWJfY3VGXzdWQmdGNXRRMERzTndsdWdfejhPN1R5Z0JjbG1PcDJCbm9ieHdvQ09YMGVtTjdPWk1QZHBYM1ZrV1d4T1ZpYk9qaUVpQnQwNGo1Vg?oc=5",
+        "published_at": "2026-08-07T13:40:00+00:00",
+        "snippet": "Thailand school shooting: seven dead after teenager opens fire&nbsp;&nbsp;The Times"
+      },
+      {
+        "id": "9b805a74-c783-4ef4-b9bd-1b136beeb8d1",
+        "source": "thenationalnews.com",
+        "source_name": "thenationalnews.com",
+        "title": "Teachers and pupils among six killed in Thailand school shooting",
+        "url": "https://news.google.com/rss/articles/CBMiugFBVV95cUxOZDZwM0hwTGY3TExnaEl2ZXl1VFVTVEtQWmJjZDZzSmlCaDUzWUhqbWVRS2M5ajgxNS1rT29jalQ5ZDV1N3BnNTJfUnJlZV8ySTBQTnpTclZXQWRGc2dNcDJvUHZNMUU4aDZQZ18wQVgyaXQyVWw1VUFrLXJGcVVSamN5al9ZeU1iYTNvN0V1R3VON2tyajRFblo2NlA2clBIQ0dtMFQtUnlXY2pyaXR0Zkw2alJEamRyb2c?oc=5",
+        "published_at": "2026-08-07T07:02:42+00:00",
+        "snippet": "Teachers and pupils among six killed in Thailand school shooting&nbsp;&nbsp;thenationalnews.com"
+      }
+    ],
+    "analysis": {
+      "balanced_summary": {
+        "consensus_facts": [
+          "A school shooting occurred in Thailand, resulting in the deaths of at least 5 teachers and potentially others.",
+          "The shooter was a student who also killed his grandparents before the school attack.",
+          "The incident has caused widespread shock and concern about school safety."
+        ],
+        "disputed_points": [
+          "The exact number of casualties, with reports varying between 5 and 7 dead.",
+          "The motivations behind the shooter's actions, which have not been fully disclosed."
+        ],
+        "neutral_summary": "A tragic school shooting took place in Thailand, where a student attacked his school after killing his grandparents, leaving multiple teachers and possibly others dead. The incident has sparked concern over school safety and the motivations behind such violent acts. The attack has been widely reported, with varying details on the number of casualties. The community is left to grapple with the aftermath and implications of this horrific event.",
+        "key_takeaway": "The Thailand school shooting is a devastating incident that highlights concerns about school safety and the need for understanding the factors that lead to such violent acts. The varying reports on casualties underscore the importance of accurate and timely information in the aftermath of such tragedies."
+      },
+      "comparison": [
+        {
+          "source": "BBC News",
+          "headline": "Thailand school shooting: Pupil describes harrowing moment teacher was shot in front of her",
+          "tone": "neutral",
+          "emphasis": "Personal account of a pupil, focusing on the human impact of the tragedy."
+        },
+        {
+          "source": "nbcnews.com",
+          "headline": "Student kills at least 5 at Thai school after fatally shooting his grandparents",
+          "tone": "informative",
+          "emphasis": "Reporting the facts of the incident, including the sequence of events and the number of casualties."
+        },
+        {
+          "source": "Straight Arrow",
+          "headline": "At least 6 killed in Thailand school shooting after gunman kills grandparents: Police",
+          "tone": "objective",
+          "emphasis": "Providing an update based on police reports, focusing on the official account of the incident."
+        },
+        {
+          "source": "South China Morning Post",
+          "headline": "7 dead as teen gunman goes on rampage at Thai school",
+          "tone": "detailed",
+          "emphasis": "Reporting the incident with a focus on the number of casualties and the actions of the gunman."
+        },
+        {
+          "source": "The Times",
+          "headline": "Thailand school shooting: seven dead after teenager opens fire",
+          "tone": "informative",
+          "emphasis": "Providing a concise summary of the incident, including the number of dead and the perpetrator's actions."
+        },
+        {
+          "source": "thenationalnews.com",
+          "headline": "Teachers and pupils among six killed in Thailand school shooting",
+          "tone": "neutral",
+          "emphasis": "Reporting the incident with a focus on the victims, including both teachers and pupils."
+        }
+      ],
+      "bias_analysis": {
+        "spectrum_score": 0.1,
+        "dominant_framing": "Tragic event with a focus on human impact and school safety",
+        "loaded_phrases": [
+          {
+            "text": "harrowing moment",
+            "outlet": "BBC News",
+            "bias": "neutral",
+            "reason": "This phrase is used to convey the severity of the experience without taking a biased stance. It aims to evoke empathy from the reader.",
+            "neutral_alternative": "A pupil witnessed a teacher being shot."
+          },
+          {
+            "text": "goes on rampage",
+            "outlet": "South China Morning Post",
+            "bias": "slightly sensational",
+            "reason": "The use of 'rampage' might slightly sensationalize the event, emphasizing the chaotic and violent nature of the incident.",
+            "neutral_alternative": "The gunman opened fire at the school."
+          }
+        ]
+      },
+      "missing_perspectives": [
+        {
+          "angle": "Mental health support for students and staff",
+          "description": "The coverage primarily focuses on the incident itself, with less discussion on the long-term psychological impact on the school community and the need for mental health support.",
+          "why_it_matters": "Understanding and addressing the mental health implications are crucial for the recovery and well-being of those affected. It also informs broader discussions on school safety and prevention strategies.",
+          "missing_from_outlets": [
+            "BBC News",
+            "nbcnews.com",
+            "Straight Arrow"
+          ]
+        },
+        {
+          "angle": "School security measures and policy changes",
+          "description": "There is limited analysis on the current state of school security in Thailand and potential policy changes that could be implemented to prevent future incidents.",
+          "why_it_matters": "Discussing school security measures and policy changes is essential for preventing similar tragedies and ensuring a safe learning environment. This includes examining both the physical security of schools and the social support systems in place.",
+          "missing_from_outlets": [
+            "South China Morning Post",
+            "The Times",
+            "thenationalnews.com"
+          ]
+        }
+      ],
+      "timeline": [
+        {
+          "published_at": "2026-08-07T03:55:48+00:00",
+          "source": "South China Morning Post",
+          "headline": "7 dead as teen gunman goes on rampage at Thai school",
+          "framing_shift": "Initial reports focused on the number of casualties and the basic facts of the incident."
+        },
+        {
+          "published_at": "2026-08-07T07:02:42+00:00",
+          "source": "thenationalnews.com",
+          "headline": "Teachers and pupils among six killed in Thailand school shooting",
+          "framing_shift": "As the day progressed, reports began to include more details about the victims, including both teachers and pupils."
+        },
+        {
+          "published_at": "2026-08-07T10:43:00+00:00",
+          "source": "nbcnews.com",
+          "headline": "Student kills at least 5 at Thai school after fatally shooting his grandparents",
+          "framing_shift": "Later in the morning, the focus expanded to include the shooter's actions prior to the school attack, including the killing of his grandparents."
+        }
+      ],
+      "transparency_report": null,
+      "narrative_shifts": [
+        {
+          "stage_type": "Initial Narrative",
+          "timestamp": "2026-08-07T03:55:48+00:00",
+          "narrative_title": "Breaking News: School Shooting in Thailand",
+          "category": "Breaking News",
+          "short_explanation": "The first reports of a school shooting in Thailand, focusing on the immediate facts of the incident.",
+          "full_shift_rationale": "The initial narrative was characterized by a focus on the basic facts of the incident, including the number of casualties and the actions of the shooter. As more information became available, the narrative shifted to include more details about the victims and the shooter's motivations.",
+          "main_stakeholders": [
+            "Students",
+            "Teachers",
+            "School Administration"
+          ],
+          "supporting_publishers": [
+            "South China Morning Post",
+            "thenationalnews.com"
+          ]
+        },
+        {
+          "stage_type": "Intermediate Shift",
+          "timestamp": "2026-08-07T10:43:00+00:00",
+          "narrative_title": "Expanding Details: Shooter's Actions and Victim Profiles",
+          "category": "Government Response",
+          "short_explanation": "As the day progressed, more details emerged about the shooter's actions before the attack and the profiles of the victims.",
+          "full_shift_rationale": "This shift in the narrative reflects the natural progression of news reporting, from initial breaking news to more in-depth analysis and detail. It also indicates a broader interest in understanding the context and implications of the incident.",
+          "main_stakeholders": [
+            "Law Enforcement",
+            "Government Officials",
+            "Mental Health Professionals"
+          ],
+          "supporting_publishers": [
+            "nbcnews.com",
+            "BBC News"
+          ]
+        }
+      ]
+    }
+  },
+  {
     "id": "story-ai-act-2026",
     "headline": "Global AI Safety Legislation & Transparency Standards Framework Approved",
     "topic": "Technology & Policy",
@@ -7,7 +233,13 @@
     "created_at": "2026-08-07T08:30:00Z",
     "updated_at": "2026-08-07T10:15:00Z",
     "article_count": 6,
-    "sources": ["Reuters", "The Wall Street Journal", "The Guardian", "Fox News", "BBC News"],
+    "sources": [
+      "Reuters",
+      "The Wall Street Journal",
+      "The Guardian",
+      "Fox News",
+      "BBC News"
+    ],
     "articles": [
       {
         "id": "art-1",
@@ -55,7 +287,13 @@
     "created_at": "2026-08-07T07:15:00Z",
     "updated_at": "2026-08-07T09:45:00Z",
     "article_count": 5,
-    "sources": ["Reuters", "CNN", "Associated Press", "Bloomberg", "Financial Times"],
+    "sources": [
+      "Reuters",
+      "CNN",
+      "Associated Press",
+      "Bloomberg",
+      "Financial Times"
+    ],
     "articles": [
       {
         "id": "art-rates-1",
@@ -94,7 +332,12 @@
     "created_at": "2026-08-07T06:00:00Z",
     "updated_at": "2026-08-07T08:30:00Z",
     "article_count": 5,
-    "sources": ["BBC News", "The Guardian", "The Wall Street Journal", "Reuters"],
+    "sources": [
+      "BBC News",
+      "The Guardian",
+      "The Wall Street Journal",
+      "Reuters"
+    ],
     "articles": [
       {
         "id": "art-energy-1",
@@ -124,7 +367,12 @@
     "created_at": "2026-08-06T16:20:00Z",
     "updated_at": "2026-08-07T05:10:00Z",
     "article_count": 4,
-    "sources": ["The New York Times", "The Wall Street Journal", "Reuters", "TechCrunch"],
+    "sources": [
+      "The New York Times",
+      "The Wall Street Journal",
+      "Reuters",
+      "TechCrunch"
+    ],
     "articles": [
       {
         "id": "art-anti-1",
@@ -154,7 +402,12 @@
     "created_at": "2026-08-06T14:10:00Z",
     "updated_at": "2026-08-07T04:00:00Z",
     "article_count": 5,
-    "sources": ["Associated Press", "BBC News", "Reuters", "CNN"],
+    "sources": [
+      "Associated Press",
+      "BBC News",
+      "Reuters",
+      "CNN"
+    ],
     "articles": [
       {
         "id": "art-space-1",
@@ -184,7 +437,12 @@
     "created_at": "2026-08-06T11:00:00Z",
     "updated_at": "2026-08-07T02:00:00Z",
     "article_count": 4,
-    "sources": ["Reuters", "The Washington Post", "Fox News", "NPR"],
+    "sources": [
+      "Reuters",
+      "The Washington Post",
+      "Fox News",
+      "NPR"
+    ],
     "articles": [
       {
         "id": "art-cyber-1",
@@ -205,7 +463,12 @@
     "created_at": "2026-08-06T09:30:00Z",
     "updated_at": "2026-08-06T23:00:00Z",
     "article_count": 4,
-    "sources": ["Nature", "The Guardian", "CNN", "BBC News"],
+    "sources": [
+      "Nature",
+      "The Guardian",
+      "CNN",
+      "BBC News"
+    ],
     "articles": [
       {
         "id": "art-bio-1",
@@ -226,7 +489,12 @@
     "created_at": "2026-08-06T08:00:00Z",
     "updated_at": "2026-08-06T21:00:00Z",
     "article_count": 5,
-    "sources": ["Financial Times", "Reuters", "The Wall Street Journal", "Bloomberg"],
+    "sources": [
+      "Financial Times",
+      "Reuters",
+      "The Wall Street Journal",
+      "Bloomberg"
+    ],
     "articles": [
       {
         "id": "art-trade-1",
@@ -247,7 +515,12 @@
     "created_at": "2026-08-06T06:15:00Z",
     "updated_at": "2026-08-06T18:00:00Z",
     "article_count": 4,
-    "sources": ["Reuters", "The Wall Street Journal", "Bloomberg", "WIRED"],
+    "sources": [
+      "Reuters",
+      "The Wall Street Journal",
+      "Bloomberg",
+      "WIRED"
+    ],
     "articles": [
       {
         "id": "art-quant-1",
@@ -268,7 +541,12 @@
     "created_at": "2026-08-05T20:00:00Z",
     "updated_at": "2026-08-06T16:00:00Z",
     "article_count": 5,
-    "sources": ["The Guardian", "BBC News", "Associated Press", "Reuters"],
+    "sources": [
+      "The Guardian",
+      "BBC News",
+      "Associated Press",
+      "Reuters"
+    ],
     "articles": [
       {
         "id": "art-cop-1",

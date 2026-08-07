@@ -13,6 +13,40 @@ export const INITIAL_QUOTA: QuotaStatus = {
 
 export const SEED_STORIES: Story[] = [
   {
+    id: 'live-ee0ae502-0e9e-42ef-a7e8-32ee09bd62b6',
+    title: 'Thailand school shooting: Pupil, 18, arrested after three killed',
+    category: 'World News',
+    created_at: '2026-08-07T19:44:00Z',
+    updated_at: '2026-08-07T19:44:00Z',
+    article_count: 6,
+    sources_count: 5,
+    dominant_bias: 'center',
+    articles: [
+      {
+        id: 'art-bbc-1',
+        source_id: 'bbc',
+        source_name: 'BBC News',
+        source_bias: 'center',
+        title: 'Thailand school shooting: Pupil, 18, arrested after three killed',
+        url: 'https://www.bbc.com/news/articles/c07rxz03034o',
+        published_at: '2026-08-07T19:44:00Z',
+        summary: 'An 18-year-old student was arrested following a fatal shooting at a school in Thailand that resulted in three deaths.',
+        tone: 'neutral'
+      },
+      {
+        id: 'art-cna-2',
+        source_id: 'cna',
+        source_name: 'Channel NewsAsia',
+        source_bias: 'center',
+        title: 'Thai Police Detain 18-Year-Old Suspect Following Campus Shooting Incident',
+        url: 'https://channelnewsasia.com/asia/thai-school-shooting-suspect-arrested',
+        published_at: '2026-08-07T19:40:00Z',
+        summary: 'Local police in Thailand confirmed three casualties and reported ongoing security reviews.',
+        tone: 'neutral'
+      }
+    ]
+  },
+  {
     id: 'story-ai-act-2026',
     title: 'Global AI Safety Legislation & Transparency Standards Framework Approved',
     category: 'Technology & Policy',

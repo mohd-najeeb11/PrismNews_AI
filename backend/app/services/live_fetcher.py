@@ -208,7 +208,7 @@ class LiveFetcherService:
         return await self._create_and_analyze_cluster(headline, topic_query.title(), unique_arts[:6])
 
     async def _create_and_analyze_cluster(self, headline: str, topic: str, articles: List[NormalizedArticle]) -> Dict[str, Any]:
-        story_id = f"live-{uuid.uuid4()}"
+        story_id = str(uuid.uuid4())
         sources = list(dict.fromkeys(a.source_name for a in articles if a.source_name))
 
         raw_articles = []
