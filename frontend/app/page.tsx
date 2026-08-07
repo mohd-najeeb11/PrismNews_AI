@@ -82,7 +82,17 @@ function HomeContent() {
     }
   }, [selectedCategory, searchTerm]);
 
+  const seenHeadlines = new Set<string>();
+
+  const displayStories = stories.filter((s) => {
+    const norm = (s.title || '').toLowerCase().trim();
+    if (!norm || seenHeadlines.has(norm)) return false;
+    seenHeadlines.add(norm);
+    return true;
+  });
+
   return (
+
     <div className="space-y-12 pb-8">
       {/* Hero Section */}
       <section className="text-center space-y-6 pt-4 max-w-4xl mx-auto">
