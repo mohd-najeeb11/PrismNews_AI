@@ -46,9 +46,13 @@ export const LanguageProvider = ({ children }: { children: React.ReactNode }) =>
       const savedLang = localStorage.getItem('prism_language') as LanguageCode;
       if (savedLang && (savedLang === 'en' || savedLang === 'hi' || savedLang === 'te')) {
         setLanguageState(savedLang);
+      } else {
+        setLanguageState('en');
+        localStorage.setItem('prism_language', 'en');
       }
     }
   }, []);
+
 
   const setLanguage = (lang: LanguageCode) => {
     setLanguageState(lang);
